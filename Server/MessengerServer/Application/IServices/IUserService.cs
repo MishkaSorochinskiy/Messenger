@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Application.IServices
 {
-    interface IUserService
+    public interface IUserService
     {
     }
 }

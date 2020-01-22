@@ -8,7 +8,7 @@ namespace Infrastructure.AppSecurity
 {
     public class SecurityContext:IdentityDbContext<SecurityUser>
     {
-        public SecurityContext(DbContextOptions options):base(options)
+        public SecurityContext(DbContextOptions<SecurityContext> options):base(options)
         {
 
         }
