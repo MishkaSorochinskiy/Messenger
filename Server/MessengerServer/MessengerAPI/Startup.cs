@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Infrastructure;
+using Infrastructure.AppSecurity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,6 +32,10 @@ namespace MessengerAPI
             services.AddControllers();
 
             services.AddDbContext<MessengerContext>(options =>
+              options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+              builder => builder.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name)));
+
+            services.AddDbContext<SecurityContext>(options =>
               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
               builder => builder.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name)));
 
