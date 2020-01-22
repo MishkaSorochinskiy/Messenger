@@ -19,8 +19,8 @@ namespace MessengerAPI.Controllers
             _auth = auth;
         }
 
-        [HttpGet("[action]")]
-        public async Task<ActionResult> SignIn([FromQuery]LoginModel model)
+        [HttpPost("[action]")]
+        public async Task<ActionResult> SignIn(LoginModel model)
         {
             if (ModelState.IsValid)
             {
