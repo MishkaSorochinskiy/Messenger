@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Domain;
 using Infrastructure;
 using Infrastructure.AppSecurity;
 using Infrastructure.Services;
@@ -53,8 +54,9 @@ namespace MessengerAPI
                 options.Password.RequireLowercase = false;
             });
 
-            services.AddScoped<AuthService>();
+            services.AddServices();
 
+            services.AddSingleton<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

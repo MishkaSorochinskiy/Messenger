@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Application.IServices
 {
-   interface  IPhotoService
+   public interface  IPhotoService
     {
     }
 }
