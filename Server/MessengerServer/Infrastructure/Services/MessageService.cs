@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Application.IServices;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Infrastructure.Services
 {
-    class MessageService
+    public class MessageService:IMessageService
     {
     }
 }
