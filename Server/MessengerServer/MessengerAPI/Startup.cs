@@ -5,9 +5,11 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Infrastructure;
 using Infrastructure.AppSecurity;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -38,6 +40,20 @@ namespace MessengerAPI
             services.AddDbContext<SecurityContext>(options =>
               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
               builder => builder.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name)));
+
+            services.AddIdentity<SecurityUser, IdentityRole>()
+                    .AddEntityFrameworkStores<SecurityContext>();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 5;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+            });
+
+            services.AddScoped<AuthService>();
 
         }
 

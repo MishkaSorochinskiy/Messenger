@@ -15,7 +15,7 @@ namespace Infrastructure
 
         public DbSet<Message> Messages { get; set; }
 
-        public MessengerContext(DbContextOptions options):base(options)
+        public MessengerContext(DbContextOptions<MessengerContext> options):base(options)
         {
 
         }
