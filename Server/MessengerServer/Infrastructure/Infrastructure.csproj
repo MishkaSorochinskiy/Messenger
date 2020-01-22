@@ -5,15 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Configurations\" />
-    <Folder Include="Repositories\" />
+    <Folder Include="AppSecurity\" />
     <Folder Include="Services\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="9.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.1" />
+    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>
