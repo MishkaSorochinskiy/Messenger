@@ -71,6 +71,8 @@ namespace MessengerAPI
 
             app.UseRouting();
 
+            //DataInitializer.SeedData(um,rm,sc,uow).Wait();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
