@@ -11,13 +11,13 @@ namespace Infrastructure
     {
         public static void AddServices(this IServiceCollection services)
         {
-            services.AddSingleton<AuthService>();
+            services.AddScoped<AuthService>();
 
-            services.AddSingleton<IPhotoService, PhotoService>();
+            services.AddScoped<IPhotoService, PhotoService>();
 
-            services.AddSingleton<IMessageService, MessageService>();
+            services.AddScoped<IMessageService, MessageService>();
 
-            services.AddSingleton<IUserService, UserService>();
+            services.AddScoped<IUserService, UserService>();
         }
     }
 }

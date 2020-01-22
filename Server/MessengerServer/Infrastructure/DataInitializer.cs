@@ -11,20 +11,20 @@ namespace Infrastructure
 {
     public static class DataInitializer
     {
-        public static async Task SeedData(UserManager<SecurityUser> userManager, RoleManager<IdentityRole> roleManager, SecurityContext context,IUnitOfWork unitofwork)
+        public static async Task SeedData(UserManager<SecurityUser> userManager, RoleManager<IdentityRole> roleManager, SecurityContext context,IUnitOfWork unit)
         {
             await SeedRoles(roleManager);
-            await SeedUsers(userManager, context,unitofwork);
+            await SeedUsers(userManager, context,unit);
         }
-        public static async Task SeedUsers(UserManager<SecurityUser> userManager, SecurityContext context,IUnitOfWork unitofwork)
+        public static async Task SeedUsers(UserManager<SecurityUser> userManager, SecurityContext context,IUnitOfWork unit)
         {
             string username = "admin@gmail.com";
             string password = "mainadmin";
             if (await userManager.FindByNameAsync(username) == null)
             {
                 User admin = new User();
-                await unitofwork.UserRepository.Create(admin);
-                await unitofwork.Commit();
+                await unit.UserRepository.Create(admin);
+                await unit.Commit();
 
                 SecurityUser secadmin = new SecurityUser() { UserName=username,Email=username,UserId=admin.Id};
                 IdentityResult result = await userManager.CreateAsync(secadmin, password);
