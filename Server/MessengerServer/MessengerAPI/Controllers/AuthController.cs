@@ -27,12 +27,12 @@ namespace MessengerAPI.Controllers
                 var result = await _auth.SignIn(model);
 
                 if (result.Succeeded)
-                    return Ok();
+                    return Ok("Access approved!!");
                 else
-                    return BadRequest();
+                    return BadRequest("Sign in denied!!");
             }
 
-            return BadRequest();
+            return BadRequest("Model is not valid!!");
         }
 
         [HttpGet("[action]")]
@@ -53,11 +53,11 @@ namespace MessengerAPI.Controllers
                     if (result.Succeeded)
                         return Ok();
                     else
-                        return BadRequest();
+                        return BadRequest("Register denied!");
                 }
             }
 
-            return BadRequest();
+            return BadRequest("Model is not valid!");
         }
 
     }
