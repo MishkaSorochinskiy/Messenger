@@ -18,7 +18,7 @@ namespace Infrastructure.AppSecurity
             base.OnModelCreating(builder);
 
             builder.Entity<SecurityUser>()
-                .HasOne(su => su.User);
+                   .HasOne(su => su.User);
         }
     }
 }
