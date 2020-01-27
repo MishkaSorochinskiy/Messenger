@@ -18,7 +18,7 @@ import { CookieService } from 'node_modules/ngx-cookie-service';
 
 const appRoutes: Routes = [
    { path: '', redirectTo:'/chat',pathMatch:'full' },
-   { path: 'chat', component:ChatComponent},
+   { path: 'chat', component:ChatComponent,canActivate:[AuthGuard]},
    { path: 'signin', component:LoginComponent },
    { path: 'register', component:RegisterComponent }
 ]
