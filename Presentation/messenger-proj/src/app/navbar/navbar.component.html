@@ -10,22 +10,18 @@
     </ul>
 
     <ul class="navbar-nav ml-auto">
-      <div *ngIf="islogged else loggedout">
-        <li class="nav-item">
-          <a class="nav-link" id="title" (click)="signout()">SignOut</a>
+        <li class="nav-item" *ngIf="auth.looggedIn()">
+          <a class="nav-link" id="title" (click)="auth.signout()">SignOut</a>
         </li>
-      </div>
+        <li class="nav-item" *ngIf="!auth.looggedIn()">
+          <a class="nav-link" id="title" routerLink="/signin">SignIn</a>
+        </li>
+        <li class="nav-item" *ngIf="!auth.looggedIn()">
+          <a class="nav-link" id="title" routerLink="/register">SignUp</a>
+        </li>
   </ul> 
 
   </div>
  </div>
 </nav>
 
-<ng-template #loggedout>
-  <li class="nav-item">
-    <a class="nav-link" id="title" routerLink="/signin">SignIn</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" id="title" routerLink="/register">SignUp</a>
-  </li>
-</ng-template>

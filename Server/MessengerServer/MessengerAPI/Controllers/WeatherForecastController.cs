@@ -25,6 +25,7 @@ namespace MessengerAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IEnumerable<WeatherForecast> Get()
         {
             var rng = new Random();
