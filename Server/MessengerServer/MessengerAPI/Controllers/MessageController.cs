@@ -6,9 +6,11 @@ using Application.Models.MessageDto;
 using AutoMapper;
 using Domain;
 using Infrastructure;
+using MessengerAPI.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace MessengerAPI.Controllers
 {
@@ -20,19 +22,31 @@ namespace MessengerAPI.Controllers
 
         private readonly IMapper _mapper;
 
-        public MessageController(IUnitOfWork unit,IMapper mapper)
+        private readonly IHubContext<Chat> _chat;
+
+        public MessageController(IUnitOfWork unit,IMapper mapper,IHubContext<Chat> chat)
         {
             _unit = unit;
 
             _mapper = mapper;
+
+            _chat=chat;
         }
 
         [HttpGet]
-        [Authorize]
         public IEnumerable<GetMessageDto> Get()
         {
-            var tmp = _unit.MessageRepository.GetAll();
             return _mapper.Map<IEnumerable<GetMessageDto>>( _unit.MessageRepository.GetAll());
         }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> AddMessage(AddMessageDto message)
+        {
+           await _chat.Clients.All.SendAsync("update",new GetMessageDto() {Content=message.Content,TimeCreated=DateTime.Now});
+
+            return Ok();
+        }
+
+
     }
 }

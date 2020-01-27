@@ -1,11 +1,12 @@
+import { logging } from 'protractor';
 import { ConfigService } from './config.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient ,HttpHeaders} from '@angular/common/http';
 import { Injectable, OnInit, ɵConsole } from '@angular/core';
 import * as signalR from "@aspnet/signalr"
 
 export interface Message{
   content:string,
-  time:string
+  timeCreated:Date
 }
 
 @Injectable({
@@ -27,17 +28,36 @@ export class ChatService {
                               .build();
     this.hubConnection.start()
                     .then(()=>console.log("Connection started"))
-                    .catch(err=>console.log(`error occured: ${err}`));
-                    
+                    .catch(err=>console.log(`error occured: ${err}`));                 
   }
 
   private async getMessages(){
      (await this.config.getConfig())
            .subscribe(data=>{
-             this.http.get<Message[]>(data["getmessages"])
-             .subscribe((data)=>{this.messages=data;console.log("hey")})
+            
+            let headers = new HttpHeaders();
+            headers= headers.append('content-type', 'application/json')
+             
+            this.http.get<Message[]>(data["getmessages"],{headers:headers})
+             .subscribe((data)=>
+               {this.messages=data},
+               err=>console.log(err))
            })
   }
 
+  sendMessage(data:Message){
+    let headers = new HttpHeaders();
+    headers= headers.append('content-type', 'application/json');
+    this.http.post("https://localhost:44334/api/Message/AddMessage",data,{responseType:'text',headers:headers})
+    .subscribe(res=>console.log(res),
+              err=>console.log(err));
+  }
+
+  public updateChat = () => {
+    this.hubConnection.on('update', (data) => {
+      this.messages.push(data);
+      console.log("messages updated");
+    });
+}
 
 }

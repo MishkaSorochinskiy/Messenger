@@ -1,6 +1,7 @@
-import { ChatService } from './../services/chat.service';
+import { ChatService, Message } from './../services/chat.service';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+
 
 @Component({
   selector: 'app-chat',
@@ -8,17 +9,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit {
-  weather;
+
+  newMessage:string;
+
   constructor(private http:HttpClient,private chatservice:ChatService) { }
 
   ngOnInit() {
     this.chatservice.startConnection();
-    console.log(this.chatservice.messages);
+    this.chatservice.updateChat();
   }
 
-  refresh(){
-    this.http.get('https://localhost:44334/api/weatherforecast')
-    .subscribe(data=>this.weather=(data));
+  sendMessage(){
+    this.chatservice.sendMessage({content:this.newMessage} as Message);
   }
-
 }
