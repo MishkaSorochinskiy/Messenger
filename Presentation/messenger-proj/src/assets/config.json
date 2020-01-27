@@ -1,0 +1,5 @@
+{
+    "signin":"https://localhost:44334/api/Auth/SignIn",
+    "signup":"https://localhost:44334/api/Auth/Register",
+    "signout":"https://localhost:44334/api/Auth/SignOut"
+}

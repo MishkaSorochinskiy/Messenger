@@ -1,3 +1,6 @@
+import { AuthGuard } from './auth.guard';
+import { ConfigService } from './services/config.service';
+import { AuthService } from './services/auth.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -8,10 +11,12 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ChatComponent } from './chat/chat.component';
 import { RouterModule, Routes } from '@angular/router';
+import {HttpClientModule, HttpHeaders} from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 const appRoutes: Routes = [
    { path: '', redirectTo:'/chat',pathMatch:'full' },
-   { path: 'chat', component:ChatComponent },
+   { path: 'chat', component:ChatComponent,canActivate:[AuthGuard] },
    { path: 'signin', component:LoginComponent },
    { path: 'register', component:RegisterComponent }
 ]
@@ -27,9 +32,15 @@ const appRoutes: Routes = [
    imports: [
       RouterModule.forRoot(appRoutes),
       BrowserModule,
-      AppRoutingModule
+      HttpClientModule,
+      AppRoutingModule,
+      FormsModule
    ],
-   providers: [],
+   providers: [
+      AuthGuard,
+      AuthService,
+      ConfigService
+   ],
    bootstrap: [
       AppComponent
    ]

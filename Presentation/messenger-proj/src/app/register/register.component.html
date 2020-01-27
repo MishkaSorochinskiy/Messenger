@@ -1,4 +1,4 @@
-<section class="container-fluid bg">
+<section class="container-fluid bg" id="mainsec">
   <section class="row justify-content-center">
     <section class="col-12 col-sm-5 col-md-5">
       <div class="card mt-5 p-0 ml-2">
@@ -11,21 +11,21 @@
           
           <form class="text-center" style="color: #757575;" action="#!"> 
             <div class="md-form">
-              <input type="email" id="formemail" class="form-control">
+              <input type="email" id="formemail" [(ngModel)]="userdata.email" name="email" class="form-control">
               <label for="formemail">E-mail</label>
             </div>
       
             <div class="md-form">
-              <input type="password" id="formpassword" class="form-control">
+              <input type="password" id="formpassword" [(ngModel)]="userdata.password" name="password" class="form-control">
               <label for="frompassword">Password</label>
             </div>
 
             <div class="md-form">
-              <input type="password" id="formpasswordconfirm" class="form-control">
+              <input type="password" id="formpasswordconfirm" [(ngModel)]="userdata.passwordconfirm"  name="confpassword" class="form-control">
               <label for="formpasswordconfirm">Confirm Password</label>
             </div>
       
-            <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit">Sign up</button>
+            <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit" (click)="register()">Sign up</button>
          
           </form>
         </div>

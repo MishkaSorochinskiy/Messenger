@@ -27,7 +27,7 @@ namespace MessengerAPI.Controllers
                 var result = await _auth.SignIn(model);
 
                 if (result.Succeeded)
-                    return Ok("Access approved!!");
+                    return Ok(Response.Headers["set-cookie"]);
                 else
                     return BadRequest("Sign in denied!!");
             }
@@ -51,7 +51,7 @@ namespace MessengerAPI.Controllers
                     var result = await _auth.Register(model);
 
                     if (result.Succeeded)
-                        return Ok();
+                        return Ok(Response.Headers["set-cookie"]);
                     else
                         return BadRequest("Register denied!");
                 }
