@@ -10,15 +10,8 @@ import { RouterModule } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
 
-  islogged:boolean;
   constructor(private auth:AuthService) { }
 
   ngOnInit() {
-    this.islogged=this.auth.looggedIn();
-  }
-
-  signout(){
-    this.auth.signout();
-    this.islogged=false;
   }
 }

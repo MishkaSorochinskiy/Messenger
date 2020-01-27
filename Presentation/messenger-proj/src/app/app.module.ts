@@ -1,3 +1,4 @@
+import { TokeninterceptorService } from './services/tokeninterceptor.service';
 import { AuthGuard } from './auth.guard';
 import { ConfigService } from './services/config.service';
 import { AuthService } from './services/auth.service';
@@ -11,12 +12,13 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ChatComponent } from './chat/chat.component';
 import { RouterModule, Routes } from '@angular/router';
-import {HttpClientModule, HttpHeaders} from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { CookieService } from 'node_modules/ngx-cookie-service';
 
 const appRoutes: Routes = [
    { path: '', redirectTo:'/chat',pathMatch:'full' },
-   { path: 'chat', component:ChatComponent,canActivate:[AuthGuard] },
+   { path: 'chat', component:ChatComponent,canActivate:[AuthGuard]},
    { path: 'signin', component:LoginComponent },
    { path: 'register', component:RegisterComponent }
 ]
@@ -37,9 +39,15 @@ const appRoutes: Routes = [
       FormsModule
    ],
    providers: [
+      CookieService,
       AuthGuard,
       AuthService,
-      ConfigService
+      ConfigService,
+      {
+         provide:HTTP_INTERCEPTORS,
+         useClass:TokeninterceptorService,
+         multi:true
+      }
    ],
    bootstrap: [
       AppComponent
