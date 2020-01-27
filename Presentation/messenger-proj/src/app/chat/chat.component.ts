@@ -1,3 +1,4 @@
+import { ChatService } from './../services/chat.service';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 
@@ -8,9 +9,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ChatComponent implements OnInit {
   weather;
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient,private chatservice:ChatService) { }
 
   ngOnInit() {
+    this.chatservice.startConnection();
+    console.log(this.chatservice.messages);
   }
 
   refresh(){

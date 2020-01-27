@@ -11,7 +11,7 @@ namespace Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<Message> builder)
         {
-            builder.ToTable("Message");
+            builder.ToTable("Messages");
 
             builder.HasKey(m => m.Id);
 
