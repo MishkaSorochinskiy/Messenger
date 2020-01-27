@@ -3,7 +3,6 @@ import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -22,7 +21,6 @@ export class AuthService {
         .subscribe(
           res=>{
             this.router.navigate(['/chat']);
-            console.log(res[0]);
             localStorage.setItem('token',res[0])
           },
           err=>console.log(err)
@@ -41,12 +39,16 @@ export class AuthService {
         .subscribe(
           res=>{
             this.router.navigate(['/chat']);
-            console.log(res[0]);
-            localStorage.setItem('token',res[0])
+            localStorage.setItem('token',res[0]);
           },
           err=>console.log(err)
         );
       });
+  }
+
+  signout(){
+    this.router.navigate(['/signin']);
+    localStorage.removeItem('token');
   }
 
   looggedIn(){
