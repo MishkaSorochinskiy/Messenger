@@ -56,9 +56,11 @@ namespace Infrastructure.Services
             return result;
         }
 
-        public async Task<SecurityUser> FindByNameAsync(string name)
+        public async Task<User> FindByNameAsync(string name)
         {
-            return await _usermanager.FindByNameAsync(name);
+            var securityUser= await _usermanager.FindByNameAsync(name);
+
+           return await _db.Users.FindAsync(securityUser.UserId);
         }
     }
 }

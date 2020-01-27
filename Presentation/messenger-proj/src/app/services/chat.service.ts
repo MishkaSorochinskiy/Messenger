@@ -45,18 +45,14 @@ export class ChatService {
            })
   }
 
-  sendMessage(data:Message){
-    let headers = new HttpHeaders();
-    headers= headers.append('content-type', 'application/json');
-    this.http.post("https://localhost:44334/api/Message/AddMessage",data,{responseType:'text',headers:headers})
-    .subscribe(res=>console.log(res),
-              err=>console.log(err));
+  public sendMessage (data:Message) {
+    this.hubConnection.invoke('SendToAll', data)
+    .catch(err => console.error(err));
   }
 
   public updateChat = () => {
     this.hubConnection.on('update', (data) => {
       this.messages.push(data);
-      console.log("messages updated");
     });
 }
 

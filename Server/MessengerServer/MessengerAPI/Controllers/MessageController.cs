@@ -38,15 +38,5 @@ namespace MessengerAPI.Controllers
         {
             return _mapper.Map<IEnumerable<GetMessageDto>>( _unit.MessageRepository.GetAll());
         }
-
-        [HttpPost("[action]")]
-        public async Task<IActionResult> AddMessage(AddMessageDto message)
-        {
-           await _chat.Clients.All.SendAsync("update",new GetMessageDto() {Content=message.Content,TimeCreated=DateTime.Now});
-
-            return Ok();
-        }
-
-
     }
 }
