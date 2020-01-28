@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+*{
+    font-family: 'Bangers',sans-serif;
+}
+
+footer{
+    background: rgb(91,84,191);
+    background: linear-gradient(90deg, rgba(91,84,191,1) 0%, rgba(48,48,176,1) 50%, rgba(0,212,255,1) 100%);
+    color:white;
+}

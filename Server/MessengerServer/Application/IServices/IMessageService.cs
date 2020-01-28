@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Application.Models.MessageDto;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Application.IServices
 {
-    interface IMessageService
+    public interface IMessageService
     {
+        Task<bool> AddMessage(AddMessageDto message);
     }
 }

@@ -27,12 +27,12 @@ namespace MessengerAPI.Controllers
                 var result = await _auth.SignIn(model);
 
                 if (result.Succeeded)
-                    return Ok();
+                    return Ok(Response.Headers["set-cookie"]);
                 else
-                    return BadRequest();
+                    return BadRequest("Sign in denied!!");
             }
 
-            return BadRequest();
+            return BadRequest("Model is not valid!!");
         }
 
         [HttpGet("[action]")]
@@ -51,13 +51,19 @@ namespace MessengerAPI.Controllers
                     var result = await _auth.Register(model);
 
                     if (result.Succeeded)
-                        return Ok();
+                        return Ok(Response.Headers["set-cookie"]);
                     else
-                        return BadRequest();
+                        return BadRequest("Register denied!");
                 }
             }
 
-            return BadRequest();
+            return BadRequest("Model is not valid!");
+        }
+
+        [HttpGet("[action]")]
+        public bool VerifyToken()
+        {
+            return User.Identity.IsAuthenticated;
         }
 
     }

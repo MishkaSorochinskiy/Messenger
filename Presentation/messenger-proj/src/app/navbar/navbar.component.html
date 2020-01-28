@@ -1,0 +1,27 @@
+<nav class="avbar navbar-expand-lg navbar-light bg-light" id="appnav">
+ <div class="container">
+  <div class="collapse navbar-collapse">
+
+    <ul class="navbar-nav p-2">
+      <li class="nav-item">
+        <a class="navbar-brand" routerLink="/chat" id="title">
+          <img src="../../assets/mainicon.png" width="30" height="30" class="d-inline-block align-top mr-1" alt="">Chatter</a>
+      </li>
+    </ul>
+
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item" *ngIf="auth.looggedIn()">
+          <a class="nav-link" id="title" (click)="auth.signout()">SignOut</a>
+        </li>
+        <li class="nav-item" *ngIf="!auth.looggedIn()">
+          <a class="nav-link" id="title" routerLink="/signin">SignIn</a>
+        </li>
+        <li class="nav-item" *ngIf="!auth.looggedIn()">
+          <a class="nav-link" id="title" routerLink="/register">SignUp</a>
+        </li>
+  </ul> 
+
+  </div>
+ </div>
+</nav>
+

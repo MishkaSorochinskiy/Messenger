@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using AutoMapper;
+using Domain;
 using Infrastructure;
 using Infrastructure.AppSecurity;
 using Infrastructure.Services;
+using MessengerAPI.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -53,7 +56,22 @@ namespace MessengerAPI
                 options.Password.RequireLowercase = false;
             });
 
-            services.AddScoped<AuthService>();
+            services.AddServices();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.WithOrigins("http://localhost:4200")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
+
+            services.AddSignalR();
+
+            services.AddAutoMapper(typeof(MappingProfile));
 
         }
 
@@ -69,11 +87,17 @@ namespace MessengerAPI
 
             app.UseRouting();
 
+            app.UseCors("CorsPolicy");
+
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+
+                endpoints.MapHub<Chat>("/chat");
             });
         }
     }
