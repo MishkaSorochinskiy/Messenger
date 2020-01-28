@@ -15,10 +15,12 @@ import { RouterModule, Routes } from '@angular/router';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CookieService } from 'node_modules/ngx-cookie-service';
+import { ProfileComponent } from './profile/profile.component';
 
 const appRoutes: Routes = [
    { path: '', redirectTo:'/chat',pathMatch:'full' },
    { path: 'chat', component:ChatComponent,canActivate:[AuthGuard]},
+   { path: 'profile', component:ProfileComponent,canActivate:[AuthGuard]},
    { path: 'signin', component:LoginComponent },
    { path: 'register', component:RegisterComponent }
 ]
@@ -29,7 +31,8 @@ const appRoutes: Routes = [
       NavbarComponent,
       LoginComponent,
       RegisterComponent,
-      ChatComponent
+      ChatComponent,
+      ProfileComponent
    ],
    imports: [
       RouterModule.forRoot(appRoutes),
@@ -42,12 +45,7 @@ const appRoutes: Routes = [
       CookieService,
       AuthGuard,
       AuthService,
-      ConfigService,
-      {
-         provide:HTTP_INTERCEPTORS,
-         useClass:TokeninterceptorService,
-         multi:true
-      }
+      ConfigService
    ],
    bootstrap: [
       AppComponent

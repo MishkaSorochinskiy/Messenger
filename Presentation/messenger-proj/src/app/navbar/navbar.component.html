@@ -10,9 +10,15 @@
     </ul>
 
     <ul class="navbar-nav ml-auto">
-        <li class="nav-item" *ngIf="auth.looggedIn()">
-          <a class="nav-link" id="title" (click)="auth.signout()">SignOut</a>
-        </li>
+      <div class="dropdown" *ngIf="auth.looggedIn()">
+        <img src="../../assets/mainicon.png" width="30" height="30" >
+        <div class="dropdown-content">
+          <a class="dropdown-item dropitem" routerLink="/profile">Profile</a>
+          <label class="dropitem" for="file_input_id">Upload photo</label>
+          <input  type="file" id="file_input_id" accept=".jpg,.jpeg,.png">
+          <a class="dropdown-item dropitem" href="#" (click)="auth.signout()">SignOut</a>
+        </div>
+      </div>
         <li class="nav-item" *ngIf="!auth.looggedIn()">
           <a class="nav-link" id="title" routerLink="/signin">SignIn</a>
         </li>
@@ -24,4 +30,3 @@
   </div>
  </div>
 </nav>
-

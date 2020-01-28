@@ -1,8 +1,7 @@
-<ul class="list-unstyled">
-  <li *ngFor="let item of chatservice.messages">
-    {{item.content}}
-  </li>
-</ul>
+<div class="container" *ngFor="let item of chatservice.messages">
+  <p>{{item.content}}</p>
+  <span class="time-right">{{item.timeCreated}}</span>
+</div>
 
 <nav class="navbar navbar-dark default-color">
   <form class="form-inline my-2 my-lg-0" (ngSubmit)="sendMessage()">
