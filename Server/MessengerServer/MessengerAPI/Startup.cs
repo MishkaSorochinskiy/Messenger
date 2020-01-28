@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using AutoMapper;
 using Domain;
 using Infrastructure;
 using Infrastructure.AppSecurity;
 using Infrastructure.Services;
+using MessengerAPI.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -67,6 +69,10 @@ namespace MessengerAPI
                     .AllowCredentials());
             });
 
+            services.AddSignalR();
+
+            services.AddAutoMapper(typeof(MappingProfile));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -90,6 +96,8 @@ namespace MessengerAPI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+
+                endpoints.MapHub<Chat>("/chat");
             });
         }
     }

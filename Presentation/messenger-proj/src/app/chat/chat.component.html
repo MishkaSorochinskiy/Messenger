@@ -1,6 +1,12 @@
-<p>
-  {{weather}}
-</p>
-<button (click)='refresh()'>
-Refresh
-</button>
+<ul class="list-unstyled">
+  <li *ngFor="let item of chatservice.messages">
+    {{item.content}}
+  </li>
+</ul>
+
+<nav class="navbar navbar-dark default-color">
+  <form class="form-inline my-2 my-lg-0" (ngSubmit)="sendMessage()">
+    <input class="form-control" type="text" placeholder="Type"  [(ngModel)]="newMessage" name="message" aria-label="Search">
+    <button class="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" type="submit">Send</button>
+  </form>
+</nav>
