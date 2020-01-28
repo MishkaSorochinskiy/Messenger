@@ -23,6 +23,8 @@ export class ChatService {
   startConnection=()=>{
     this.getMessages();
 
+    console.log(this.messages);
+
     this.hubConnection = new signalR.HubConnectionBuilder()
                               .withUrl("https://localhost:44334/chat")
                               .build();
@@ -53,6 +55,7 @@ export class ChatService {
   public updateChat = () => {
     this.hubConnection.on('update', (data) => {
       this.messages.push(data);
+      console.log(this.messages);
     });
 }
 

@@ -24,7 +24,7 @@ namespace Infrastructure.Services
 
         public async Task<bool> AddMessage(AddMessageDto message)
         {
-            var user = await _auth.FindByNameAsync(message.UserName);
+            var user = await _auth.FindByNameUserAsync(message.UserName);
 
             if (user != null & !string.IsNullOrEmpty(message.Content))
             {
