@@ -13,5 +13,17 @@ namespace Domain.Entities
         public User User { get; set; }
 
         public byte[] UserPhoto { get; protected set; }
+
+        public Photo()
+        {
+
+        }
+
+        public Photo(byte[]photo,int userid)
+        {
+            this.UserPhoto = photo;
+
+            this.UserId = userid;
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Application.Models.MessageDto;
+using Application.Models.PhotoDto;
 using AutoMapper;
 using Domain.Entities;
 using System;
@@ -12,6 +13,8 @@ namespace Infrastructure
         public MappingProfile()
         {
             CreateMap<Message, GetMessageDto>();
+
+            CreateMap<Photo, GetPhotoDto>();
         }
     }
 }
