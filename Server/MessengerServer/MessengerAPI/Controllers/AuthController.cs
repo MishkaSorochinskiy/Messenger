@@ -60,5 +60,11 @@ namespace MessengerAPI.Controllers
             return BadRequest("Model is not valid!");
         }
 
+        [HttpGet("[action]")]
+        public bool VerifyToken()
+        {
+            return User.Identity.IsAuthenticated;
+        }
+
     }
 }
