@@ -1,3 +1,4 @@
+import { PhotoService } from './photo.service';
 import { browser } from 'protractor';
 import { ConfigService } from './config.service';
 import { HttpClient,HttpHeaders } from '@angular/common/http';
@@ -10,7 +11,7 @@ import {CookieService} from 'node_modules/ngx-cookie-service';
 })
 export class AuthService {
 
-  constructor(private http:HttpClient,private config:ConfigService,private router:Router,private cookie:CookieService) { }
+  constructor(private http:HttpClient,private config:ConfigService,private router:Router,private cookie:CookieService,private photo:PhotoService) { }
 
   async register(user){
     (await this.config.getConfig()).subscribe(data=>
@@ -22,6 +23,7 @@ export class AuthService {
         this.http.post(url,JSON.stringify(user),{responseType:'text',headers:headers})
         .subscribe(
           res=>{
+            this.photo.GetPhoto();
             this.router.navigate(['/chat']);
             localStorage.setItem('token',res[0]);
           },
@@ -40,6 +42,7 @@ export class AuthService {
         this.http.post(url,JSON.stringify(user),{headers:headers})
         .subscribe(
           res=>{
+            this.photo.GetPhoto();
             this.router.navigate(['/chat']);
             localStorage.setItem('token',res[0]);
           },

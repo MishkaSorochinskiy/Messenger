@@ -34,6 +34,7 @@ namespace MessengerAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IEnumerable<GetMessageDto> Get()
         {
             return _mapper.Map<IEnumerable<GetMessageDto>>( _unit.MessageRepository.GetAll());

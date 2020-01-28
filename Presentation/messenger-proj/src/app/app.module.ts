@@ -16,6 +16,7 @@ import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CookieService } from 'node_modules/ngx-cookie-service';
 import { ProfileComponent } from './profile/profile.component';
+import {DomSanitizer} from '@angular/platform-browser';
 
 const appRoutes: Routes = [
    { path: '', redirectTo:'/chat',pathMatch:'full' },
@@ -45,7 +46,12 @@ const appRoutes: Routes = [
       CookieService,
       AuthGuard,
       AuthService,
-      ConfigService
+      ConfigService,
+      {
+         provide: HTTP_INTERCEPTORS,
+         useClass: TokeninterceptorService,
+         multi: true
+       }
    ],
    bootstrap: [
       AppComponent
