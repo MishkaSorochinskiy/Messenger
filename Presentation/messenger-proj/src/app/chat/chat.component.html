@@ -1,6 +1,6 @@
 <div class="container" *ngFor="let item of chatservice.messages">
   <p>{{item.content}}</p>
-  <span class="time-right">{{item.timeCreated}}</span>
+  <span class="time-right">{{item.timeCreated | date}}</span>
 </div>
 
 <nav class="navbar navbar-dark default-color">

@@ -1,3 +1,4 @@
+import { Message } from './chat.service';
 import { logging } from 'protractor';
 import { ConfigService } from './config.service';
 import { HttpClient ,HttpHeaders} from '@angular/common/http';
@@ -40,9 +41,9 @@ export class ChatService {
             let headers = new HttpHeaders();
             headers= headers.append('content-type', 'application/json')
              
-            this.http.get<Message[]>(data["getmessages"],{headers:headers})
+            this.http.get<any>(data["getmessages"],{headers:headers})
              .subscribe((data)=>
-               {this.messages=data},
+               {this.messages=data.messages},
                err=>console.log(err))
            })
   }
