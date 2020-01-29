@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { resolve } from 'url';
 
 
 @Injectable({
@@ -11,8 +12,9 @@ export class ConfigService {
 
   constructor(private http:HttpClient) { }
 
-  async getConfig() {
-    return await this.http.get(this.configUrl)
+  async getConfig(key:string) {
+     let data=await this.http.get(this.configUrl).toPromise()
+     return new Promise<string>((res,rej)=>res(data[key]));
   }
   
 }
