@@ -11,7 +11,7 @@
 
     <ul class="navbar-nav ml-auto">
       <div class="dropdown" *ngIf="auth.looggedIn()">
-        <img [src]="photoser.imageUrl" width="30" height="30" >
+        <img [src]="photoser.imageUrl" id="userphoto">
         <div class="dropdown-content">
           <a class="dropdown-item dropitem" routerLink="/profile">Profile</a>
           <label class="dropitem" for="file_input_id">Upload photo</label>
