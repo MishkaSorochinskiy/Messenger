@@ -56,5 +56,20 @@ namespace MessengerAPI.Controllers
 
             return BadRequest();
         }
+
+        [Authorize]
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetPhotoById([FromQuery]GetPhotoDtoRequest request)
+        {
+            if (ModelState.IsValid)
+            {
+                var photo = await _photoservice.GetPhoto(request.id);
+
+                if (photo != null)
+                    return new FileContentResult(photo.UserPhoto, new MediaTypeHeaderValue("application/octet-stream"));
+            }
+
+            return BadRequest();
+        }
     }
 }

@@ -11,5 +11,8 @@ namespace Application.IServices
         Task ChangePhoto(AddPhotoDto model);
 
         Task<GetPhotoDto> GetPhoto(string username);
+
+        Task<GetPhotoDto> GetPhoto(int id);
+
     }
 }
