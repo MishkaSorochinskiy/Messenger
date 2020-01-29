@@ -1,5 +1,6 @@
 ﻿using Application.Models.MessageDto;
 using Application.Models.PhotoDto;
+using Application.Models.UserDto;
 using AutoMapper;
 using Domain.Entities;
 using System;
@@ -15,6 +16,10 @@ namespace Infrastructure
             CreateMap<Message, GetMessageDto>();
 
             CreateMap<Photo, GetPhotoDto>();
+
+            CreateMap<User, GetUserDto>()
+                .ForMember(dest=>dest.Id,src=>src.MapFrom(u=>u.Id))
+                .ForMember(d=>d.UserPhoto,src=>src.MapFrom(u=>u.Photo.UserPhoto));
         }
     }
 }

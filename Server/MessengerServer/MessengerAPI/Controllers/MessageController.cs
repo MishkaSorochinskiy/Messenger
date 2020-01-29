@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.IServices;
 using Application.Models.MessageDto;
 using AutoMapper;
 using Domain;
@@ -22,22 +23,23 @@ namespace MessengerAPI.Controllers
 
         private readonly IMapper _mapper;
 
-        private readonly IHubContext<Chat> _chat;
+        private readonly IMessageService _masservice;
 
-        public MessageController(IUnitOfWork unit,IMapper mapper,IHubContext<Chat> chat)
+        public MessageController(IUnitOfWork unit,IMapper mapper,IMessageService masservice)
         {
             _unit = unit;
 
             _mapper = mapper;
 
-            _chat=chat;
+            _masservice = masservice;
+
         }
 
         [HttpGet]
         [Authorize]
-        public IEnumerable<GetMessageDto> Get()
+        public AllMessagesDto Get()
         {
-            return _mapper.Map<IEnumerable<GetMessageDto>>( _unit.MessageRepository.GetAll());
+            return _masservice.GetAllMessages();
         }
     }
 }
