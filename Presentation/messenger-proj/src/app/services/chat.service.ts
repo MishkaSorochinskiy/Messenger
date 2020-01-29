@@ -1,5 +1,3 @@
-import { Message } from './chat.service';
-import { logging } from 'protractor';
 import { ConfigService } from './config.service';
 import { HttpClient ,HttpHeaders} from '@angular/common/http';
 import { Injectable, OnInit, ɵConsole } from '@angular/core';
@@ -45,17 +43,14 @@ export class ChatService {
   }
 
   private async getMessages(){
-    (await this.config.getConfig())
-          .subscribe(data=>{
-           
-           let headers = new HttpHeaders();
+    let url = await this.config.getConfig("getmessages");
+
+    let headers = new HttpHeaders();
            headers= headers.append('content-type', 'application/json')
             
-           this.http.get<ChatContent>(data["getmessages"],{headers:headers})
-            .subscribe((data)=>{
-              this.messages=data.messages;
-             },
-              err=>console.log(err))
+    return  this.http.get<ChatContent>(url,{headers:headers})
+        .subscribe((data)=>{
+          this.messages=data.messages;
           })
  }
 

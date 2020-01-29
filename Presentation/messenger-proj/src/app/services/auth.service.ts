@@ -14,41 +14,32 @@ export class AuthService {
   constructor(private http:HttpClient,private config:ConfigService,private router:Router,private cookie:CookieService,private photo:PhotoService) { }
 
   async register(user){
-    (await this.config.getConfig()).subscribe(data=>
-      {
-        let url=data['signup'];
+    let url=await this.config.getConfig("signup");
 
-        let headers = new HttpHeaders();
-        headers= headers.append('content-type', 'application/json');
-        this.http.post(url,JSON.stringify(user),{responseType:'text',headers:headers})
+    let headers = new HttpHeaders();
+    headers= headers.append('content-type', 'application/json');
+    
+    return this.http.post(url,JSON.stringify(user),{responseType:'text',headers:headers})
         .subscribe(
           res=>{
             this.photo.GetPhoto();
             this.router.navigate(['/chat']);
             localStorage.setItem('token',res[0]);
-          },
-          err=>console.log(err)
-        );
-      });
+          });
   }
 
   async signin(user){
-    (await this.config.getConfig()).subscribe(data=>
-      {
-        let url=data['signin'];
-
-        let headers = new HttpHeaders();
-        headers= headers.append('content-type', 'application/json')
-        this.http.post(url,JSON.stringify(user),{headers:headers})
-        .subscribe(
-          res=>{
+    let url=await this.config.getConfig("signin");
+    
+    let headers = new HttpHeaders();
+    headers= headers.append('content-type', 'application/json');
+    
+    return this.http.post(url,JSON.stringify(user),{responseType:'text',headers:headers})
+          .subscribe(res=>{
             this.photo.GetPhoto();
+            localStorage.setItem('token',res);
             this.router.navigate(['/chat']);
-            localStorage.setItem('token',res[0]);
-          },
-          err=>console.log(err)
-        );
-      });
+          });
   }
 
   signout(){

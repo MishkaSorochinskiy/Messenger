@@ -17,8 +17,8 @@ export class NavbarComponent implements OnInit {
     this.photoser.GetPhoto();
   }
 
-  fileselected(event){
-    this.photoser.UploadPhoto(event.target.files[0]);
+  async fileselected(event){
+   (await this.photoser.UploadPhoto(event.target.files[0]))
+        .subscribe((res=>this.photoser.GetPhoto()))
   }
-
 }

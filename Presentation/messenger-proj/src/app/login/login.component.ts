@@ -9,7 +9,7 @@ import { NgZone  } from '@angular/core';
 export class LoginComponent implements OnInit {
 
   userdata={email:'',password:''};
-  constructor(private auth:AuthService,private zone:NgZone) { }
+  constructor(private auth:AuthService) { }
 
   ngOnInit() {
   }
