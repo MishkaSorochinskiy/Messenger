@@ -7,5 +7,6 @@ namespace Domain.IRepositories
 {
     public interface IMessageRepository:IRepository<Message>
     {
+        IEnumerable<Message> GetAllWithUsers();
     }
 }
