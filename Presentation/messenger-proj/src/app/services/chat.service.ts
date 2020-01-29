@@ -3,10 +3,22 @@ import { ConfigService } from './config.service';
 import { HttpClient ,HttpHeaders} from '@angular/common/http';
 import { Injectable, OnInit, ɵConsole } from '@angular/core';
 import * as signalR from "@aspnet/signalr"
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 
 export interface Message{
   content:string,
+  userId:number,
   timeCreated:Date
+}
+
+export interface User{
+  userPhoto:Blob,
+  id:number
+}
+
+export interface ChatContent{
+  users:User[],
+  messages:Message[]
 }
 
 @Injectable({
@@ -17,13 +29,11 @@ export class ChatService {
 
   public messages:Message[];
 
-  constructor(private http:HttpClient,private config:ConfigService) { }
+  constructor(private http:HttpClient,private config:ConfigService,private sanitizer:DomSanitizer) { }
 
 
   startConnection=()=>{
     this.getMessages();
-
-    console.log(this.messages);
 
     this.hubConnection = new signalR.HubConnectionBuilder()
                               .withUrl("https://localhost:44334/chat")
@@ -34,18 +44,19 @@ export class ChatService {
   }
 
   private async getMessages(){
-     (await this.config.getConfig())
-           .subscribe(data=>{
+    (await this.config.getConfig())
+          .subscribe(data=>{
+           
+           let headers = new HttpHeaders();
+           headers= headers.append('content-type', 'application/json')
             
-            let headers = new HttpHeaders();
-            headers= headers.append('content-type', 'application/json')
-             
-            this.http.get<Message[]>(data["getmessages"],{headers:headers})
-             .subscribe((data)=>
-               {this.messages=data},
-               err=>console.log(err))
-           })
-  }
+           this.http.get<ChatContent>(data["getmessages"],{headers:headers})
+            .subscribe((data)=>{
+              this.messages=data.messages;
+             },
+              err=>console.log(err))
+          })
+ }
 
   public sendMessage (data:Message) {
     this.hubConnection.invoke('SendToAll', data)
@@ -58,5 +69,4 @@ export class ChatService {
       console.log(this.messages);
     });
 }
-
 }

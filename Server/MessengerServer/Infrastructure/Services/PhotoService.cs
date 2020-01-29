@@ -58,5 +58,16 @@ namespace Infrastructure.Services
 
             return await Task.FromResult(default(GetPhotoDto));
         }
+
+        public async Task<GetPhotoDto> GetPhoto(int id)
+        {            
+            var photo = await _unit.PhotoRepository.GetPhotoByUser(id);
+
+            if (photo != null)
+                return await Task.FromResult(_map.Map<GetPhotoDto>(photo));
+
+            return await Task.FromResult(default(GetPhotoDto));
+
+        }
     }
 }
