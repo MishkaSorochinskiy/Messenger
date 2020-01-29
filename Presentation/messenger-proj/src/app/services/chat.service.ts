@@ -1,3 +1,4 @@
+import { Message } from './chat.service';
 import { logging } from 'protractor';
 import { ConfigService } from './config.service';
 import { HttpClient ,HttpHeaders} from '@angular/common/http';
