@@ -29,12 +29,19 @@ namespace Infrastructure.Services
             _map = map;
         }
 
-        public async Task<bool> AddMessage(AddMessageDto message)
+        public async Task<GetMessageDto> AddMessage(AddMessageDto message)
         {
             var user = await _auth.FindByNameUserAsync(message.UserName);
 
             if (user != null & !string.IsNullOrEmpty(message.Content))
             {
+                var newmessage= new Message()
+                {
+                    Content = message.Content,
+                    TimeCreated = DateTime.Now,
+                    UserId = user.Id
+                };
+
                 user.Messages.Add(new Message()
                 {
                     Content = message.Content,
@@ -44,10 +51,10 @@ namespace Infrastructure.Services
 
                 await _unit.Commit();
 
-                return await Task.FromResult(true);
+                return _map.Map<GetMessageDto>(newmessage);
             }
 
-            return await Task.FromResult(false);
+            return default(GetMessageDto);
         }
 
         public AllMessagesDto GetAllMessages()

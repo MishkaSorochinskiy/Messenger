@@ -83,7 +83,7 @@ namespace Infrastructure.Services
                 return await _db.Users.FindAsync(secuser.UserId);
             }
 
-            return await Task.FromResult(default(User));
+            return default(User);
         }
     }
 }

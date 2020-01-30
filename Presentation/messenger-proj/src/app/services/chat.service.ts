@@ -68,13 +68,23 @@ export class ChatService {
     .catch(err => console.error(err));
   }
 
-  public updateChat = () => {
-    this.hubConnection.on('update', (data) => {
+  public updateChat = async () => {
+    this.hubConnection.on('update', async (data) => {
       this.messages.push(data);
+      if(this.users.find(u=>u.id===data.userId)==undefined){
+        await this.getMessages();     
+      }
     });
 }
 
+  public async addUser(id:number){
+    let url=`${await this.config.getConfig("getuserinfo")}?UserId=${id}`;
+    let headers = new HttpHeaders();
+           headers= headers.append('content-type', 'application/json')
+    return this.http.get(url,{headers:headers}).subscribe(res=>console.log(res+"hello"));
+  }
+
   public GetUrl(id:number){
-    return `${this.photourl}/${this.users.find(u=>u.id===id).photoName}`;
+      return `${this.photourl}/${this.users.find(u=>u.id===id).photoName}`; 
   }
 }

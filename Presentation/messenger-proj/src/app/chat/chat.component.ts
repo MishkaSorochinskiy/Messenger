@@ -14,12 +14,13 @@ export class ChatComponent implements OnInit {
 
   constructor(private http:HttpClient,private chatservice:ChatService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.chatservice.startConnection();
-    this.chatservice.updateChat();
+    await this.chatservice.updateChat();
   }
 
   sendMessage(){
     this.chatservice.sendMessage({content:this.newMessage} as Message);
+    this.newMessage=null;
   }
 }

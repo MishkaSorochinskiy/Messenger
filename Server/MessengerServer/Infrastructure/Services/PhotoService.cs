@@ -56,10 +56,10 @@ namespace Infrastructure.Services
 
                 await _unit.Commit();
 
-                return await Task.FromResult(true);
+                return true;
             }
 
-            return await Task.FromResult(false);
+            return false;
 
         }
 
@@ -72,7 +72,7 @@ namespace Infrastructure.Services
                return _map.Map<GetPhotoDto>(await _unit.PhotoRepository.GetPhotoByUser(user.Id));
             }
 
-            return await Task.FromResult(default(GetPhotoDto));
+            return default(GetPhotoDto);
         }
 
         public async Task<GetPhotoDto> GetPhoto(int id)
@@ -80,9 +80,9 @@ namespace Infrastructure.Services
             var photo = await _unit.PhotoRepository.GetPhotoByUser(id);
 
             if (photo != null)
-                return await Task.FromResult(_map.Map<GetPhotoDto>(photo));
+                return  _map.Map<GetPhotoDto>(photo);
 
-            return await Task.FromResult(default(GetPhotoDto));
+            return default(GetPhotoDto);
 
         }
     }
