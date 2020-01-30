@@ -18,7 +18,8 @@ namespace Infrastructure
             CreateMap<Photo, GetPhotoDto>();
 
             CreateMap<User, GetUserDto>()
-                .ForMember(dest => dest.Id, src => src.MapFrom(u => u.Id));
+                .ForMember(dest => dest.Id, src => src.MapFrom(u => u.Id))
+                .ForMember(dest=>dest.PhotoName,src=>src.MapFrom(u=>u.Photo.Name));
         }
     }
 }

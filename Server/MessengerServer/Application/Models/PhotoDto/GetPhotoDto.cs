@@ -6,6 +6,6 @@ namespace Application.Models.PhotoDto
 {
     public class GetPhotoDto
     {
-        public byte[] UserPhoto { get; set; }
+        public string Name { get; set; }
     }
 }

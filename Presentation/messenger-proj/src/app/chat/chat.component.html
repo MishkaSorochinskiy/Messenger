@@ -1,4 +1,5 @@
 <div class="container" *ngFor="let item of chatservice.messages">
+  <img [src]="chatservice.GetUrl(item.userId)" class="userimg">
   <p>{{item.content}}</p>
   <span class="time-right">{{item.timeCreated | date}}</span>
 </div>

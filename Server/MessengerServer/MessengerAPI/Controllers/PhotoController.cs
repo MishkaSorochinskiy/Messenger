@@ -33,16 +33,19 @@ namespace MessengerAPI.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> ChangePhoto(IFormCollection collection)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid&&collection.Files[0]!=null)
             {
-                await _photoservice.ChangePhoto(new AddPhotoDto()
+                if (await _photoservice.ChangePhoto(new AddPhotoDto()
                 {
                     UserName = User.Identity.Name,
-                    UserPhoto = await collection.Files[0].getBytes()
-                });     
+                    UploadedFile = collection.Files[0]
+                }))
+                    return Ok();
+
+                return BadRequest();
             }
 
-            return Ok();
+            return BadRequest();
         }
 
         [Authorize]
@@ -52,7 +55,7 @@ namespace MessengerAPI.Controllers
             var photo=await _photoservice.GetPhoto(User.Identity.Name);
 
             if (photo != null)
-                return new FileContentResult(photo.UserPhoto, new MediaTypeHeaderValue("application/octet-stream"));
+                return Ok(photo.Name);
 
             return BadRequest();
         }
@@ -66,7 +69,7 @@ namespace MessengerAPI.Controllers
                 var photo = await _photoservice.GetPhoto(request.id);
 
                 if (photo != null)
-                    return new FileContentResult(photo.UserPhoto, new MediaTypeHeaderValue("application/octet-stream"));
+                    return Ok(photo.Name);
             }
 
             return BadRequest();

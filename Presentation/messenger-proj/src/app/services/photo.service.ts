@@ -17,7 +17,8 @@ export class PhotoService {
     let url = await this.config.getConfig("updatephoto");
 
     const uploadData = new FormData();
-    uploadData.append('photo', photo, photo.name);
+    console.log(photo);
+    uploadData.append(photo.name, photo, photo.name);
 
     return this.http.post(url,uploadData);
   }
@@ -30,9 +31,10 @@ export class PhotoService {
       'Accept': 'application/json'
     });
 
-    return this.http.get(url,{responseType:"blob" as "json",headers:headers}).subscribe(
-      res=>{
-       this.ConvertPhoto(res as Blob);
+    return this.http.get(url,{responseType:"json",headers:headers}).subscribe(
+      async res=>{
+        let imgpath=await this.config.getConfig("photopath");
+        this.imageUrl=`${imgpath}/${res}`;
       })
    
   }
@@ -42,11 +44,4 @@ export class PhotoService {
     return this.imageUrl;
   }
 
-   ConvertPhoto(data:Blob){
-      var reader = new FileReader();
-      reader.readAsDataURL(data as Blob); 
-      reader.onloadend = ()=>{
-          this.imageUrl = this.sanitizer.bypassSecurityTrustUrl(reader.result as string);
-      }
-  }
 }

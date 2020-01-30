@@ -11,7 +11,7 @@ export interface Message{
 }
 
 export interface User{
-  userPhoto:Blob,
+  photoName:string,
   id:number
 }
 
@@ -27,6 +27,11 @@ export class ChatService {
   private hubConnection:signalR.HubConnection;
 
   public messages:Message[];
+
+  public users:User[];
+
+  public photourl:string;
+
 
   constructor(private http:HttpClient,private config:ConfigService,private sanitizer:DomSanitizer) { }
 
@@ -44,6 +49,9 @@ export class ChatService {
 
   private async getMessages(){
     let url = await this.config.getConfig("getmessages");
+    
+    let photopath = await this.config.getConfig("photopath");
+    this.photourl=photopath;
 
     let headers = new HttpHeaders();
            headers= headers.append('content-type', 'application/json')
@@ -51,6 +59,7 @@ export class ChatService {
     return  this.http.get<ChatContent>(url,{headers:headers})
         .subscribe((data)=>{
           this.messages=data.messages;
+          this.users=data.users;
           })
  }
 
@@ -62,7 +71,10 @@ export class ChatService {
   public updateChat = () => {
     this.hubConnection.on('update', (data) => {
       this.messages.push(data);
-      console.log(this.messages);
     });
 }
+
+  public GetUrl(id:number){
+    return `${this.photourl}/${this.users.find(u=>u.id===id).photoName}`;
+  }
 }

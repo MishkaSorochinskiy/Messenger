@@ -22,7 +22,7 @@ namespace Infrastructure
             string password = "mainadmin";
             if (await userManager.FindByNameAsync(username) == null)
             {
-                User admin = new User();
+                 User admin = new User();
                  unit.Users.Add(admin);
                  unit.SaveChanges();
 
