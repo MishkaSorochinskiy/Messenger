@@ -8,5 +8,6 @@ namespace Domain.IRepositories
 {
     public interface IUserRepository:IRepository<User>
     {
+        Task<User> GetWithPhoto(int id);
     }
 }

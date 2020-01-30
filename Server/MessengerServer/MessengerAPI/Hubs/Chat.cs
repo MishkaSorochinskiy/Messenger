@@ -2,6 +2,7 @@
 using Application.Models.MessageDto;
 using AutoMapper;
 using Domain;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
@@ -16,19 +17,29 @@ namespace MessengerAPI.Hubs
 
         private readonly IMapper _map;
 
-        public Chat(IMessageService messageService,IMapper map)
+        private readonly AuthService _auth;
+
+        private readonly IUnitOfWork _unit;
+
+        public Chat(IMessageService messageService,IMapper map,AuthService auth,IUnitOfWork unit)
         {
             _messageService = messageService;
 
             _map = map;
+
+            _auth = auth;
+
+            _unit = unit;
         }
         public async Task SendToAll(AddMessageDto message)
         {
             message.UserName = Context.User.Identity.Name;
 
-            if (await _messageService.AddMessage(message))
+            var newmessage = await _messageService.AddMessage(message);
+
+            if (newmessage!=null)
             {
-                await Clients.All.SendAsync("update",new GetMessageDto() {Content=message.Content});
+                await Clients.All.SendAsync("update",newmessage);
             }
         }
     }

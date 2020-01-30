@@ -15,5 +15,11 @@ namespace Infrastructure.Repositories
         {
             
         }
+
+        public async Task<User> GetWithPhoto(int id)
+        {
+            return await this.db.Users.Where(u => u.Id == id)
+                .FirstOrDefaultAsync();
+        }
     }
 }
