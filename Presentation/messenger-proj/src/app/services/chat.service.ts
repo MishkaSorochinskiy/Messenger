@@ -1,3 +1,4 @@
+import { PhotoService } from './photo.service';
 import { ConfigService } from './config.service';
 import { HttpClient ,HttpHeaders} from '@angular/common/http';
 import { Injectable, OnInit, ɵConsole } from '@angular/core';
@@ -11,7 +12,6 @@ export interface Message{
 }
 
 export interface User{
-  userPhoto:Blob,
   id:number
 }
 
@@ -28,11 +28,13 @@ export class ChatService {
 
   public messages:Message[];
 
-  constructor(private http:HttpClient,private config:ConfigService,private sanitizer:DomSanitizer) { }
+  public users:User[];
+
+  constructor(private http:HttpClient,private config:ConfigService,private photoser:PhotoService) { }
 
 
-  startConnection=()=>{
-    this.getMessages();
+   startConnection=async()=>{
+    await this.getMessages();
 
     this.hubConnection = new signalR.HubConnectionBuilder()
                               .withUrl("https://localhost:44334/chat")
@@ -51,6 +53,8 @@ export class ChatService {
     return  this.http.get<ChatContent>(url,{headers:headers})
         .subscribe((data)=>{
           this.messages=data.messages;
+          this.users=data.users;
+          this.users.forEach(async u=>await this.photoser.GetUrl(u.id));
           })
  }
 
