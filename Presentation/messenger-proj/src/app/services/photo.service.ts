@@ -29,24 +29,20 @@ export class PhotoService {
       'Content-Type': 'application/json',
       'Accept': 'application/json'
     });
-
-    return this.http.get(url,{responseType:"blob" as "json",headers:headers}).subscribe(
-      res=>{
-       this.ConvertPhoto(res as Blob);
-      })
-   
+    return this.http.get(url,{responseType:"blob" as "json",headers:headers})
+    .subscribe(
+      async res=>{
+        this.imageUrl=await this.ConvertPhotoAsync(res as Blob);
+     });;
   }
-
-   get Image(){
-    this.GetPhoto();
-    return this.imageUrl;
-  }
-
-   ConvertPhoto(data:Blob){
+  
+  async ConvertPhotoAsync(data:Blob){
+    return new Promise((res,rej)=>{
       var reader = new FileReader();
       reader.readAsDataURL(data as Blob); 
       reader.onloadend = ()=>{
-          this.imageUrl = this.sanitizer.bypassSecurityTrustUrl(reader.result as string);
+          res(this.sanitizer.bypassSecurityTrustUrl(reader.result as string));
       }
+    })
   }
 }

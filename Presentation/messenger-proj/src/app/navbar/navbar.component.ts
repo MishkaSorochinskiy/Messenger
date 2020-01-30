@@ -1,3 +1,4 @@
+import { SafeUrl } from '@angular/platform-browser';
 import { PhotoService } from './../services/photo.service';
 import { AuthService } from './../services/auth.service';
 import { Component, OnInit } from '@angular/core';
@@ -11,9 +12,10 @@ import { RouterModule } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
 
+  public imageUrl:SafeUrl;
   constructor(private auth:AuthService,private photoser:PhotoService) { }
 
-  ngOnInit() {
+   ngOnInit() {
     this.photoser.GetPhoto();
   }
 
