@@ -15,6 +15,12 @@ namespace Infrastructure.Configurations
 
             builder.HasKey(u => u.Id);
 
+            builder.Property(u => u.NickName)
+                .HasMaxLength(20).IsRequired();
+
+            builder.Property(u => u.Sex)
+                .IsRequired();
+
             builder.HasOne(u => u.Photo)
                    .WithOne(p => p.User)
                    .HasForeignKey<Photo>(p => p.UserId)
