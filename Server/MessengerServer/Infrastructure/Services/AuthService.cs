@@ -54,8 +54,8 @@ namespace Infrastructure.Services
             var photo = new Photo()
             {
                 UserId=appuser.Id,
-                Path=_config.GetValue<string>("defaultimagepath"),
-                Name= _config.GetValue<string>("defaultimagename")
+                Path=$"{_config.GetValue<string>("defaultimagepath")}{(model.Sex == Sex.Male ? "defaultmale.png":"defaultfemale.png")}",
+                Name= model.Sex==Sex.Male? _config.GetValue<string>("defaultmale"): _config.GetValue<string>("defaultfemale")
             };
 
             await _db.Photos.AddAsync(photo);
