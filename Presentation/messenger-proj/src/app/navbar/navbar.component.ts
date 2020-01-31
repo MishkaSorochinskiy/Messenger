@@ -14,7 +14,6 @@ export class NavbarComponent implements OnInit {
   constructor(private auth:AuthService,private photoser:PhotoService) { }
 
   ngOnInit() {
-    this.photoser.GetPhoto();
   }
 
   async fileselected(event){

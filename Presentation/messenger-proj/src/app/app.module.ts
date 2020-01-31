@@ -1,3 +1,4 @@
+import { RegisterGuard } from './register.guard';
 import { TokeninterceptorService } from './services/tokeninterceptor.service';
 import { AuthGuard } from './auth.guard';
 import { ConfigService } from './services/config.service';
@@ -16,14 +17,15 @@ import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CookieService } from 'node_modules/ngx-cookie-service';
 import { ProfileComponent } from './profile/profile.component';
-import {DomSanitizer} from '@angular/platform-browser';
+import { FilluserinfoComponent } from './filluserinfo/filluserinfo.component';
 
 const appRoutes: Routes = [
    { path: '', redirectTo:'/chat',pathMatch:'full' },
    { path: 'chat', component:ChatComponent,canActivate:[AuthGuard]},
    { path: 'profile', component:ProfileComponent,canActivate:[AuthGuard]},
    { path: 'signin', component:LoginComponent },
-   { path: 'register', component:RegisterComponent }
+   { path: 'register', component:RegisterComponent },
+   { path: 'fillinfo', component:FilluserinfoComponent ,canActivate:[RegisterGuard]}
 ]
 
 @NgModule({
@@ -33,7 +35,8 @@ const appRoutes: Routes = [
       LoginComponent,
       RegisterComponent,
       ChatComponent,
-      ProfileComponent
+      ProfileComponent,
+      FilluserinfoComponent
    ],
    imports: [
       RouterModule.forRoot(appRoutes),
@@ -45,13 +48,14 @@ const appRoutes: Routes = [
    providers: [
       CookieService,
       AuthGuard,
+      RegisterGuard,
       AuthService,
       ConfigService,
       {
          provide: HTTP_INTERCEPTORS,
          useClass: TokeninterceptorService,
          multi: true
-       }
+      }
    ],
    bootstrap: [
       AppComponent

@@ -40,7 +40,14 @@ namespace Infrastructure.Services
 
         public async Task<IdentityResult> Register(RegisterModel model)
         {
-            var appuser = new User();
+            var appuser = new User() 
+            {
+                NickName=model.NickName,
+                Age=model.Age,
+                PhoneNumber=model.PhoneNumber,
+                Sex=model.Sex
+            };
+
             await _db.Users.AddAsync(appuser);
             await _db.SaveChangesAsync();
 
