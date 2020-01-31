@@ -1,12 +1,27 @@
-<div class="container" *ngFor="let item of chatservice.messages">
-  <img [src]="chatservice.GetUrl(item.userId)" class="userimg">
-  <p>{{item.content}}</p>
-  <span class="time-right">{{item.timeCreated | date}}</span>
-</div>
 
-<nav class="navbar navbar-dark default-color">
-  <form class="form-inline my-2 my-lg-0" (ngSubmit)="sendMessage()">
-    <input class="form-control" type="text" placeholder="Type"  [(ngModel)]="newMessage" name="message" aria-label="Search">
-    <button class="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" type="submit">Send</button>
-  </form>
-</nav>
+<div class="container">
+  <div class="container-fluid" id="contentdiv">
+    
+    <div class="row customcard"  *ngFor="let item of chatservice.messages">
+      
+      <div class="col-1">
+        <img [src]="chatservice.GetUrl(item.userId)" class="cardimg">
+      </div>      
+      <div class="col-sm">
+          <p class="cardcontent">{{item.content}}</p>
+      </div>
+      <div class="col-2 p-0 m-0">
+        <p class="messagetime">{{item.timeCreated|date}}</p>
+      </div>
+    </div>
+ 
+  </div>
+
+  <nav class="navbar navbar-dark default-color" id="sendform">
+    <form class="form-inline my-2 my-lg-0" (ngSubmit)="sendMessage()">
+      <input class="form-control" type="text" placeholder="Type"  [(ngModel)]="newMessage" name="message" aria-label="Search">
+      <button class="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" type="submit">Send</button>
+    </form>
+  </nav>
+
+</div>

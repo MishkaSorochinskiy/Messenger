@@ -74,7 +74,7 @@ export class ChatService {
     this.hubConnection.on('update', async (data) => {
       this.messages.push(data);
       if(this.users.find(u=>u.id===data.userId)==undefined){
-        await this.getMessages();     
+        await this.getMessages();
       }
     });
 }
