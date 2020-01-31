@@ -40,7 +40,14 @@ namespace Infrastructure.Services
 
         public async Task<IdentityResult> Register(RegisterModel model)
         {
-            var appuser = new User();
+            var appuser = new User() 
+            {
+                NickName=model.NickName,
+                Age=model.Age,
+                PhoneNumber=model.PhoneNumber,
+                Sex=model.Sex
+            };
+
             await _db.Users.AddAsync(appuser);
             await _db.SaveChangesAsync();
 
@@ -62,7 +69,7 @@ namespace Infrastructure.Services
             IdentityResult result = await _usermanager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
-                //await _usermanager.AddToRoleAsync(user, "Worker");
+                await _usermanager.AddToRoleAsync(user, "Chatter");
                 await _signinmanager.PasswordSignInAsync(model.Email, model.Password, false, false);
             }
 

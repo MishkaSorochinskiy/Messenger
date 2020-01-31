@@ -1,3 +1,4 @@
+import { PhotoService } from './photo.service';
 import { ConfigService } from './config.service';
 import { HttpClient ,HttpHeaders} from '@angular/common/http';
 import { Injectable, OnInit, ɵConsole } from '@angular/core';
@@ -33,11 +34,12 @@ export class ChatService {
   public photourl:string;
 
 
-  constructor(private http:HttpClient,private config:ConfigService,private sanitizer:DomSanitizer) { }
+  constructor(private http:HttpClient,private config:ConfigService,private sanitizer:DomSanitizer, private photo: PhotoService) { }
 
 
   startConnection=()=>{
     this.getMessages();
+    this.photo.GetPhoto();
 
     this.hubConnection = new signalR.HubConnectionBuilder()
                               .withUrl("https://localhost:44334/chat")
