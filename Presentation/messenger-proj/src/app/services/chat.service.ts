@@ -33,12 +33,17 @@ export class ChatService {
 
   public photourl:string;
 
+  public currentUser:User;
+
 
   constructor(private http:HttpClient,private config:ConfigService,private sanitizer:DomSanitizer, private photo: PhotoService) { }
 
 
-  startConnection=()=>{
+  startConnection=async()=>{
+    this.SetCurrentUser();
+
     this.getMessages();
+
     this.photo.GetPhoto();
 
     this.hubConnection = new signalR.HubConnectionBuilder()
@@ -56,7 +61,7 @@ export class ChatService {
     this.photourl=photopath;
 
     let headers = new HttpHeaders();
-           headers= headers.append('content-type', 'application/json')
+    headers= headers.append('content-type', 'application/json');
             
     return  this.http.get<ChatContent>(url,{headers:headers})
         .subscribe((data)=>{
@@ -83,10 +88,21 @@ export class ChatService {
     let url=`${await this.config.getConfig("getuserinfo")}?UserId=${id}`;
     let headers = new HttpHeaders();
            headers= headers.append('content-type', 'application/json')
-    return this.http.get(url,{headers:headers}).subscribe(res=>console.log(res+"hello"));
+    return this.http.get(url,{headers:headers});
   }
 
   public GetUrl(id:number){
       return `${this.photourl}/${this.users.find(u=>u.id===id).photoName}`; 
   }
+
+  public async SetCurrentUser(){
+    let url=await this.config.getConfig("getuserinfo");
+    
+    let headers = new HttpHeaders();
+    headers= headers.append('content-type', 'application/json');
+
+    return this.http.get<User>(url,{headers:headers})
+          .subscribe(res=>this.currentUser=res);
+  }
+
 }
