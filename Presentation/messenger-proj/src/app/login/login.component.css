@@ -5,3 +5,7 @@
 .forminput{
     padding-left: 5px;
 }
+.validinfo{
+    color:red;
+    margin-bottom: 10px;
+}

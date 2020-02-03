@@ -8,14 +8,19 @@ import { NgZone  } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
 
+  public isnotvalid=false;
   userdata={email:'',password:''};
   constructor(private auth:AuthService) { }
 
   ngOnInit() {
   }
 
-  signin(){
-    this.auth.signin(this.userdata);
+  async signin(){
+    await this.auth.signin(this.userdata)
+    .then(()=>{
+      this.isnotvalid=true;
+      console.log(this.isnotvalid);
+    });
   }
 
 }
