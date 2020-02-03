@@ -11,17 +11,17 @@
           
           <form class="text-center" style="color: #757575;" action="#!"> 
             <div class="md-form">
-              <input type="text" id="formnick" [(ngModel)]="userdata.NickName" name="nick" class="form-control">
+              <input type="text" id="formnick" [(ngModel)]="userdata.NickName" name="nick" class="form-control forminput">
               <label for="formemail">NickName</label>
             </div>
       
             <div class="form-row md-form">
               <div class="col-sm">
-                <input type="number" id="formage" [(ngModel)]="userdata.Age" name="age" class="form-control">
+                <input type="number" id="formage" [(ngModel)]="userdata.Age" name="age" class="form-control forminput">
                 <label for="frompassword" class="inputage">Age</label>
               </div>
               <div class="col-sm">
-                <select class="browser-default custom-select" id="sexselect" [(ngModel)]="userdata.Sex" name="sex">
+                <select class="browser-default custom-select forminput" id="sexselect" [(ngModel)]="userdata.Sex" name="sex">
                   <option selected value=0>Male</option>
                   <option value=1>Female</option>
                 </select>
@@ -29,7 +29,7 @@
             </div>
 
             <div class="md-form">
-              <input type="text" id="formphone" [(ngModel)]="userdata.PhoneNumber" name="phone" class="form-control" (keyup)="validate($event)">
+              <input type="text" id="formphone" [(ngModel)]="userdata.PhoneNumber" name="phone" class="form-control forminput" (keyup)="validate($event)">
               <label for="formphone">Phone</label>
             </div>
             <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit" (click)="register()">Fill</button>

@@ -1,18 +1,17 @@
-
 <div class="container">
   <div class="container-fluid overflow-auto" id="contentdiv">
-    
     <div *ngFor="let item of chatservice.messages">
 
         <div class="row customcard" *ngIf="item.userId!=chatservice.currentUser.id">
           <div class="col-1" *ngIf="item.userId!=chatservice.currentUser.id">
+            <span class="customtooltip">{{chatservice.GetUser(item.userId).nickName}}</span>
             <img [src]="chatservice.GetUrl(item.userId)" class="cardimg">
           </div>      
           <div class="col-sm" *ngIf="item.userId!=chatservice.currentUser.id">
               <p class="cardcontent">{{item.content}}</p>
           </div>
           <div class="col-2 p-0 m-0" *ngIf="item.userId!=chatservice.currentUser.id">
-            <p class="messagetime">{{item.timeCreated|date}}</p>
+            <p class="messagetime">{{item.timeCreated | date}}</p>
           </div>
         </div>
 
@@ -21,12 +20,13 @@
 
         </div>
         <div class="col-1 p-0 m-0 p-0 timerigth" *ngIf="item.userId==chatservice.currentUser.id">
-          <p class="messagetime rigthtime">{{item.timeCreated|date}}</p>
+          <p class="messagetime rigthtime">{{item.timeCreated| date}}</p>
         </div>
-          <div class="col-4 m-0 p-0 contentrigth" *ngIf="item.userId==chatservice.currentUser.id">
+          <div class="col-4 m-0 pt-1 contentrigth" *ngIf="item.userId==chatservice.currentUser.id">
               <p class="textrigth">{{item.content}}</p>
           </div>
-          <div class="col-1 m-0 p-0 imgrigth text-right" id="divwithrigth" *ngIf="item.userId==chatservice.currentUser.id">
+          <div class="col-1 m-0 pl-1 imgrigth text-right" id="divwithrigth" *ngIf="item.userId==chatservice.currentUser.id">
+            <span class="customtooltipright">{{chatservice.GetUser(item.userId).nickName}}</span>
             <img [src]="chatservice.GetUrl(item.userId)" class="rigthimgcontent">
           </div>  
         </div>

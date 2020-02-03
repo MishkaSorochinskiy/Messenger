@@ -17,17 +17,20 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
   }
 
-   register(){
+  async register(){
      if(this.userdata.password==this.userdata.passwordconfirm&&this.isPossiblyValidEmail(this.userdata.email))
      {
-      this.auth.fillRegister(this.userdata);
-      this.guard.isenabled=true;
-      this.router.navigate(['/fillinfo']);
-     }
-     else{
-       this.isnotvalid=true;
-     }
-  }
+        let res=await this.auth.fillRegister(this.userdata);
+        
+        if(res){
+          this.guard.isenabled=true;
+          this.router.navigate(['/fillinfo']);
+        }
+      }
+
+      this.isnotvalid=true;
+
+}
 
    isPossiblyValidEmail(txt) {
     return txt.length > 5 && txt.indexOf('@')>0;
