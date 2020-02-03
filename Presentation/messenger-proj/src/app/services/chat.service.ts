@@ -1,3 +1,4 @@
+import { Message } from './chat.service';
 import { PhotoService } from './photo.service';
 import { ConfigService } from './config.service';
 import { HttpClient ,HttpHeaders} from '@angular/common/http';
@@ -13,7 +14,8 @@ export interface Message{
 
 export interface User{
   photoName:string,
-  id:number
+  id:number,
+  nickname:string
 }
 
 export interface ChatContent{
@@ -93,6 +95,10 @@ export class ChatService {
 
   public GetUrl(id:number){
       return `${this.photourl}/${this.users.find(u=>u.id===id).photoName}`; 
+  }
+
+  public GetUser(id:number){
+    return this.users.find(u=>u.id===id);
   }
 
   public async SetCurrentUser(){

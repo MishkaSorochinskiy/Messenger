@@ -1,6 +1,7 @@
+import { DatePipe } from './../pipes/date.pipe';
 import { ChatService, Message } from './../services/chat.service';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 
 
 @Component({
@@ -22,5 +23,10 @@ export class ChatComponent implements OnInit {
   sendMessage(){
     this.chatservice.sendMessage({content:this.newMessage} as Message);
     this.newMessage=null;
+  } 
+
+  mouseenter(event){
+    console.log(event);
+    event.toElement.offset
   }
 }

@@ -14,7 +14,7 @@
     margin-bottom: 10px;
     max-height: 70vh;
   }
-
+  
   img{
     width:40px;
     height: 40px;
@@ -47,7 +47,7 @@
   }
 
   .cardimg{
-    margin-top: 10px;
+    margin-top: 6px;
   }
 
   .cardcontent{
@@ -57,7 +57,7 @@
 
   .messagetime{
     font-size: 12px;
-    margin-top:15px;
+    margin-top:19px;
   }
 
   #messageinput{
@@ -105,4 +105,51 @@
 
   .rigthtime{
     margin-left: 10px;
+  }
+
+  #chatcontent{
+    background-color: gray;
+    height: 70vh;
+  }
+
+  .messageauthor{
+    margin:0;
+    padding:0;
+    font-size:14px;
+    margin-bottom: 10px;
+  }
+
+  .messageauthorrigth{
+    padding-left: 10px;
+    font-size: 14px;
+  }
+
+  .customtooltip{
+    position: absolute;
+    opacity: 0;
+    width:45px;
+    height: 50px;
+    text-align: center;
+    padding-top: 10px;
+  }
+
+  .customtooltip:hover{
+    opacity: 1;
+    margin-top:-23px ;
+    margin-left: -25px;
+  }
+
+  .customtooltipright{
+    position: absolute;
+    opacity: 0;
+    width:45px;
+    height: 50px;
+    text-align: center;
+    padding-top: 10px;
+  }
+
+  .customtooltipright:hover{
+    opacity: 1;
+    margin-top:-25px ;
+    margin-left: 30px;
   }

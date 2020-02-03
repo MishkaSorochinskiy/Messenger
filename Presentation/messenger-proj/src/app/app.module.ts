@@ -1,3 +1,4 @@
+import { DatePipe } from './pipes/date.pipe';
 import { RegisterGuard } from './register.guard';
 import { TokeninterceptorService } from './services/tokeninterceptor.service';
 import { AuthGuard } from './auth.guard';
@@ -36,7 +37,8 @@ const appRoutes: Routes = [
       RegisterComponent,
       ChatComponent,
       ProfileComponent,
-      FilluserinfoComponent
+      FilluserinfoComponent,
+      DatePipe
    ],
    imports: [
       RouterModule.forRoot(appRoutes),
