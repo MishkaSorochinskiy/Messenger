@@ -146,6 +146,7 @@
     height: 50px;
     text-align: center;
     padding-top: 10px;
+    word-break: break-all;
   }
 
   .customtooltipright:hover{

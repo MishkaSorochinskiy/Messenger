@@ -50,8 +50,8 @@ export class AuthService {
     return this.http.post(url,JSON.stringify(user),{responseType:'text',headers:headers})
           .subscribe(res=>{
             this.photo.GetPhoto();
-            localStorage.setItem('token',res);
             this.router.navigate(['/chat']);
+            localStorage.setItem('token',res);
           });
   }
 

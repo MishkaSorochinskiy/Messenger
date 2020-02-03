@@ -1,4 +1,3 @@
-import { Message } from './chat.service';
 import { PhotoService } from './photo.service';
 import { ConfigService } from './config.service';
 import { HttpClient ,HttpHeaders} from '@angular/common/http';
@@ -15,7 +14,10 @@ export interface Message{
 export interface User{
   photoName:string,
   id:number,
-  nickname:string
+  nickname:string,
+  phone:string,
+  email:string,
+  age:number
 }
 
 export interface ChatContent{
@@ -101,6 +103,16 @@ export class ChatService {
     return this.users.find(u=>u.id===id);
   }
 
+  public async UpdateUser() {
+    let url=await this.config.getConfig("updateuser");
+
+    let headers = new HttpHeaders();
+    headers= headers.append('content-type', 'application/json');
+            
+    return  this.http.post(url,JSON.stringify(this.currentUser),{headers:headers}).toPromise();
+
+  }
+
   public async SetCurrentUser(){
     let url=await this.config.getConfig("getuserinfo");
     
@@ -108,7 +120,7 @@ export class ChatService {
     headers= headers.append('content-type', 'application/json');
 
     return this.http.get<User>(url,{headers:headers})
-          .subscribe(res=>this.currentUser=res);
+          .subscribe(res=>{this.currentUser=res; console.log(this.currentUser);});
   }
 
 }

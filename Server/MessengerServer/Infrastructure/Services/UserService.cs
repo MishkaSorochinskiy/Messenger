@@ -34,5 +34,25 @@ namespace Infrastructure.Services
 
             return default(GetUserDto);
         }
+
+        public async Task<bool> UpdateUser(UpdateUserDto model)
+        {
+            var user = await _auth.FindByNameUserAsync(model.Email);
+
+            if (user != null)
+            {
+                user.Age = model.Age;
+
+                user.PhoneNumber = model.Phone;
+
+                user.NickName = model.NickName;
+
+                await _unit.Commit();
+
+                return true;
+            }
+
+            return false;
+        }
     }
 }

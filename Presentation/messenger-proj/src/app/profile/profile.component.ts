@@ -1,4 +1,6 @@
+import { PhotoService } from './../services/photo.service';
 import { Component, OnInit } from '@angular/core';
+import { ChatService, User } from '../services/chat.service';
 
 @Component({
   selector: 'app-profile',
@@ -7,9 +9,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileComponent implements OnInit {
 
-  constructor() { }
+  constructor(private photo:PhotoService,private chat:ChatService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.photo.GetPhoto();
+    let res=await this.chat.SetCurrentUser();
   }
 
 }

@@ -8,5 +8,6 @@
     "getphoto":"https://localhost:44334/api/Photo/GetPhoto",
     "getphotobyid":"https://localhost:44334/api/Photo/GetPhotoById",
     "getuserinfo":"https://localhost:44334/api/User/UserInfo",
-    "checkemail":"https://localhost:44334/api/Auth/EmailExist"
+    "checkemail":"https://localhost:44334/api/Auth/EmailExist",
+    "updateuser":"https://localhost:44334/api/User/UpdateUser"
 }
