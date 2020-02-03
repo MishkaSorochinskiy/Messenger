@@ -55,10 +55,16 @@ export class AuthService {
           });
   }
 
-  fillRegister(data){
+  async fillRegister(data){
+    let url=await this.config.getConfig("checkemail");
     this.userInfo.Email=data.email;
     this.userInfo.Password=data.password;
     this.userInfo.PasswordConfirm=data.passwordconfirm;
+
+    let headers = new HttpHeaders();
+    headers= headers.append('content-type', 'application/json');
+    
+    return this.http.post<boolean>(url,this.userInfo,{headers:headers}).toPromise();
   }
 
   fillInfo(data){

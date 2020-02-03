@@ -7,5 +7,6 @@
     "updatephoto":"https://localhost:44334/api/Photo/ChangePhoto",
     "getphoto":"https://localhost:44334/api/Photo/GetPhoto",
     "getphotobyid":"https://localhost:44334/api/Photo/GetPhotoById",
-    "getuserinfo":"https://localhost:44334/api/User/UserInfo"
+    "getuserinfo":"https://localhost:44334/api/User/UserInfo",
+    "checkemail":"https://localhost:44334/api/Auth/EmailExist"
 }
