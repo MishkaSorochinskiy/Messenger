@@ -9,5 +9,7 @@ namespace Application.IServices
     public interface IUserService
     {
         Task<GetUserDto> GetUserInfo(GetUserInfoRequest request);
+
+        Task<bool> UpdateUser(UpdateUserDto model);
     }
 }

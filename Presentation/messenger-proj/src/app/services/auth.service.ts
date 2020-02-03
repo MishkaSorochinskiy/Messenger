@@ -38,7 +38,7 @@ export class AuthService {
             this.photo.GetPhoto();
             this.router.navigate(['/chat']);
             localStorage.setItem('token',res[0]);
-          },err=>console.log(err));
+          });
   }
 
   async signin(user){
@@ -50,8 +50,8 @@ export class AuthService {
     return this.http.post(url,JSON.stringify(user),{responseType:'text',headers:headers})
           .subscribe(res=>{
             this.photo.GetPhoto();
-            localStorage.setItem('token',res);
             this.router.navigate(['/chat']);
+            localStorage.setItem('token',res);
           });
   }
 

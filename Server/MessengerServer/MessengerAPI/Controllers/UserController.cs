@@ -40,8 +40,21 @@ namespace MessengerAPI.Controllers
             if (user != null)
             {
                 var dto = _map.Map<GetUserDto>(user);
+                dto.Email = User.Identity.Name;
                 return Ok(dto);
             }
+
+            return BadRequest();
+        }
+
+        [Authorize]
+        [HttpPost("[action]")]
+        public async Task<IActionResult> UpdateUser(UpdateUserDto model)
+        {
+            var res= await _userservice.UpdateUser(model);
+
+            if (res)
+                return Ok();
 
             return BadRequest();
         }
