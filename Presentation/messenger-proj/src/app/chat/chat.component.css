@@ -5,14 +5,14 @@
     border-radius: 5px;
     padding: 10px;
     margin: 10px 0;
-    min-height: 75vh;
+    min-height: 85vh;
     margin-top:3vh;
   }
 
   #contentdiv{
-    min-height: 70vh;
+    min-height: 80vh;
     margin-bottom: 10px;
-    max-height: 70vh;
+    max-height: 75vh;
   }
   
   img{
@@ -154,3 +154,15 @@
     margin-top:-25px ;
     margin-left: 30px;
   }
+
+  #chatbox{
+    border-right-width: 3px;
+    border-right-color: #6F89C8;
+    border-right-style: solid;
+    margin-right: 2px;
+    background-color: #B0BFE5;
+  }
+
+#sendform{
+  background-color: #4D7DF6;
+}

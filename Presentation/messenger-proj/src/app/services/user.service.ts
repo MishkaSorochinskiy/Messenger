@@ -50,5 +50,4 @@ export class UserService  {
   updateCurrentUser(user:User){
     this.currentUser.next(user);
   }
-
 }
