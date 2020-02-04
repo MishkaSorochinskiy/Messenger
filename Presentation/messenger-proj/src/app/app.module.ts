@@ -21,6 +21,7 @@ import { FormsModule } from '@angular/forms';
 import { CookieService } from 'node_modules/ngx-cookie-service';
 import { ProfileComponent } from './profile/profile.component';
 import { FilluserinfoComponent } from './filluserinfo/filluserinfo.component';
+import { ChatlistComponent } from './chatlist/chatlist.component';
 
 const appRoutes: Routes = [
    { path: '', redirectTo:'/chat',pathMatch:'full' },
@@ -42,7 +43,8 @@ const appRoutes: Routes = [
       ChatComponent,
       ProfileComponent,
       FilluserinfoComponent,
-      DatePipe
+      DatePipe,
+      ChatlistComponent
    ],
    imports: [
       RouterModule.forRoot(appRoutes),
@@ -63,7 +65,7 @@ const appRoutes: Routes = [
          provide: HTTP_INTERCEPTORS,
          useClass: TokeninterceptorService,
          multi: true
-      }
+       }
    ],
    bootstrap: [
       AppComponent
