@@ -1,6 +1,6 @@
 import { PhotoService } from './../services/photo.service';
 import { Component, OnInit } from '@angular/core';
-import { ChatService, User } from '../services/chat.service';
+import { UserService, User } from '../services/user.service';
 
 @Component({
   selector: 'app-profile',
@@ -9,11 +9,18 @@ import { ChatService, User } from '../services/chat.service';
 })
 export class ProfileComponent implements OnInit {
 
-  constructor(private photo:PhotoService,private chat:ChatService) { }
+  currentUser:User=new User();
 
-  async ngOnInit() {
-    this.photo.GetPhoto();
-    let res=await this.chat.SetCurrentUser();
+
+  constructor(private photo:PhotoService,private userservice:UserService) { }
+
+ ngOnInit() {
+    this.userservice.data.subscribe(user=>this.currentUser=user);
+  }
+
+  UpdateUser(){
+    this.userservice.UpdateUser(this.currentUser)
+      .then(()=>this.userservice.updateCurrentUser(this.currentUser));
   }
 
 }

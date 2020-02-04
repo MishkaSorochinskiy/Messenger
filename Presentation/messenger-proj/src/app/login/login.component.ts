@@ -1,6 +1,6 @@
 import { AuthService } from './../services/auth.service';
 import { Component, OnInit } from '@angular/core';
-import { NgZone  } from '@angular/core';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -19,7 +19,6 @@ export class LoginComponent implements OnInit {
     await this.auth.signin(this.userdata)
     .then(()=>{
       this.isnotvalid=true;
-      console.log(this.isnotvalid);
     });
   }
 

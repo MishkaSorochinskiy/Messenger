@@ -3,21 +3,14 @@ import { ConfigService } from './config.service';
 import { HttpClient ,HttpHeaders} from '@angular/common/http';
 import { Injectable, OnInit, ɵConsole } from '@angular/core';
 import * as signalR from "@aspnet/signalr"
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import {DomSanitizer} from '@angular/platform-browser';
+import { User } from './user.service';
+import { BehaviorSubject } from 'rxjs';
 
 export interface Message{
   content:string,
   userId:number,
   timeCreated:Date
-}
-
-export interface User{
-  photoName:string,
-  id:number,
-  nickname:string,
-  phone:string,
-  email:string,
-  age:number
 }
 
 export interface ChatContent{
@@ -31,24 +24,21 @@ export interface ChatContent{
 export class ChatService {
   private hubConnection:signalR.HubConnection;
 
-  public messages:Message[];
+  private messages=new BehaviorSubject<Message[]>([]);
+  messagessource=this.messages.asObservable();
 
-  public users:User[];
+  private users=new BehaviorSubject<User[]>([]);
+  userssource=this.users.asObservable();
 
   public photourl:string;
 
-  public currentUser:User;
-
+  messagesUpdate = this.messages.asObservable();
 
   constructor(private http:HttpClient,private config:ConfigService,private sanitizer:DomSanitizer, private photo: PhotoService) { }
 
 
   startConnection=async()=>{
-    this.SetCurrentUser();
-
     this.getMessages();
-
-    this.photo.GetPhoto();
 
     this.hubConnection = new signalR.HubConnectionBuilder()
                               .withUrl("https://localhost:44334/chat")
@@ -67,12 +57,12 @@ export class ChatService {
     let headers = new HttpHeaders();
     headers= headers.append('content-type', 'application/json');
             
-    return  this.http.get<ChatContent>(url,{headers:headers})
-        .subscribe((data)=>{
-          this.messages=data.messages;
-          this.users=data.users;
+    return await this.http.get<ChatContent>(url,{headers:headers}).toPromise()
+        .then((data)=>{
+          this.MessagesUpdate(data.messages);
+          this.UsersUpdate(data.users);
           })
- }
+    }
 
   public sendMessage (data:Message) {
     this.hubConnection.invoke('SendToAll', data)
@@ -81,46 +71,21 @@ export class ChatService {
 
   public updateChat = async () => {
     this.hubConnection.on('update', async (data) => {
-      this.messages.push(data);
-      if(this.users.find(u=>u.id===data.userId)==undefined){
+      
+      this.messages.value.push(data);
+      this.MessagesUpdate(this.messages.getValue());
+      
+      if(this.users.value.find(u=>u.id===data.userId)==undefined){
         await this.getMessages();
       }
     });
 }
 
-  public async addUser(id:number){
-    let url=`${await this.config.getConfig("getuserinfo")}?UserId=${id}`;
-    let headers = new HttpHeaders();
-           headers= headers.append('content-type', 'application/json')
-    return this.http.get(url,{headers:headers});
+  MessagesUpdate(messages: Message[]) {
+    this.messages.next(messages);
   }
 
-  public GetUrl(id:number){
-      return `${this.photourl}/${this.users.find(u=>u.id===id).photoName}`; 
+  UsersUpdate(users:User[]){
+    this.users.next(users);
   }
-
-  public GetUser(id:number){
-    return this.users.find(u=>u.id===id);
-  }
-
-  public async UpdateUser() {
-    let url=await this.config.getConfig("updateuser");
-
-    let headers = new HttpHeaders();
-    headers= headers.append('content-type', 'application/json');
-            
-    return  this.http.post(url,JSON.stringify(this.currentUser),{headers:headers}).toPromise();
-
-  }
-
-  public async SetCurrentUser(){
-    let url=await this.config.getConfig("getuserinfo");
-    
-    let headers = new HttpHeaders();
-    headers= headers.append('content-type', 'application/json');
-
-    return this.http.get<User>(url,{headers:headers})
-          .subscribe(res=>{this.currentUser=res; console.log(this.currentUser);});
-  }
-
 }

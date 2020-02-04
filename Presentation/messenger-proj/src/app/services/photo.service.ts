@@ -1,15 +1,15 @@
+import { BehaviorSubject } from 'rxjs';
 import { ConfigService } from './config.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
-import { ChildActivationStart } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PhotoService {
 
-  imageUrl;
+  public imageUrl:string=null;
 
   constructor(private http:HttpClient,private config:ConfigService,private sanitizer:DomSanitizer) { }
 
@@ -17,7 +17,6 @@ export class PhotoService {
     let url = await this.config.getConfig("updatephoto");
 
     const uploadData = new FormData();
-    console.log(photo);
     uploadData.append(photo.name, photo, photo.name);
 
     return this.http.post(url,uploadData);
@@ -31,17 +30,10 @@ export class PhotoService {
       'Accept': 'application/json'
     });
 
-    return this.http.get(url,{responseType:"json",headers:headers}).subscribe(
+    return await this.http.get(url,{responseType:"json",headers:headers}).toPromise().then(
       async res=>{
         let imgpath=await this.config.getConfig("photopath");
         this.imageUrl=`${imgpath}/${res}`;
-      })
-   
+      }) 
   }
-
-   get Image(){
-    this.GetPhoto();
-    return this.imageUrl;
-  }
-
 }
