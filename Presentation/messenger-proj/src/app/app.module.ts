@@ -1,3 +1,5 @@
+import { PhotoService } from './services/photo.service';
+import { UserService } from './services/user.service';
 import { DatePipe } from './pipes/date.pipe';
 import { RegisterGuard } from './register.guard';
 import { TokeninterceptorService } from './services/tokeninterceptor.service';
@@ -5,7 +7,7 @@ import { AuthGuard } from './auth.guard';
 import { ConfigService } from './services/config.service';
 import { AuthService } from './services/auth.service';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -29,6 +31,8 @@ const appRoutes: Routes = [
    { path: 'fillinfo', component:FilluserinfoComponent ,canActivate:[RegisterGuard]}
 ]
 
+
+
 @NgModule({
    declarations: [
       AppComponent,
@@ -50,6 +54,8 @@ const appRoutes: Routes = [
    providers: [
       CookieService,
       AuthGuard,
+      UserService,
+      PhotoService,
       RegisterGuard,
       AuthService,
       ConfigService,
