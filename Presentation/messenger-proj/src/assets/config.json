@@ -1,6 +1,13 @@
 {
+    "photopath":"https://localhost:44334/avatars",
     "signin":"https://localhost:44334/api/Auth/SignIn",
     "signup":"https://localhost:44334/api/Auth/Register",
     "signout":"https://localhost:44334/api/Auth/SignOut",
-    "getmessages":"https://localhost:44334/api/Message"
+    "getmessages":"https://localhost:44334/api/Message",
+    "updatephoto":"https://localhost:44334/api/Photo/ChangePhoto",
+    "getphoto":"https://localhost:44334/api/Photo/GetPhoto",
+    "getphotobyid":"https://localhost:44334/api/Photo/GetPhotoById",
+    "getuserinfo":"https://localhost:44334/api/User/UserInfo",
+    "checkemail":"https://localhost:44334/api/Auth/EmailExist",
+    "updateuser":"https://localhost:44334/api/User/UpdateUser"
 }

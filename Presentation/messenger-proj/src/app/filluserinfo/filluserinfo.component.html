@@ -1,0 +1,44 @@
+<section class="container-fluid bg" id="mainsec">
+  <section class="row justify-content-center">
+    <section class="col-12 col-sm-5 col-md-5">
+      <div class="card mt-5 p-0 ml-2">
+
+        <h5 class="card-header info-color white-text text-center py-4">
+          <strong>Fill Info</strong>
+        </h5>   
+
+        <div class="card-body px-lg-5">
+          
+          <form class="text-center" style="color: #757575;" action="#!"> 
+            <div class="md-form">
+              <input type="text" id="formnick" [(ngModel)]="userdata.NickName" name="nick" class="form-control forminput">
+              <label for="formemail">NickName</label>
+            </div>
+      
+            <div class="form-row md-form">
+              <div class="col-sm">
+                <input type="number" id="formage" [(ngModel)]="userdata.Age" name="age" class="form-control forminput">
+                <label for="frompassword" class="inputage">Age</label>
+              </div>
+              <div class="col-sm">
+                <select class="browser-default custom-select forminput" id="sexselect" [(ngModel)]="userdata.Sex" name="sex">
+                  <option selected value=0>Male</option>
+                  <option value=1>Female</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="md-form">
+              <input type="text" id="formphone" [(ngModel)]="userdata.PhoneNumber" name="phone" class="form-control forminput" (keyup)="validate($event)">
+              <label for="formphone">Phone</label>
+            </div>
+            <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit" (click)="register()">Fill</button>
+            <div class="col-sm validinfo" *ngIf="isnotvalid">
+              Your data is invalid
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </section>
+</section>

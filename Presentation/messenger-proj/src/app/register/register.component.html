@@ -11,22 +11,25 @@
           
           <form class="text-center" style="color: #757575;" action="#!"> 
             <div class="md-form">
-              <input type="email" id="formemail" [(ngModel)]="userdata.email" name="email" class="form-control">
+              <input type="email" id="formemail" [(ngModel)]="userdata.email" name="email" class="form-control forminput">
               <label for="formemail">E-mail</label>
             </div>
       
             <div class="md-form">
-              <input type="password" id="formpassword" [(ngModel)]="userdata.password" name="password" class="form-control">
+              <input type="password" id="formpassword" [(ngModel)]="userdata.password" name="password" class="form-control forminput">
               <label for="frompassword">Password</label>
             </div>
 
             <div class="md-form">
-              <input type="password" id="formpasswordconfirm" [(ngModel)]="userdata.passwordconfirm"  name="confpassword" class="form-control">
+              <input type="password" id="formpasswordconfirm" [(ngModel)]="userdata.passwordconfirm"  name="confpassword" class="form-control forminput">
               <label for="formpasswordconfirm">Confirm Password</label>
             </div>
       
             <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit" (click)="register()">Sign up</button>
-         
+            
+            <div class="col-sm validinfo" *ngIf="isnotvalid">
+              Your data is not valid
+            </div>
           </form>
         </div>
       </div>

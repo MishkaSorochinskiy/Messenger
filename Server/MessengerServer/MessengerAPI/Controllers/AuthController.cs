@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Models;
+using Infrastructure.AppSecurity;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MessengerAPI.Controllers
@@ -14,9 +17,13 @@ namespace MessengerAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly AuthService _auth;
-        public AuthController(AuthService auth)
+
+        private readonly UserManager<SecurityUser> _usermanager;
+        public AuthController(AuthService auth,UserManager<SecurityUser> usermanager)
         {
             _auth = auth;
+
+            _usermanager = usermanager;
         }
 
         [HttpPost("[action]")]
@@ -66,5 +73,10 @@ namespace MessengerAPI.Controllers
             return User.Identity.IsAuthenticated;
         }
 
+        [HttpPost("[action]")]
+        public async  Task<bool> EmailExist([FromBody]CheckRegisterModel model)
+        {
+            return (await _usermanager.FindByEmailAsync(model.Email)) == null;
+        }
     }
 }

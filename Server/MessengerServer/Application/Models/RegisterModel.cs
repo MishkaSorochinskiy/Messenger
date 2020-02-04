@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -18,5 +19,15 @@ namespace Application.Models
         [Required]
         [Compare("Password")]
         public string PasswordConfirm { get; set; }
+
+        [Required]
+        public string NickName { get; set; }
+
+        [Required]
+        public Sex Sex { get; set; }
+
+        public string PhoneNumber { get; set; }
+
+        public int Age { get; set; }
     }
 }

@@ -87,6 +87,8 @@ namespace MessengerAPI
 
             app.UseRouting();
 
+            app.UseStaticFiles();
+
             app.UseCors("CorsPolicy");
 
             app.UseAuthentication();

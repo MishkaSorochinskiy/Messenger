@@ -15,8 +15,11 @@ namespace Infrastructure.Configurations
 
             builder.HasKey(p => p.Id);
 
-            builder.Property(p => p.UserPhoto)
-                   .HasColumnType("image");
+            builder.Property(p => p.Path)
+                   .IsRequired();
+
+            builder.Property(p => p.Name)
+                  .IsRequired();
         }
     }
 }

@@ -1,5 +1,7 @@
+import { RegisterGuard } from './../register.guard';
 import { AuthService } from './../services/auth.service';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -8,15 +10,30 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RegisterComponent implements OnInit {
 
-
+  isnotvalid:boolean;
   userdata={email:'',password:'',passwordconfirm:''};
-  constructor(private auth:AuthService) { }
+  constructor(private auth:AuthService,private router:Router,private guard: RegisterGuard) { }
 
   ngOnInit() {
   }
 
-  register(){
-    this.auth.register(this.userdata);
-  }
+  async register(){
+     if(this.userdata.password==this.userdata.passwordconfirm&&this.isPossiblyValidEmail(this.userdata.email))
+     {
+        let res=await this.auth.fillRegister(this.userdata);
+        
+        if(res){
+          this.guard.isenabled=true;
+          this.router.navigate(['/fillinfo']);
+        }
+      }
+
+      this.isnotvalid=true;
+
+}
+
+   isPossiblyValidEmail(txt) {
+    return txt.length > 5 && txt.indexOf('@')>0;
+ }
 
 }

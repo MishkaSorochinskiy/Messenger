@@ -1,12 +1,44 @@
-<ul class="list-unstyled">
-  <li *ngFor="let item of chatservice.messages">
-    {{item.content}}
-  </li>
-</ul>
+<div class="container">
+  <div class="container-fluid overflow-auto" id="contentdiv">
+    <div *ngFor="let item of messages">
 
-<nav class="navbar navbar-dark default-color">
-  <form class="form-inline my-2 my-lg-0" (ngSubmit)="sendMessage()">
-    <input class="form-control" type="text" placeholder="Type"  [(ngModel)]="newMessage" name="message" aria-label="Search">
-    <button class="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" type="submit">Send</button>
-  </form>
-</nav>
+        <div class="row customcard" *ngIf="item.userId!=currentUser.id">
+          <div class="col-1" *ngIf="item.userId!=currentUser.id">
+            <span class="customtooltip">{{GetUser(item.userId).nickName}}</span>
+            <img [src]="GetUrl(item.userId)" class="cardimg">
+          </div>      
+          <div class="col-sm" *ngIf="item.userId!=currentUser.id">
+              <p class="cardcontent">{{item.content}}</p>
+          </div>
+          <div class="col-2 p-0 m-0" *ngIf="item.userId!=currentUser.id">
+            <p class="messagetime">{{item.timeCreated | date}}</p>
+          </div>
+        </div>
+
+      <div class="row left-row" *ngIf="item.userId==currentUser.id">
+        <div class="col-6">
+
+        </div>
+        <div class="col-1 p-0 m-0 p-0 timerigth" *ngIf="item.userId==currentUser.id">
+          <p class="messagetime rigthtime">{{item.timeCreated| date}}</p>
+        </div>
+          <div class="col-4 m-0 pt-1 contentrigth" *ngIf="item.userId==currentUser.id">
+              <p class="textrigth">{{item.content}}</p>
+          </div>
+          <div class="col-1 m-0 pl-1 imgrigth text-right" id="divwithrigth" *ngIf="item.userId==currentUser.id">
+            <span class="customtooltipright">{{GetUser(item.userId).nickName}}</span>
+            <img [src]="GetUrl(item.userId)" class="rigthimgcontent">
+          </div>  
+        </div>
+
+      </div>
+    </div>
+
+  <nav class="navbar navbar-dark default-color" id="sendform">
+    <form class="form-inline my-2 my-lg-0" (ngSubmit)="sendMessage()">
+      <input class="form-control" type="text" placeholder="Type"  [(ngModel)]="newMessage" name="message" aria-label="Search">
+      <button class="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" type="submit">Send</button>
+    </form>
+  </nav>
+
+</div>

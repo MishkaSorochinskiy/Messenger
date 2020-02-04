@@ -1,0 +1,156 @@
+/* Chat containers */
+.container {
+    border: 2px solid #dedede;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+    min-height: 75vh;
+    margin-top:3vh;
+  }
+
+  #contentdiv{
+    min-height: 70vh;
+    margin-bottom: 10px;
+    max-height: 70vh;
+  }
+  
+  img{
+    width:40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+
+  .mesageinfo{
+    background-color: royalblue;
+    margin:10px;
+  }
+
+  .card-item{
+    float: left;
+  }
+
+  .customcard{
+    border-width: 2px;
+    border-color: silver;
+    border-style: solid;
+    width: 25rem;
+    margin-left: 10px;
+    margin-top: 5px;
+    border-radius: 10px;
+    background-color: white;
+  }
+
+  .card{
+    margin-bottom: 10px;
+    width: 18rem;
+  }
+
+  .cardimg{
+    margin-top: 6px;
+  }
+
+  .cardcontent{
+    margin-left: 15px;
+    margin-top:15px;
+  }
+
+  .messagetime{
+    font-size: 12px;
+    margin-top:19px;
+  }
+
+  #messageinput{
+    word-break: break-all;
+  }
+
+  .timerigth{
+    background-color: white;
+    border-left: 2px solid silver;
+    border-top: 2px solid silver;
+    border-bottom: 2px solid silver;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+
+  .contentrigth{
+    background-color: white;
+    border-top: 2px solid silver;
+    border-bottom: 2px solid silver;
+    }
+
+  .left-row{
+    margin-top:10px;
+    margin-right: 10px;
+  }
+
+  .imgrigth{
+    background-color: white;
+    border-right: 2px solid silver;
+    border-top: 2px solid silver;
+    border-bottom: 2px solid silver;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+
+  .rigthimgcontent{
+    margin-top: 5px;
+  }
+
+  .textrigth{
+    text-align: right;
+    margin-top:10px;
+    margin-right: 5px;
+  }
+
+  .rigthtime{
+    margin-left: 10px;
+  }
+
+  #chatcontent{
+    background-color: gray;
+    height: 70vh;
+  }
+
+  .messageauthor{
+    margin:0;
+    padding:0;
+    font-size:14px;
+    margin-bottom: 10px;
+  }
+
+  .messageauthorrigth{
+    padding-left: 10px;
+    font-size: 14px;
+  }
+
+  .customtooltip{
+    position: absolute;
+    opacity: 0;
+    width:45px;
+    height: 50px;
+    text-align: center;
+    padding-top: 10px;
+  }
+
+  .customtooltip:hover{
+    opacity: 1;
+    margin-top:-23px ;
+    margin-left: -25px;
+  }
+
+  .customtooltipright{
+    position: absolute;
+    opacity: 0;
+    width:45px;
+    height: 50px;
+    text-align: center;
+    padding-top: 10px;
+    word-break: break-all;
+  }
+
+  .customtooltipright:hover{
+    opacity: 1;
+    margin-top:-25px ;
+    margin-left: 30px;
+  }

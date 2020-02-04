@@ -9,7 +9,7 @@ namespace Infrastructure
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private MessengerContext db;
+        protected MessengerContext db;
 
         public Repository(MessengerContext context)
         {

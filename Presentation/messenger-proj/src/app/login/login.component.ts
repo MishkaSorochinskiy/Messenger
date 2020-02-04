@@ -1,6 +1,6 @@
 import { AuthService } from './../services/auth.service';
 import { Component, OnInit } from '@angular/core';
-import { NgZone  } from '@angular/core';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -8,14 +8,18 @@ import { NgZone  } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
 
+  public isnotvalid=false;
   userdata={email:'',password:''};
-  constructor(private auth:AuthService,private zone:NgZone) { }
+  constructor(private auth:AuthService) { }
 
   ngOnInit() {
   }
 
-  signin(){
-    this.auth.signin(this.userdata);
+  async signin(){
+    await this.auth.signin(this.userdata)
+    .then(()=>{
+      this.isnotvalid=true;
+    });
   }
 
 }

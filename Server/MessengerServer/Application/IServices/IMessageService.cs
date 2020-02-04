@@ -8,6 +8,8 @@ namespace Application.IServices
 {
     public interface IMessageService
     {
-        Task<bool> AddMessage(AddMessageDto message);
+        Task<GetMessageDto> AddMessage(AddMessageDto message);
+
+        AllMessagesDto GetAllMessages();
     }
 }

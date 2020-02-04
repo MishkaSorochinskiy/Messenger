@@ -12,6 +12,8 @@ namespace Domain.Entities
 
         public User User { get; set; }
 
-        public byte[] UserPhoto { get; protected set; }
+        public string Path { get; set; }
+
+        public string Name { get; set; }
     }
 }
