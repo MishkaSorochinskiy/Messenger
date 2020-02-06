@@ -17,6 +17,11 @@ namespace Infrastructure.Configurations
 
             builder.Property(m => m.Content)
                    .HasMaxLength(300);
+
+            builder.HasOne(m => m.Chat)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(m => m.ChatId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

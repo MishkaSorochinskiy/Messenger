@@ -15,6 +15,10 @@ namespace Infrastructure
 
         public DbSet<Message> Messages { get; set; }
 
+        public DbSet<Chat> Chats { get; set; }
+
+        public DbSet<BlockedUser> BlockedUsers { get; set; }
+
         public MessengerContext(DbContextOptions<MessengerContext> options):base(options)
         {
 
@@ -30,6 +34,9 @@ namespace Infrastructure
 
             modelBuilder.ApplyConfiguration(new MessageConfiguration());
 
+            modelBuilder.ApplyConfiguration(new ChatConfiguration());
+
+            modelBuilder.ApplyConfiguration(new BlockedUserConfiguration());
         }
     }
 }

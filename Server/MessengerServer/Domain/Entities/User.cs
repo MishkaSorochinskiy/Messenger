@@ -26,9 +26,17 @@ namespace Domain.Entities
 
         public ICollection<Message> Messages { get; private set; }
 
+        public ICollection<Chat> Chats { get; private set; }
+
+        public ICollection<BlockedUser> BlockedUsers { get; private set; }
+
         public User()
         {
             Messages = new List<Message>();
+
+            Chats = new List<Chat>();
+
+            BlockedUsers = new List<BlockedUser>();
         }
     }
 }
