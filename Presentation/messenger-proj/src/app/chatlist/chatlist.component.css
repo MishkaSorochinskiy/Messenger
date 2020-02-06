@@ -1,0 +1,20 @@
+.row{
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    border-bottom-color: #6F89C8;
+}
+
+.row:hover{
+    background-color: white;
+}
+
+img{
+    width: 40px;
+    height: 40px;
+    padding-top: 3px;
+}
+
+.chatname{
+    text-align: center;
+    padding-top: 10px;
+}

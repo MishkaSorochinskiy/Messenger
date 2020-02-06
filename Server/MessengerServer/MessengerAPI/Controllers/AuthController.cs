@@ -43,6 +43,7 @@ namespace MessengerAPI.Controllers
         }
 
         [HttpGet("[action]")]
+        [Authorize]
         public async Task SignOut()
         {
              await _auth.SignOut();
