@@ -23,7 +23,7 @@ namespace Infrastructure
             string password = "mainadmin";
             if (await userManager.FindByNameAsync(username) == null)
             {
-                 User admin = new User() {NickName="admin_captain",Sex=Sex.Male};
+                 User admin = new User() {NickName="admin_captain",Sex=Sex.Male,Email=username};
                  mescontext.Users.Add(admin);
                  mescontext.SaveChanges();
 

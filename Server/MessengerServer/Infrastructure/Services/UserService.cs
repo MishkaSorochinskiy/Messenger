@@ -2,6 +2,8 @@
 using Application.Models.UserDto;
 using AutoMapper;
 using Domain;
+using Infrastructure.AppSecurity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,13 +16,16 @@ namespace Infrastructure.Services
         private readonly IUnitOfWork _unit;
         private readonly IMapper _map;
         private readonly AuthService _auth;
-        public UserService(IUnitOfWork unit,IMapper map,AuthService auth)
+        private readonly SecurityContext _seccontext;
+        public UserService(IUnitOfWork unit,IMapper map,AuthService auth,SecurityContext seccontext)
         {
             _unit = unit;
 
             _auth = auth;
 
             _map = map;
+
+            _seccontext = seccontext;
         }
 
         public async Task<GetUserDto> GetUserInfo(GetUserInfoRequest request)
@@ -49,10 +54,17 @@ namespace Infrastructure.Services
 
                 await _unit.Commit();
 
+                this.SearchUser(new SearchUserDtoRequest());
+
                 return true;
             }
 
             return false;
+        }
+
+        public  async void SearchUser(SearchUserDtoRequest request)
+        {
+            var users = await _seccontext.Users.Include(u => u.User).ToListAsync();
         }
     }
 }
