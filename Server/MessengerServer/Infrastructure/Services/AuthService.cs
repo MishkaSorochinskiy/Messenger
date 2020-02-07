@@ -45,7 +45,8 @@ namespace Infrastructure.Services
                 NickName=model.NickName,
                 Age=model.Age,
                 PhoneNumber=model.PhoneNumber,
-                Sex=model.Sex
+                Sex=model.Sex,
+                Email=model.Email
             };
 
             await _db.Users.AddAsync(appuser);
