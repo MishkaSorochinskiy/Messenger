@@ -61,7 +61,7 @@ namespace MessengerAPI.Controllers
 
         [HttpGet("[action]")]
         [Authorize]
-        public async Task<List<SearchUserDto>> SearchUser([FromQuery]SearchUserDtoRequest request )
+        public async Task<List<SearchUserDto>> Search([FromQuery]SearchUserDtoRequest request )
         {
            return await this._userservice.SearchUser(request);
         }

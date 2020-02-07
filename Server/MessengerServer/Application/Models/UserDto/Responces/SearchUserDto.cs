@@ -8,7 +8,7 @@ namespace Application.Models.UserDto
     {
         public int Id { get; set; }
 
-        public string Photo { get; set; }
+        public string PhotoName { get; set; }
 
         public string Email { get; set; }
 
