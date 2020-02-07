@@ -18,6 +18,9 @@ namespace Infrastructure
             services.AddScoped<IMessageService, MessageService>();
 
             services.AddScoped<IUserService, UserService>();
+
+            services.AddScoped<IChatService, ChatService>();
+
         }
     }
 }

@@ -88,4 +88,14 @@ export class ChatService {
   UsersUpdate(users:User[]){
     this.users.next(users);
   }
+
+  public async CreateChate(SecondUserId:number){
+    let url=await this.config.getConfig("createchat");
+
+    let headers = new HttpHeaders();
+    headers= headers.append('content-type', 'application/json');
+
+    this.http.post(url,JSON.stringify({SecondUserId}),{headers:headers}).toPromise()
+      .then(res=>console.log(res));
+  }
 }

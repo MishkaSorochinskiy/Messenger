@@ -1,5 +1,6 @@
 import { UserService, User } from './../services/user.service';
 import { Component, OnInit } from '@angular/core';
+import { ChatService } from '../services/chat.service';
 
 @Component({
   selector: 'app-search',
@@ -10,7 +11,7 @@ export class SearchComponent implements OnInit {
 
   SearchUsers:User[];
   filter:string=null;
-  constructor(private userservice:UserService) { }
+  constructor(private userservice:UserService,private chatservice:ChatService) { }
 
   ngOnInit() {
     this.userservice.searchdata.subscribe((res)=>this.SearchUsers=res);
@@ -18,6 +19,10 @@ export class SearchComponent implements OnInit {
 
   search(){
     this.userservice.SearchUsers(this.filter);
+  }
+
+  createChat(userid:number){
+    this.chatservice.CreateChate(userid);
   }
 
 }
