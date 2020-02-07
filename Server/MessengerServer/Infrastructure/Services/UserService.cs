@@ -2,10 +2,12 @@
 using Application.Models.UserDto;
 using AutoMapper;
 using Domain;
+using Domain.Entities;
 using Infrastructure.AppSecurity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -62,7 +64,11 @@ namespace Infrastructure.Services
 
         public  async Task<List<SearchUserDto>> SearchUser(SearchUserDtoRequest request)
         {
-            var users = await _unit.UserRepository.Search(request.Filter);
+            var currentuser = await _auth.FindByNameUserAsync(request.UserName);
+
+            var users = (await _unit.UserRepository.Search(request.Filter));
+
+            users.Remove(currentuser);
 
             var res = _map.Map<List<SearchUserDto>>(users);
 

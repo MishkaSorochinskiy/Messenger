@@ -1,4 +1,5 @@
-﻿using Application.Models.MessageDto;
+﻿using Application.Models.ChatDto.Responces;
+using Application.Models.MessageDto;
 using Application.Models.PhotoDto;
 using Application.Models.UserDto;
 using AutoMapper;

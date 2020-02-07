@@ -15,8 +15,7 @@ namespace Infrastructure.Configurations
 
             builder.HasKey(c => c.Id);
 
-
-             builder.HasOne(c => c.FirstUser)
+            builder.HasOne(c => c.FirstUser)
                 .WithMany(u => u.Chats)
                 .HasForeignKey(c => c.FirstUserId)
                 .OnDelete(DeleteBehavior.NoAction);

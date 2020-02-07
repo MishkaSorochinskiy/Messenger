@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.IServices;
+using Application.Models.ChatDto.Requests;
 using Application.Models.UserDto;
 using AutoMapper;
 using Infrastructure.Services;
@@ -63,6 +64,8 @@ namespace MessengerAPI.Controllers
         [Authorize]
         public async Task<List<SearchUserDto>> Search([FromQuery]SearchUserDtoRequest request )
         {
+            request.UserName = User.Identity.Name;
+
            return await this._userservice.SearchUser(request);
         }
     }

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Application.Models.UserDto
+namespace Application.Models.ChatDto.Requests
 {
-   public class SearchUserDtoRequest
+    public class AddChatRequest
     {
         [Required]
-        public string Filter { get; set; }
+        public int SecondUserId { get; set; }
 
         public string UserName { get; set; }
     }
