@@ -22,7 +22,7 @@ namespace MessengerAPI.Controllers
 
         private readonly IMapper _map;
 
-        public UserController(IUserService userservice,AuthService auth,IMapper map)
+        public UserController(IUserService userservice, AuthService auth, IMapper map)
         {
             _userservice = userservice;
 
@@ -51,12 +51,19 @@ namespace MessengerAPI.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> UpdateUser(UpdateUserDto model)
         {
-            var res= await _userservice.UpdateUser(model);
+            var res = await _userservice.UpdateUser(model);
 
             if (res)
                 return Ok();
 
             return BadRequest();
+        }
+
+        [HttpGet("[action]")]
+        [Authorize]
+        public async Task<List<SearchUserDto>> SearchUser([FromQuery]SearchUserDtoRequest request )
+        {
+           return await this._userservice.SearchUser(request);
         }
     }
 }

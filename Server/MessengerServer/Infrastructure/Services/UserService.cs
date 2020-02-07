@@ -54,17 +54,19 @@ namespace Infrastructure.Services
 
                 await _unit.Commit();
 
-                this.SearchUser(new SearchUserDtoRequest());
-
                 return true;
             }
 
             return false;
         }
 
-        public  async void SearchUser(SearchUserDtoRequest request)
+        public  async Task<List<SearchUserDto>> SearchUser(SearchUserDtoRequest request)
         {
-            var users = await _seccontext.Users.Include(u => u.User).ToListAsync();
+            var users = await _unit.UserRepository.Search(request.Filter);
+
+            var res = _map.Map<List<SearchUserDto>>(users);
+
+            return res;
         }
     }
 }

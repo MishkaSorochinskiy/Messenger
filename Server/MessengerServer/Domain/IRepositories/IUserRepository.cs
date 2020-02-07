@@ -9,5 +9,7 @@ namespace Domain.IRepositories
     public interface IUserRepository:IRepository<User>
     {
         Task<User> GetWithPhoto(int id);
+
+        Task<List<User>> Search(string filter);
     }
 }

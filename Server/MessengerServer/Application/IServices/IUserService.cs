@@ -11,5 +11,7 @@ namespace Application.IServices
         Task<GetUserDto> GetUserInfo(GetUserInfoRequest request);
 
         Task<bool> UpdateUser(UpdateUserDto model);
+
+        Task<List<SearchUserDto>> SearchUser(SearchUserDtoRequest request);
     }
 }

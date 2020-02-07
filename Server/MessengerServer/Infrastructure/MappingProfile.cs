@@ -23,6 +23,9 @@ namespace Infrastructure
                 .ForMember(dest=>dest.Age,src=>src.MapFrom(u=>u.Age))
                 .ForMember(dest=>dest.NickName,src=>src.MapFrom(u=>u.NickName))
                 .ForMember(dest=>dest.Phone,src=>src.MapFrom(u=>u.PhoneNumber));
+
+            CreateMap<User, SearchUserDto>()
+                .ForMember(dest=>dest.Photo,src=>src.MapFrom(u=>u.Photo.Name));
         }
     }
 }

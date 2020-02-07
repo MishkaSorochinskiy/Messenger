@@ -75,7 +75,7 @@ namespace Infrastructure
                     userRepository = new UserRepository(_db);
                 }
 
-                return UserRepository;
+                return userRepository;
             }
         }
 
