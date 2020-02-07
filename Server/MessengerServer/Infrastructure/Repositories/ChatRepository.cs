@@ -18,8 +18,24 @@ namespace Infrastructure.Repositories
         public async Task<bool> ChatExist(int firstUserId, int secondUserId)
         {
             return (await this.db.Chats
-                .Where(c => c.FirstUserId == firstUserId && c.SecondUserId == secondUserId)
-                .CountAsync()) ==0;
+                .Where(c => (c.FirstUserId == firstUserId && c.SecondUserId == secondUserId)||
+                        (c.FirstUserId == secondUserId && c.SecondUserId == firstUserId))
+                .CountAsync())==0;
+        }
+
+        public async Task<List<Chat>> GetUserChats(int userid)
+        {
+            var res = await this.db.Chats
+                .Where(c => c.SecondUserId == userid || c.FirstUserId == userid)
+                .Include(c=>c.LastMessage)
+                .Include(c => c.FirstUser)
+                 .ThenInclude(u=>u.Photo)
+                .Include(c => c.SecondUser)
+                 .ThenInclude(u=>u.Photo)
+                .ToListAsync();
+
+            return res;
+                
         }
     }
 }

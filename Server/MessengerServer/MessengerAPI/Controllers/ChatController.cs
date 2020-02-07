@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Application.IServices;
 using Application.Models.ChatDto.Requests;
+using Application.Models.ChatDto.Responces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,15 @@ namespace MessengerAPI.Controllers
             request.UserName = User.Identity.Name;
 
             return await _chatservice.CreateChat(request);
+        }
+
+        [HttpGet("[action]")]
+        [Authorize]
+        public async Task<List<GetChatDto>> GetChats([FromQuery]GetChatsRequestDto request)
+        {
+            request.UserName = User.Identity.Name;
+
+            return await _chatservice.GetChats(request);
         }
     }
 }

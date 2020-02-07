@@ -9,5 +9,7 @@ namespace Domain.IRepositories
     public interface IChatRepository:IRepository<Chat>
     {
         Task<bool> ChatExist(int firstUserId, int secondUserId);
+
+        Task<List<Chat>> GetUserChats(int userid);
     }
 }

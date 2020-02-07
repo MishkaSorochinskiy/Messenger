@@ -68,7 +68,7 @@ export class UserService  {
           user.photoName=`${imgpath}/${user.photoName}`;
           return user;
         })
-        console.log(mappedres);
+
         this.updateSearchUsers(mappedres);
         return mappedres;
       });
