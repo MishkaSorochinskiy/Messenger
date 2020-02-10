@@ -32,6 +32,7 @@ namespace Infrastructure.Repositories
                 .Include(c => c.SecondUser)
                  .ThenInclude(u=>u.Photo)
                 .Include(c=>c.LastMessage)
+                .OrderByDescending(c=>c.LastMessage.TimeCreated)
                 .ToListAsync();
 
             return res;

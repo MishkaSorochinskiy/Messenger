@@ -3,6 +3,7 @@ using Application.Models.ChatDto.Requests;
 using Application.Models.ChatDto.Responces;
 using Domain;
 using Domain.Entities;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,11 +16,15 @@ namespace Infrastructure.Services
         private readonly IUnitOfWork _unit;
 
         private readonly AuthService _auth;
-        public ChatService(IUnitOfWork unit, AuthService auth)
+
+        private readonly IConfiguration _config;
+        public ChatService(IUnitOfWork unit, AuthService auth,IConfiguration config)
         {
             _unit = unit;
 
             _auth = auth;
+
+            _config = config;
         }
 
         public async Task<bool> CreateChat(AddChatRequest request)
@@ -34,7 +39,19 @@ namespace Infrastructure.Services
                     SecondUserId = request.SecondUserId
                 };
 
-                await this._unit.ChatRepository.Create(chat);
+                var grettingMessage = new Message()
+                {
+                    Content = _config.GetValue<string>("greetmessage"),
+                    TimeCreated = DateTime.Now,
+                    UserId = user.Id,
+                    Chat = chat
+                };
+
+                await this._unit.MessageRepository.Create(grettingMessage);
+
+                await this._unit.Commit();
+
+                chat.LastMessage = grettingMessage;
 
                 await this._unit.Commit();
 
@@ -58,7 +75,8 @@ namespace Infrastructure.Services
                 {
                     Id = chat.Id,
                     Photo = chat.FirstUserId == user.Id ? chat.SecondUser.Photo.Name : chat.FirstUser.Photo.Name,
-                    Content = chat.LastMessage==null?null:chat.LastMessage.Content
+                    Content = chat.LastMessage==null?null:chat.LastMessage.Content,
+                    SecondUserId=chat.SecondUserId
                 });
             }
 

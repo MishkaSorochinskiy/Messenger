@@ -11,5 +11,7 @@ namespace Application.Models.ChatDto.Responces
         public string Photo { get; set; }
 
         public string Content { get; set; }
+
+        public int SecondUserId { get; set; }
     }
 }
