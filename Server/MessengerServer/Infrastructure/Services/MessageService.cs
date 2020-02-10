@@ -42,12 +42,7 @@ namespace Infrastructure.Services
                     UserId = user.Id
                 };
 
-                user.Messages.Add(new Message()
-                {
-                    Content = message.Content,
-                    TimeCreated = DateTime.Now,
-                    UserId = user.Id
-                });
+                user.Messages.Add(newmessage);
 
                 await _unit.Commit();
 

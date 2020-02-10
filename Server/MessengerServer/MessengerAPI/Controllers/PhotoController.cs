@@ -18,12 +18,12 @@ namespace MessengerAPI.Controllers
     [ApiController]
     public class PhotoController : ControllerBase
     {
-        private readonly IPhotoService _photoservice;
+        private readonly IPhotoService _photoService;
 
         private readonly IUnitOfWork _unit;
-        public PhotoController(IPhotoService photoservice,IUnitOfWork unit)
+        public PhotoController(IPhotoService photoService,IUnitOfWork unit)
         {
-            _photoservice = photoservice;
+            _photoService = photoService;
 
             _unit = unit;
 
@@ -35,7 +35,7 @@ namespace MessengerAPI.Controllers
         {
             if (ModelState.IsValid&&collection.Files[0]!=null)
             {
-                if (await _photoservice.ChangePhoto(new AddPhotoDto()
+                if (await _photoService.ChangePhoto(new AddPhotoDto()
                 {
                     UserName = User.Identity.Name,
                     UploadedFile = collection.Files[0]
@@ -52,7 +52,7 @@ namespace MessengerAPI.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> GetPhoto()
         {
-            var photo=await _photoservice.GetPhoto(User.Identity.Name);
+            var photo=await _photoService.GetPhoto(User.Identity.Name);
 
             if (photo != null)
                 return Ok(photo.Name);
@@ -66,7 +66,7 @@ namespace MessengerAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var photo = await _photoservice.GetPhoto(request.id);
+                var photo = await _photoService.GetPhoto(request.id);
 
                 if (photo != null)
                     return Ok(photo.Name);
