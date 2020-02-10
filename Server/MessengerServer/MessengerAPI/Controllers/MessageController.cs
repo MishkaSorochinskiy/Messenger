@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.IServices;
+using Application.Models.ChatDto.Requests;
 using Application.Models.MessageDto;
 using AutoMapper;
 using Domain;
@@ -40,6 +41,15 @@ namespace MessengerAPI.Controllers
         public AllMessagesDto Get()
         {
             return _masservice.GetAllMessages();
+        }
+
+        [HttpGet("[action]")]
+        [Authorize]
+        public async Task<AllMessagesDto> GetChatMessages([FromQuery]GetChatMessagesRequest request)
+        {
+            var responce=await this._masservice.GetMessagesByChat(request);
+
+            return responce;
         }
     }
 }

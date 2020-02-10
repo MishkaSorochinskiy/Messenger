@@ -1,4 +1,5 @@
-﻿using Application.Models.MessageDto;
+﻿using Application.Models.ChatDto.Requests;
+using Application.Models.MessageDto;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,5 +12,7 @@ namespace Application.IServices
         Task<GetMessageDto> AddMessage(AddMessageDto message);
 
         AllMessagesDto GetAllMessages();
+
+        Task<AllMessagesDto> GetMessagesByChat(GetChatMessagesRequest request);
     }
 }

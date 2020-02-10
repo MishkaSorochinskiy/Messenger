@@ -27,15 +27,27 @@ namespace Infrastructure.Repositories
         {
             var res = await this.db.Chats
                 .Where(c => c.SecondUserId == userid || c.FirstUserId == userid)
-                .Include(c=>c.LastMessage)
                 .Include(c => c.FirstUser)
                  .ThenInclude(u=>u.Photo)
                 .Include(c => c.SecondUser)
                  .ThenInclude(u=>u.Photo)
+                .Include(c=>c.LastMessage)
                 .ToListAsync();
 
             return res;
                 
+        }
+
+        public async Task<Chat> GetChatContent(int id)
+        {
+           return await this.db.Chats
+                 .Where(c => c.Id == id)
+                 .Include(c => c.Messages)
+                 .Include(c => c.FirstUser)
+                     .ThenInclude(u => u.Photo)
+                 .Include(c => c.SecondUser)
+                     .ThenInclude(u => u.Photo)
+                 .FirstOrDefaultAsync();
         }
     }
 }

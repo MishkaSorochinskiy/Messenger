@@ -47,8 +47,6 @@ export class ChatService {
 
 
   startConnection=async()=>{
-    this.getMessages();
-
     this.hubConnection = new signalR.HubConnectionBuilder()
                               .withUrl("https://localhost:44334/chat")
                               .build();
@@ -57,8 +55,8 @@ export class ChatService {
                     .catch(err=>console.log(`error occured: ${err}`));                 
   }
 
-  private async getMessages(){
-    let url = await this.config.getConfig("getmessages");
+  public async getMessages(chatid:number){
+    let url = `${await this.config.getConfig("getchatmessages")}?id=${chatid}`;
     
     let photopath = await this.config.getConfig("photopath");
     this.photourl=photopath;
@@ -70,6 +68,7 @@ export class ChatService {
         .then((data)=>{
           this.MessagesUpdate(data.messages);
           this.UsersUpdate(data.users);
+          console.log(data);
           })
     }
 
@@ -83,10 +82,6 @@ export class ChatService {
       
       this.messages.value.push(data);
       this.MessagesUpdate(this.messages.getValue());
-      
-      if(this.users.value.find(u=>u.id===data.userId)==undefined){
-        await this.getMessages();
-      }
     });
 }
 
@@ -109,7 +104,14 @@ export class ChatService {
     headers= headers.append('content-type', 'application/json');
 
     this.http.post(url,JSON.stringify({SecondUserId}),{headers:headers}).toPromise()
-      .then(res=>console.log(res));
+      .then(res=>{
+        if(res===true){
+          this.GetChats();
+        }
+        else{
+
+        }
+      });
   }
 
   public async GetChats(){

@@ -1,4 +1,5 @@
 ﻿using Application.IServices;
+using Application.Models.ChatDto.Requests;
 using Application.Models.MessageDto;
 using Application.Models.UserDto;
 using AutoMapper;
@@ -70,6 +71,20 @@ namespace Infrastructure.Services
                 Users = _map.Map<List<GetUserDto>>(users),
 
                 Messages = _map.Map<List<GetMessageDto>>(messages)
+            };
+
+            return result;
+        }
+
+        public async Task<AllMessagesDto> GetMessagesByChat(GetChatMessagesRequest request)
+        {
+           var chatContent= await this._unit.ChatRepository.GetChatContent(request.Id);
+
+
+            var result = new AllMessagesDto()
+            {
+                Users = _map.Map<List<GetUserDto>>(new List<User>() { chatContent.FirstUser, chatContent.SecondUser }),
+                Messages = _map.Map<List<GetMessageDto>>(chatContent.Messages.OrderBy(m => m.TimeCreated))
             };
 
             return result;

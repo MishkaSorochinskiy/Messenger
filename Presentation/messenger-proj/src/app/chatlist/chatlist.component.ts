@@ -20,4 +20,8 @@ export class ChatlistComponent implements OnInit {
     })
   }
 
+  getMessages(id:number){
+    this.chatservice.getMessages(id);
+  }
+
 }
