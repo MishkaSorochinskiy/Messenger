@@ -86,7 +86,10 @@ export class ChatService {
       if(this.currentChatId==chatId){
         var curchat=this.chats.getValue()
             .find(c=>c.id==chatId);
-            
+        
+        this.chats.getValue().splice(this.chats.getValue().indexOf(curchat),1);
+        this.chats.getValue().splice(0,0,curchat);
+
         curchat.content=data.content;
         this.messages.value.push(data);
         this.MessagesUpdate(this.messages.getValue());
