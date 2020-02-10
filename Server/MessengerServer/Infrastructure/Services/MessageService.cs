@@ -1,4 +1,5 @@
 ﻿using Application.IServices;
+using Application.Models.ChatDto.Requests;
 using Application.Models.MessageDto;
 using Application.Models.UserDto;
 using AutoMapper;
@@ -33,21 +34,21 @@ namespace Infrastructure.Services
         {
             var user = await _auth.FindByNameUserAsync(message.UserName);
 
-            if (user != null & !string.IsNullOrEmpty(message.Content))
+            var chat = await _unit.ChatRepository.Get(message.chatId);
+
+            if (user != null & !string.IsNullOrEmpty(message.Content)&& chat!=null)
             {
                 var newmessage= new Message()
                 {
                     Content = message.Content,
                     TimeCreated = DateTime.Now,
-                    UserId = user.Id
+                    UserId = user.Id,
+                    ChatId=message.chatId
                 };
 
-                user.Messages.Add(new Message()
-                {
-                    Content = message.Content,
-                    TimeCreated = DateTime.Now,
-                    UserId = user.Id
-                });
+                user.Messages.Add(newmessage);
+
+                chat.LastMessage = newmessage;
 
                 await _unit.Commit();
 
@@ -70,6 +71,19 @@ namespace Infrastructure.Services
                 Users = _map.Map<List<GetUserDto>>(users),
 
                 Messages = _map.Map<List<GetMessageDto>>(messages)
+            };
+
+            return result;
+        }
+
+        public async Task<AllMessagesDto> GetMessagesByChat(GetChatMessagesRequest request)
+        {
+           var chatContent= await this._unit.ChatRepository.GetChatContent(request.Id);
+
+            var result = new AllMessagesDto()
+            {
+                Users = _map.Map<List<GetUserDto>>(new List<User>() { chatContent.FirstUser, chatContent.SecondUser }),
+                Messages = _map.Map<List<GetMessageDto>>(chatContent.Messages.OrderBy(m => m.TimeCreated))
             };
 
             return result;

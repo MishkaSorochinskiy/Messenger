@@ -170,3 +170,10 @@
 #sendform{
   background-color: #4D7DF6;
 }
+
+#chatempty{
+  font-size: 30px;
+  text-align: center;
+  padding-top: 50px;
+  color: #6F89C8;
+}

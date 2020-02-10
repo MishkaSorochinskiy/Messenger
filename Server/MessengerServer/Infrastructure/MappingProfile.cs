@@ -27,6 +27,7 @@ namespace Infrastructure
 
             CreateMap<User, SearchUserDto>()
                 .ForMember(dest=>dest.PhotoName,src=>src.MapFrom(u=>u.Photo.Name));
+
         }
     }
 }

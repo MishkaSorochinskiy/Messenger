@@ -11,5 +11,7 @@ namespace Domain.IRepositories
         Task<bool> ChatExist(int firstUserId, int secondUserId);
 
         Task<List<Chat>> GetUserChats(int userid);
+
+        Task<Chat> GetChatContent(int id);
     }
 }

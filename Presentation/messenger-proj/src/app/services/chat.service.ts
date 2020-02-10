@@ -10,7 +10,8 @@ import { BehaviorSubject } from 'rxjs';
 export interface Message{
   content:string,
   userId:number,
-  timeCreated:Date
+  timeCreated:Date,
+  chatId:number
 }
 
 export interface ChatContent{
@@ -21,7 +22,8 @@ export interface ChatContent{
 export interface Chat{
   id:number,
   photo:string,
-  content:string
+  content:string,
+  secondUserId:number
 }
 
 @Injectable({
@@ -39,6 +41,8 @@ export class ChatService {
   private chats=new BehaviorSubject<Chat[]>([]);
   chatssource=this.chats.asObservable();
 
+  public currentChatId:number;
+
   public photourl:string;
 
   messagesUpdate = this.messages.asObservable();
@@ -47,8 +51,6 @@ export class ChatService {
 
 
   startConnection=async()=>{
-    this.getMessages();
-
     this.hubConnection = new signalR.HubConnectionBuilder()
                               .withUrl("https://localhost:44334/chat")
                               .build();
@@ -57,8 +59,9 @@ export class ChatService {
                     .catch(err=>console.log(`error occured: ${err}`));                 
   }
 
-  private async getMessages(){
-    let url = await this.config.getConfig("getmessages");
+  public async getMessages(chatid:number){
+    this.currentChatId=chatid;
+    let url = `${await this.config.getConfig("getchatmessages")}?id=${chatid}`;
     
     let photopath = await this.config.getConfig("photopath");
     this.photourl=photopath;
@@ -69,23 +72,24 @@ export class ChatService {
     return await this.http.get<ChatContent>(url,{headers:headers}).toPromise()
         .then((data)=>{
           this.MessagesUpdate(data.messages);
-          this.UsersUpdate(data.users);
-          })
+          this.UsersUpdate(data.users);})
     }
 
   public sendMessage (data:Message) {
+    data.chatId=this.currentChatId;
     this.hubConnection.invoke('SendToAll', data)
     .catch(err => console.error(err));
   }
 
   public updateChat = async () => {
-    this.hubConnection.on('update', async (data) => {
-      
-      this.messages.value.push(data);
-      this.MessagesUpdate(this.messages.getValue());
-      
-      if(this.users.value.find(u=>u.id===data.userId)==undefined){
-        await this.getMessages();
+    this.hubConnection.on('update', async (data,chatId) => {
+      if(this.currentChatId==chatId){
+        var curchat=this.chats.getValue()
+            .find(c=>c.id==chatId);
+        curchat.content=data.content;
+        this.messages.value.push(data);
+        this.MessagesUpdate(this.messages.getValue());
+        this.ChatsUpdate(this.chats.getValue());
       }
     });
 }
@@ -109,7 +113,20 @@ export class ChatService {
     headers= headers.append('content-type', 'application/json');
 
     this.http.post(url,JSON.stringify({SecondUserId}),{headers:headers}).toPromise()
-      .then(res=>console.log(res));
+      .then(res=>{
+        console.log(res);
+        if(res===true){
+          this.GetChats();
+        }
+        else{
+          console.log(this.chats.getValue());
+          var chat=this.chats.getValue()
+              .find(c=>c.secondUserId==SecondUserId);
+          this.currentChatId=chat.id;
+          console.log(chat);
+          this.getMessages(this.currentChatId);
+        }
+      });
   }
 
   public async GetChats(){
@@ -118,11 +135,15 @@ export class ChatService {
 
     return await this.http.get<Chat[]>(url).toPromise()
       .then(res=>{
-        console.log(res);
         let mappedres= res.map(chat=>{
           chat.photo=`${imgpath}/${chat.photo}`;
           return chat;
         })
+
+        console.log(mappedres);
+
+        this.currentChatId=mappedres[0].id;
+        this.getMessages(this.currentChatId);
 
         this.ChatsUpdate(res);
         return res;
