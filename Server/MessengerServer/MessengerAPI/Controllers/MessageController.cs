@@ -23,15 +23,15 @@ namespace MessengerAPI.Controllers
 
         private readonly IMapper _mapper;
 
-        private readonly IMessageService _masservice;
+        private readonly IMessageService _messageService;
 
-        public MessageController(IUnitOfWork unit,IMapper mapper,IMessageService masservice)
+        public MessageController(IUnitOfWork unit,IMapper mapper,IMessageService messageService)
         {
             _unit = unit;
 
             _mapper = mapper;
 
-            _masservice = masservice;
+            _messageService = messageService;
 
         }
 
@@ -39,7 +39,7 @@ namespace MessengerAPI.Controllers
         [Authorize]
         public AllMessagesDto Get()
         {
-            return _masservice.GetAllMessages();
+            return _messageService.GetAllMessages();
         }
     }
 }

@@ -16,15 +16,15 @@ namespace MessengerAPI.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUserService _userservice;
+        private readonly IUserService _userService;
 
         private readonly AuthService _auth;
 
         private readonly IMapper _map;
 
-        public UserController(IUserService userservice,AuthService auth,IMapper map)
+        public UserController(IUserService userService,AuthService auth,IMapper map)
         {
-            _userservice = userservice;
+            _userService = userService;
 
             _auth = auth;
 
@@ -40,7 +40,9 @@ namespace MessengerAPI.Controllers
             if (user != null)
             {
                 var dto = _map.Map<GetUserDto>(user);
+
                 dto.Email = User.Identity.Name;
+
                 return Ok(dto);
             }
 
@@ -51,7 +53,7 @@ namespace MessengerAPI.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> UpdateUser(UpdateUserDto model)
         {
-            var res= await _userservice.UpdateUser(model);
+            var res= await _userService.UpdateUser(model);
 
             if (res)
                 return Ok();
