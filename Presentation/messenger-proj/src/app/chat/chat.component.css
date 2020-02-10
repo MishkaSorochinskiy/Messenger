@@ -177,3 +177,7 @@
   padding-top: 50px;
   color: #6F89C8;
 }
+
+.contentrigth ,.contentleft{
+  word-break: break-all;
+}

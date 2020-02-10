@@ -1,12 +1,12 @@
 <app-search></app-search>
 <a *ngFor="let chat of chats" (click)="getMessages(chat.id)">
-  <div class="row m-0 p-0">
+  <div class="row m-0 p-0"  [class.CurrentChat]="chat.id==chatservice.currentChatId">
     <div class="col-1">
       <img [src]="chat.photo" class="cardimg">
     </div>      
     <div class="col-sm chatname">
         <p class="cardcontent" *ngIf="chat.content==null">Chat</p>
-        <p class="cardcontent" *ngIf="chat.content!==null">{{chat.content}}</p>
+        <p class="cardcontent contentparagraph" *ngIf="chat.content!==null">{{chat.content}}</p>
     </div>
   </div>
 </a>
