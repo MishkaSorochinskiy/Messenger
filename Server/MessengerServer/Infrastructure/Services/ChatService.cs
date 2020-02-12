@@ -27,11 +27,11 @@ namespace Infrastructure.Services
             _config = config;
         }
 
-        public async Task<bool> CreateChat(AddChatRequest request)
+        public async Task<bool> CreateChatAsync(AddChatRequest request)
         {
             var user = await _auth.FindByNameUserAsync(request.UserName);
 
-            if ((await this._unit.ChatRepository.ChatExist(user.Id, request.SecondUserId)))
+            if ((await this._unit.ChatRepository.ChatExistAsync(user.Id, request.SecondUserId)))
             {
                 var chat = new Chat()
                 {
@@ -47,7 +47,7 @@ namespace Infrastructure.Services
                     Chat = chat
                 };
 
-                await this._unit.MessageRepository.Create(grettingMessage);
+                await this._unit.MessageRepository.CreateAsync(grettingMessage);
 
                 await this._unit.Commit();
 
@@ -61,11 +61,11 @@ namespace Infrastructure.Services
             return false;
         }
 
-        public async Task<List<GetChatDto>> GetChats(GetChatsRequestDto request)
+        public async Task<List<GetChatDto>> GetChatsAsync(GetChatsRequestDto request)
         {
             var user = await _auth.FindByNameUserAsync(request.UserName);
 
-            var chatres= await _unit.ChatRepository.GetUserChats(user.Id);
+            var chatres= await _unit.ChatRepository.GetUserChatsAsync(user.Id);
 
             var res = new List<GetChatDto>();
 

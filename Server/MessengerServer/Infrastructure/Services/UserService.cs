@@ -30,9 +30,9 @@ namespace Infrastructure.Services
             _seccontext = seccontext;
         }
 
-        public async Task<GetUserDto> GetUserInfo(GetUserInfoRequest request)
+        public async Task<GetUserDto> GetUserInfoAsync(GetUserInfoRequest request)
         {
-            var user= await _unit.UserRepository.GetWithPhoto(request.UserId);
+            var user= await _unit.UserRepository.GetWithPhotoAsync(request.UserId);
 
             if (user != null)
             {
@@ -42,7 +42,7 @@ namespace Infrastructure.Services
             return default(GetUserDto);
         }
 
-        public async Task<bool> UpdateUser(UpdateUserDto model)
+        public async Task<bool> UpdateUserAsync(UpdateUserDto model)
         {
             var user = await _auth.FindByNameUserAsync(model.Email);
 
@@ -62,11 +62,11 @@ namespace Infrastructure.Services
             return false;
         }
 
-        public  async Task<List<SearchUserDto>> SearchUser(SearchUserDtoRequest request)
+        public  async Task<List<SearchUserDto>> SearchUserAsync(SearchUserDtoRequest request)
         {
             var currentuser = await _auth.FindByNameUserAsync(request.UserName);
 
-            var users = (await _unit.UserRepository.Search(request.Filter));
+            var users = (await _unit.UserRepository.SearchUsersAsync(request.Filter));
 
             users.Remove(currentuser);
 

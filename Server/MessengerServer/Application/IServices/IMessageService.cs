@@ -9,10 +9,10 @@ namespace Application.IServices
 {
     public interface IMessageService
     {
-        Task<GetMessageDto> AddMessage(AddMessageDto message);
+        Task<GetMessageDto> AddMessageAsync(AddMessageDto message);
 
-        AllMessagesDto GetAllMessages();
+        Task<AllMessagesDto> GetAllMessagesAsync();
 
-        Task<AllMessagesDto> GetMessagesByChat(GetChatMessagesRequest request);
+        Task<AllMessagesDto> GetMessageByChatAsync(GetChatMessagesRequest request);
     }
 }

@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MessengerAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -33,7 +33,7 @@ namespace MessengerAPI.Controllers
         }
 
         [Authorize]
-        [HttpGet("[action]")]
+        [HttpGet]
         public async Task<IActionResult> UserInfo()
         {
             var user = await _auth.FindByNameUserAsync(User.Identity.Name);
@@ -49,10 +49,10 @@ namespace MessengerAPI.Controllers
         }
 
         [Authorize]
-        [HttpPost("[action]")]
+        [HttpPost]
         public async Task<IActionResult> UpdateUser(UpdateUserDto model)
         {
-            var res = await _userservice.UpdateUser(model);
+            var res = await _userservice.UpdateUserAsync(model);
 
             if (res)
                 return Ok();
@@ -60,13 +60,13 @@ namespace MessengerAPI.Controllers
             return BadRequest();
         }
 
-        [HttpGet("[action]")]
+        [HttpGet]
         [Authorize]
         public async Task<List<SearchUserDto>> Search([FromQuery]SearchUserDtoRequest request )
         {
             request.UserName = User.Identity.Name;
 
-           return await this._userservice.SearchUser(request);
+           return await this._userservice.SearchUserAsync(request);
         }
     }
 }
