@@ -104,5 +104,24 @@ namespace Infrastructure.Services
 
             return false;
         }
+
+        public async Task<bool> UnBlockUser(BlockUserRequest request)
+        {
+            var currentUser = await this._auth.FindByNameUserAsync(request.UserName);
+
+            var blockedUser = await this._unit.BlockedUserRepository
+                              .IsBlockedUserAsync(currentUser.Id, request.UserIdToBlock);
+
+            if (blockedUser != null)
+            {
+                await this._unit.BlockedUserRepository.DeleteAsync(blockedUser.Id);
+
+                await this._unit.Commit();
+
+                return true;
+            }
+
+            return false;
+        }
     }
 }
