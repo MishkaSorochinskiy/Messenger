@@ -15,8 +15,8 @@ namespace Application.IServices
 
         Task<List<SearchUserDto>> SearchUserAsync(SearchUserDtoRequest request);
 
-        Task<bool> BlockUser(BlockUserRequest request);
+        Task<bool> BlockUserAsync(BlockUserRequest request);
 
-        Task<bool> UnBlockUser(BlockUserRequest request);
+        Task<bool> UnBlockUserAsync(BlockUserRequest request);
     }
 }

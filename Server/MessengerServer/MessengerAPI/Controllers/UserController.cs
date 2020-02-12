@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Application.IServices;
 using Application.Models.ChatDto.Requests;
 using Application.Models.UserDto;
+using Application.Models.UserDto.Requests;
 using AutoMapper;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -69,6 +70,28 @@ namespace MessengerAPI.Controllers
             request.UserName = User.Identity.Name;
 
            return await this._userService.SearchUserAsync(request);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<bool> BlockUser([FromBody]BlockUserRequest request)
+        {
+            request.UserName = User.Identity.Name;
+
+            var res= await this._userService.BlockUserAsync(request);
+
+            return res;
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<bool> UnBlockUser([FromBody]BlockUserRequest request)
+        {
+            request.UserName = User.Identity.Name;
+
+            var res = await this._userService.UnBlockUserAsync(request);
+
+            return res;
         }
     }
 }

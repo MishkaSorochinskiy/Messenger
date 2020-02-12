@@ -76,7 +76,7 @@ namespace Infrastructure.Services
             return res;
         }
 
-        public async Task<bool> BlockUser(BlockUserRequest request) 
+        public async Task<bool> BlockUserAsync(BlockUserRequest request) 
         {
             var currentUser = await this._auth.FindByNameUserAsync(request.UserName);
             
@@ -105,7 +105,7 @@ namespace Infrastructure.Services
             return false;
         }
 
-        public async Task<bool> UnBlockUser(BlockUserRequest request)
+        public async Task<bool> UnBlockUserAsync(BlockUserRequest request)
         {
             var currentUser = await this._auth.FindByNameUserAsync(request.UserName);
 
