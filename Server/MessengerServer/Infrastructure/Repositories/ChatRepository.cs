@@ -15,7 +15,7 @@ namespace Infrastructure.Repositories
         {
         }
 
-        public async Task<bool> ChatExist(int firstUserId, int secondUserId)
+        public async Task<bool> ChatExistAsync(int firstUserId, int secondUserId)
         {
             return (await this.db.Chats
                 .Where(c => (c.FirstUserId == firstUserId && c.SecondUserId == secondUserId)||
@@ -23,7 +23,7 @@ namespace Infrastructure.Repositories
                 .CountAsync())==0;
         }
 
-        public async Task<List<Chat>> GetUserChats(int userid)
+        public async Task<List<Chat>> GetUserChatsAsync(int userid)
         {
             var res = await this.db.Chats
                 .Where(c => c.SecondUserId == userid || c.FirstUserId == userid)
@@ -39,7 +39,7 @@ namespace Infrastructure.Repositories
                 
         }
 
-        public async Task<Chat> GetChatContent(int id)
+        public async Task<Chat> GetChatContentAsync(int id)
         {
            return await this.db.Chats
                  .Where(c => c.Id == id)

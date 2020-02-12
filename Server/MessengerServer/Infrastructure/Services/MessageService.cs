@@ -30,11 +30,11 @@ namespace Infrastructure.Services
             _map = map;
         }
 
-        public async Task<GetMessageDto> AddMessage(AddMessageDto message)
+        public async Task<GetMessageDto> AddMessageAsync(AddMessageDto message)
         {
             var user = await _auth.FindByNameUserAsync(message.UserName);
 
-            var chat = await _unit.ChatRepository.Get(message.chatId);
+            var chat = await _unit.ChatRepository.GetAsync(message.chatId);
 
             if (user != null & !string.IsNullOrEmpty(message.Content)&& chat!=null)
             {
@@ -58,11 +58,9 @@ namespace Infrastructure.Services
             return default(GetMessageDto);
         }
 
-        public AllMessagesDto GetAllMessages()
+        public async Task<AllMessagesDto> GetAllMessagesAsync()
         {
-            var messages = _unit.MessageRepository.GetAllWithUsers()
-                .ToList()
-                .OrderBy(m => m.TimeCreated);
+            var messages = await _unit.MessageRepository.GetAllWithUsersAsync();
 
             var users = messages.Distinct(new MessageComparer()).Select(m=>m.User);
 
@@ -76,9 +74,9 @@ namespace Infrastructure.Services
             return result;
         }
 
-        public async Task<AllMessagesDto> GetMessagesByChat(GetChatMessagesRequest request)
+        public async Task<AllMessagesDto> GetMessageByChatAsync(GetChatMessagesRequest request)
         {
-           var chatContent= await this._unit.ChatRepository.GetChatContent(request.Id);
+           var chatContent= await this._unit.ChatRepository.GetChatContentAsync(request.Id);
 
             var result = new AllMessagesDto()
             {

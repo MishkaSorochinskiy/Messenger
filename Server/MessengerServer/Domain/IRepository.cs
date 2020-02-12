@@ -7,10 +7,10 @@ namespace Domain
 {
     public interface IRepository<T> where T:class
     {
-        IEnumerable<T> GetAll();
-        Task<T> Get(int id);
-        Task Create(T item);
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<T> GetAsync(int id);
+        Task CreateAsync(T item);
         T Update(T item);
-        Task Delete(int id);
+        Task DeleteAsync(int id);
     }
 }

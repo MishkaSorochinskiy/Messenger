@@ -8,11 +8,11 @@ namespace Application.IServices
 {
    public interface  IPhotoService
     {
-        Task<bool> ChangePhoto(AddPhotoDto model);
+        Task<bool> ChangePhotoAsync(AddPhotoDto model);
 
-        Task<GetPhotoDto> GetPhoto(string username);
+        Task<GetPhotoDto> GetPhotoAsync(string username);
 
-        Task<GetPhotoDto> GetPhoto(int id);
+        Task<GetPhotoDto> GetPhotoAsync(int id);
 
     }
 }

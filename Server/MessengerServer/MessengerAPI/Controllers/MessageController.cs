@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace MessengerAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class MessageController : ControllerBase
     {
@@ -38,16 +38,9 @@ namespace MessengerAPI.Controllers
 
         [HttpGet]
         [Authorize]
-        public AllMessagesDto Get()
-        {
-            return _masservice.GetAllMessages();
-        }
-
-        [HttpGet("[action]")]
-        [Authorize]
         public async Task<AllMessagesDto> GetChatMessages([FromQuery]GetChatMessagesRequest request)
         {
-            var responce=await this._masservice.GetMessagesByChat(request);
+            var responce=await this._masservice.GetMessageByChatAsync(request);
 
             return responce;
         }

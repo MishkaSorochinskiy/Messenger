@@ -35,7 +35,7 @@ namespace Infrastructure.Services
             _env = env;
         }
 
-        public async Task<bool> ChangePhoto(AddPhotoDto model)
+        public async Task<bool> ChangePhotoAsync(AddPhotoDto model)
         {
             var user = await _auth.FindByNameUserAsync(model.UserName);
 
@@ -43,7 +43,7 @@ namespace Infrastructure.Services
 
             if (user != null&&this.extensions.Contains(ext))
             {
-                var photo = await _unit.PhotoRepository.GetPhotoByUser(user.Id);
+                var photo = await _unit.PhotoRepository.GetPhotoByUserAsync(user.Id);
 
                 photo.Name = $"{user.Id}{model.UploadedFile.Name}";
 
@@ -63,21 +63,21 @@ namespace Infrastructure.Services
 
         }
 
-        public async Task<GetPhotoDto> GetPhoto(string username)
+        public async Task<GetPhotoDto> GetPhotoAsync(string username)
         {
             var user = await _auth.FindByNameUserAsync(username);
 
             if (user != null)
             {
-               return _map.Map<GetPhotoDto>(await _unit.PhotoRepository.GetPhotoByUser(user.Id));
+               return _map.Map<GetPhotoDto>(await _unit.PhotoRepository.GetPhotoByUserAsync(user.Id));
             }
 
             return default(GetPhotoDto);
         }
 
-        public async Task<GetPhotoDto> GetPhoto(int id)
+        public async Task<GetPhotoDto> GetPhotoAsync(int id)
         {            
-            var photo = await _unit.PhotoRepository.GetPhotoByUser(id);
+            var photo = await _unit.PhotoRepository.GetPhotoByUserAsync(id);
 
             if (photo != null)
                 return  _map.Map<GetPhotoDto>(photo);

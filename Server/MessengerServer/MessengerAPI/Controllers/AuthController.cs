@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MessengerAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -26,7 +26,7 @@ namespace MessengerAPI.Controllers
             _usermanager = usermanager;
         }
 
-        [HttpPost("[action]")]
+        [HttpPost]
         public async Task<ActionResult> SignIn(LoginModel model)
         {
             if (ModelState.IsValid)
@@ -42,14 +42,14 @@ namespace MessengerAPI.Controllers
             return BadRequest("Model is not valid!!");
         }
 
-        [HttpGet("[action]")]
+        [HttpGet]
         [Authorize]
         public async Task SignOut()
         {
              await _auth.SignOut();
         }
 
-        [HttpPost("[action]")]
+        [HttpPost]
         public async Task<ActionResult> Register(RegisterModel model)
         {
             if (ModelState.IsValid)
@@ -68,8 +68,7 @@ namespace MessengerAPI.Controllers
             return BadRequest("Model is not valid!");
         }
 
-
-        [HttpPost("[action]")]
+        [HttpPost]
         public async  Task<bool> EmailExist([FromBody]CheckRegisterModel model)
         {
             return (await _usermanager.FindByEmailAsync(model.Email)) == null;

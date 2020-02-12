@@ -8,6 +8,6 @@ namespace Domain.IRepositories
 {
     public interface IPhotoRepository:IRepository<Photo>
     {
-        Task<Photo> GetPhotoByUser(int userid);
+        Task<Photo> GetPhotoByUserAsync(int userid);
     }
 }

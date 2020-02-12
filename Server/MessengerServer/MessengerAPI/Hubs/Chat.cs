@@ -38,7 +38,7 @@ namespace MessengerAPI.Hubs
         {
            var userId=(await this._auth.FindByNameAsync(Context.User.Identity.Name)).UserId;
 
-           var userChats =await this._unit.ChatRepository.GetUserChats(userId);
+           var userChats =await this._unit.ChatRepository.GetUserChatsAsync(userId);
 
             userChats.ForEach(async chat =>
             {
@@ -52,7 +52,7 @@ namespace MessengerAPI.Hubs
         {
             message.UserName = Context.User.Identity.Name;
 
-            var newmessage = await _messageService.AddMessage(message);
+            var newmessage = await _messageService.AddMessageAsync(message);
 
             if (newmessage!=null)
             {
@@ -64,7 +64,7 @@ namespace MessengerAPI.Hubs
         {
             var userId = (await this._auth.FindByNameAsync(Context.User.Identity.Name)).UserId;
 
-            var userChats = await this._unit.ChatRepository.GetUserChats(userId);
+            var userChats = await this._unit.ChatRepository.GetUserChatsAsync(userId);
 
             userChats.ForEach(async chat =>
             {

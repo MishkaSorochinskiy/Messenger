@@ -16,7 +16,7 @@ namespace Infrastructure.Repositories
 
         }
 
-        public async Task<Photo> GetPhotoByUser(int userid)
+        public async Task<Photo> GetPhotoByUserAsync(int userid)
         {
             return await this.db.Photos.Where(p => p.UserId == userid)
                 .FirstOrDefaultAsync();

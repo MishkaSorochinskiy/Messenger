@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MessengerAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class ChatController : ControllerBase
     {
@@ -21,22 +21,22 @@ namespace MessengerAPI.Controllers
             _chatservice = chatservice;
         }
 
-        [HttpPost("[action]")]
+        [HttpPost]
         [Authorize]
         public async Task<bool> Create([FromBody]AddChatRequest request)
         {
             request.UserName = User.Identity.Name;
 
-            return await _chatservice.CreateChat(request);
+            return await _chatservice.CreateChatAsync(request);
         }
 
-        [HttpGet("[action]")]
+        [HttpGet]
         [Authorize]
         public async Task<List<GetChatDto>> GetChats([FromQuery]GetChatsRequestDto request)
         {
             request.UserName = User.Identity.Name;
 
-            return await _chatservice.GetChats(request);
+            return await _chatservice.GetChatsAsync(request);
         }
     }
 }
