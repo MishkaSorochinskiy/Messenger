@@ -4,7 +4,7 @@ import { HttpClient ,HttpHeaders} from '@angular/common/http';
 import { Injectable, OnInit, ɵConsole } from '@angular/core';
 import * as signalR from "@aspnet/signalr"
 import {DomSanitizer} from '@angular/platform-browser';
-import { User } from './user.service';
+import { User, UserService } from './user.service';
 import { BehaviorSubject } from 'rxjs';
 
 export interface Message{
@@ -47,7 +47,7 @@ export class ChatService {
 
   messagesUpdate = this.messages.asObservable();
 
-  constructor(private http:HttpClient,private config:ConfigService,private sanitizer:DomSanitizer, private photo: PhotoService) { }
+  constructor(private http:HttpClient,private config:ConfigService,private sanitizer:DomSanitizer, private photo: PhotoService,private userservice:UserService) { }
 
 
   startConnection=async()=>{
@@ -118,16 +118,16 @@ export class ChatService {
 
     this.http.post(url,JSON.stringify({SecondUserId}),{headers:headers}).toPromise()
       .then(res=>{
-        console.log(res);
+        this.userservice.updateSearchUsers([]);
         if(res===true){
           this.GetChats();
         }
         else{
-          console.log(this.chats.getValue());
+          console.log(SecondUserId);
           var chat=this.chats.getValue()
               .find(c=>c.secondUserId==SecondUserId);
+            console.log(chat);
           this.currentChatId=chat.id;
-          console.log(chat);
           this.getMessages(this.currentChatId);
         }
       });

@@ -9,6 +9,7 @@ using Infrastructure;
 using Infrastructure.AppSecurity;
 using Infrastructure.Services;
 using MessengerAPI.Hubs;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -78,8 +79,6 @@ namespace MessengerAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Chatter Messenger", Version = "v1" });
             });
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
