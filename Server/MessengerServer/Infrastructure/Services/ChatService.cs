@@ -6,6 +6,7 @@ using Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -63,7 +64,7 @@ namespace Infrastructure.Services
 
         public async Task<List<GetChatDto>> GetChatsAsync(GetChatsRequestDto request)
         {
-            var user = await _auth.FindByNameUserAsync(request.UserName);
+            var user = await this._unit.UserRepository.GetUserWithBlackList(request.UserName);
 
             var chatres= await _unit.ChatRepository.GetUserChatsAsync(user.Id);
 
@@ -75,9 +76,10 @@ namespace Infrastructure.Services
                 {
                     Id = chat.Id,
                     Photo = chat.FirstUserId == user.Id ? chat.SecondUser.Photo.Name : chat.FirstUser.Photo.Name,
-                    Content = chat.LastMessage==null?null:chat.LastMessage.Content,
-                    SecondUserId=chat.SecondUserId
-                });
+                    Content = chat.LastMessage == null ? null : chat.LastMessage.Content,
+                    SecondUserId = chat.SecondUserId,
+                    IsBlocked = user.BlockedUsers.Any(bl => bl.UserToBlockId == chat.SecondUserId) ? true : false
+                }) ;
             }
 
             return res;

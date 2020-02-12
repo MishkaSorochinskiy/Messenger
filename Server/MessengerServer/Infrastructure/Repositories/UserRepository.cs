@@ -30,5 +30,12 @@ namespace Infrastructure.Repositories
                 .Include(u=>u.Photo)
                 .ToListAsync();
         }
+
+        public async Task<User> GetUserWithBlackList(string userName)
+        {
+            return await this.db.Users.Where(user => user.Email == userName)
+                    .Include(user => user.BlockedUsers)
+                    .FirstOrDefaultAsync();
+        }
     }
 }

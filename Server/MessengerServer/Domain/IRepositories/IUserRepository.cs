@@ -11,5 +11,7 @@ namespace Domain.IRepositories
         Task<User> GetWithPhotoAsync(int id);
 
         Task<List<User>> SearchUsersAsync(string filter);
+
+        Task<User> GetUserWithBlackList(string userName);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Application.IServices;
 using Application.Models.UserDto;
+using Application.Models.UserDto.Requests;
 using AutoMapper;
 using Domain;
 using Domain.Entities;
@@ -73,6 +74,35 @@ namespace Infrastructure.Services
             var res = _map.Map<List<SearchUserDto>>(users);
 
             return res;
+        }
+
+        public async Task<bool> BlockUser(BlockUserRequest request) 
+        {
+            var currentUser = await this._auth.FindByNameUserAsync(request.UserName);
+            
+            var userToBlock = await this._unit.UserRepository.GetAsync(request.UserIdToBlock);
+
+
+            var blockedUser = await this._unit.BlockedUserRepository
+                              .IsBlockedUserAsync(currentUser.Id, request.UserIdToBlock);
+
+            if (blockedUser == null && userToBlock!=null)
+            {
+                var newBlockedUser = new BlockedUser()
+                {
+                    UserId = currentUser.Id,
+                    UserToBlockId = request.UserIdToBlock
+                };
+
+                await this._unit.BlockedUserRepository
+                        .CreateAsync(newBlockedUser);
+
+                await this._unit.Commit();
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

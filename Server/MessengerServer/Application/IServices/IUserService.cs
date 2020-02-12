@@ -1,4 +1,5 @@
 ﻿using Application.Models.UserDto;
+using Application.Models.UserDto.Requests;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,5 +14,7 @@ namespace Application.IServices
         Task<bool> UpdateUserAsync(UpdateUserDto model);
 
         Task<List<SearchUserDto>> SearchUserAsync(SearchUserDtoRequest request);
+
+        Task<bool> BlockUser(BlockUserRequest request);
     }
 }
