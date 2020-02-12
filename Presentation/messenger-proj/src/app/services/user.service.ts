@@ -19,8 +19,10 @@ export class User{
 export class UserService  {
 
   private currentUser=new BehaviorSubject<User>(new User());
-
   data=this.currentUser.asObservable();
+
+  private searchUsers=new BehaviorSubject<User[]>([]);
+  searchdata=this.searchUsers.asObservable();
 
   constructor(private http:HttpClient,private config:ConfigService,private photoservice:PhotoService) { }
 
@@ -49,5 +51,26 @@ export class UserService  {
 
   updateCurrentUser(user:User){
     this.currentUser.next(user);
+  }
+
+  updateSearchUsers(values:User[]){
+    this.searchUsers.next(values);
+  }
+
+  public async SearchUsers(filter:string){
+    let url =await this.config.getConfig("search")+`?Filter=${filter}`;
+    let imgpath=await this.config.getConfig("photopath");
+    console.log(imgpath);
+    return await this.http.get<User[]>(url).toPromise()
+    .then(res=>
+      {
+       let mappedres= res.map(user=>{
+          user.photoName=`${imgpath}/${user.photoName}`;
+          return user;
+        })
+
+        this.updateSearchUsers(mappedres);
+        return mappedres;
+      });
   }
 }

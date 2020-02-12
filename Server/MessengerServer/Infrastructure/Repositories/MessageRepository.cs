@@ -16,10 +16,12 @@ namespace Infrastructure.Repositories
 
         }
 
-        public IEnumerable<Message> GetAllWithUsers()
+        public async Task<IEnumerable<Message>> GetAllWithUsersAsync()
         {
-           return this.db.Messages.Include(m => m.User)
-                .ThenInclude(u=>u.Photo);
+           return await this.db.Messages.Include(m => m.User)
+                .ThenInclude(u=>u.Photo)
+                .OrderBy(m => m.TimeCreated)
+                .ToListAsync();
         }
     }
 }

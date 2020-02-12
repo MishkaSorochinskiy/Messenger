@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.IServices;
+using Application.Models.ChatDto.Requests;
 using Application.Models.UserDto;
 using AutoMapper;
 using Infrastructure.Services;
@@ -12,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MessengerAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -22,7 +23,7 @@ namespace MessengerAPI.Controllers
 
         private readonly IMapper _map;
 
-        public UserController(IUserService userService,AuthService auth,IMapper map)
+        public UserController(IUserService userService, AuthService auth, IMapper map)
         {
             _userService = userService;
 
@@ -32,7 +33,7 @@ namespace MessengerAPI.Controllers
         }
 
         [Authorize]
-        [HttpGet("[action]")]
+        [HttpGet]
         public async Task<IActionResult> UserInfo()
         {
             var user = await _auth.FindByNameUserAsync(User.Identity.Name);
@@ -50,15 +51,24 @@ namespace MessengerAPI.Controllers
         }
 
         [Authorize]
-        [HttpPost("[action]")]
+        [HttpPost]
         public async Task<IActionResult> UpdateUser(UpdateUserDto model)
         {
-            var res= await _userService.UpdateUser(model);
+            var res = await _userService.UpdateUserAsync(model);
 
             if (res)
                 return Ok();
 
             return BadRequest();
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<List<SearchUserDto>> Search([FromQuery]SearchUserDtoRequest request )
+        {
+            request.UserName = User.Identity.Name;
+
+           return await this._userService.SearchUserAsync(request);
         }
     }
 }

@@ -8,8 +8,10 @@ namespace Application.IServices
 {
     public interface IUserService
     {
-        Task<GetUserDto> GetUserInfo(GetUserInfoRequest request);
+        Task<GetUserDto> GetUserInfoAsync(GetUserInfoRequest request);
 
-        Task<bool> UpdateUser(UpdateUserDto model);
+        Task<bool> UpdateUserAsync(UpdateUserDto model);
+
+        Task<List<SearchUserDto>> SearchUserAsync(SearchUserDtoRequest request);
     }
 }

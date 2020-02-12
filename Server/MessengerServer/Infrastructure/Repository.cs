@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,31 +17,31 @@ namespace Infrastructure
             this.db = context;
         }
 
-        public async Task Create(T item)
+        public async Task CreateAsync(T item)
         {
             await db.Set<T>().AddAsync(item);
         }
 
-        public async void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
             T entity = await db.Set<T>().FindAsync(id);
             if (entity != null)
                 db.Set<T>().Remove(entity);
         }
 
-        public async Task<T> Get(int id)
+        public async Task<T> GetAsync(int id)
         {
             return await db.Set<T>().FindAsync(id);
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return db.Set<T>().ToList();
+             return await db.Set<T>().ToListAsync();
         }
 
-        public void Update(T item)
+        public T Update(T item)
         {
-            db.Set<T>().Update(item);
+            return db.Set<T>().Update(item)?.Entity;
         }
     }
 }

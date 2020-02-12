@@ -23,7 +23,7 @@ namespace Infrastructure
             string password = "mainadmin";
             if (await userManager.FindByNameAsync(username) == null)
             {
-                 User admin = new User() {NickName="admin_captain",Sex=Sex.Male};
+                 User admin = new User() {NickName="admin_captain",Sex=Sex.Male,Email=username};
                  mescontext.Users.Add(admin);
                  mescontext.SaveChanges();
 
@@ -31,9 +31,10 @@ namespace Infrastructure
                 {
                     UserId = admin.Id,
                     Path = _config.GetValue<string>("defaultimagepath"),
-                    Name = _config.GetValue<string>("defaultimagename")
+                    Name = _config.GetValue<string>("defaultmale")
                 };
 
+                mescontext.Photos.Add(photo);
                 mescontext.SaveChanges();
 
                 SecurityUser secadmin = new SecurityUser() { UserName=username,Email=username,UserId=admin.Id};

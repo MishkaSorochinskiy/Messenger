@@ -6,6 +6,11 @@
 
     <div class="container-fluid overflow-auto col-sm p-0 m-0">
       <div class="col-sm p-0 m-0" id="contentdiv">
+        <div *ngIf="messages.length==0" id="chatempty">
+          <img src="../../assets/running.png" width="30" height="30" class="d-inline-block align-top mr-1" alt="">
+          Type smth to your Friend...
+        </div>
+
         <div *ngFor="let item of messages">
   
           <div class="row customcard" *ngIf="item.userId!=currentUser.id">
@@ -13,7 +18,7 @@
               <span class="customtooltip">{{GetUser(item.userId).nickName}}</span>
               <img [src]="GetUrl(item.userId)" class="cardimg">
             </div>      
-            <div class="col-sm" *ngIf="item.userId!=currentUser.id">
+            <div class="col-sm contentleft" *ngIf="item.userId!=currentUser.id">
                 <p class="cardcontent">{{item.content}}</p>
             </div>
             <div class="col-2 p-0 m-0" *ngIf="item.userId!=currentUser.id">

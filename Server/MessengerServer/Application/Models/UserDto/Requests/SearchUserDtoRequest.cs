@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Application.Models.MessageDto
+namespace Application.Models.UserDto
 {
-    public class AddMessageDto
+   public class SearchUserDtoRequest
     {
         [Required]
-        public string Content { get; set; }
+        public string Filter { get; set; }
 
         public string UserName { get; set; }
     }

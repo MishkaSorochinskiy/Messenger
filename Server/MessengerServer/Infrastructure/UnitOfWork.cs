@@ -15,7 +15,33 @@ namespace Infrastructure
         private IUserRepository userRepository;      
         private IPhotoRepository photoRepository;     
         private IMessageRepository messageRepository;
+        private IChatRepository chatRepository;
+        private IBlockedUserRepository blockeduserRepository;
 
+        public IChatRepository ChatRepository
+        {
+            get
+            {
+                if (chatRepository == null)
+                {
+                    chatRepository = new ChatRepository(_db);
+                }
+
+                return chatRepository;
+            }
+        }
+        public IBlockedUserRepository BlockedUserRepository
+        {
+            get
+            {
+                if (blockeduserRepository == null)
+                {
+                    blockeduserRepository = new BlockedUserRepository(_db);
+                }
+
+                return blockeduserRepository;
+            }
+        }
         public IPhotoRepository PhotoRepository
         {
             get
@@ -28,7 +54,6 @@ namespace Infrastructure
                 return photoRepository;
             }
         }
-
         public IMessageRepository MessageRepository
         {
             get
@@ -41,7 +66,6 @@ namespace Infrastructure
                 return messageRepository;
             }
         }
-
         public IUserRepository UserRepository 
         {
             get
@@ -51,7 +75,7 @@ namespace Infrastructure
                     userRepository = new UserRepository(_db);
                 }
 
-                return UserRepository;
+                return userRepository;
             }
         }
 

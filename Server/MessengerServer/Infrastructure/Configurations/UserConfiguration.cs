@@ -18,6 +18,9 @@ namespace Infrastructure.Configurations
             builder.Property(u => u.NickName)
                 .HasMaxLength(20).IsRequired();
 
+            builder.Property(u => u.Email)
+                .IsRequired();
+
             builder.Property(u => u.Sex)
                 .IsRequired();
 

@@ -17,4 +17,14 @@ img{
 .chatname{
     text-align: center;
     padding-top: 10px;
+    margin-left: 10px;
+}
+
+.contentparagraph{
+    width:100px;
+    overflow: hidden;
+}
+
+.CurrentChat{
+    background-color: white;
 }

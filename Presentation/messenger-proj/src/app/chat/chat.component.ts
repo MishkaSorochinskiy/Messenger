@@ -39,7 +39,6 @@ export class ChatComponent implements OnInit {
   sendMessage(){
     this.chatservice.sendMessage({content:this.newMessage} as Message);
     this.newMessage=null;
-    console.log(this.messages);
   }
 
   public GetUrl(id:number){

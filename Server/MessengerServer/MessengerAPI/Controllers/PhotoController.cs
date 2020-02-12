@@ -14,7 +14,7 @@ using Microsoft.Net.Http.Headers;
 
 namespace MessengerAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class PhotoController : ControllerBase
     {
@@ -30,12 +30,12 @@ namespace MessengerAPI.Controllers
         }
 
         [Authorize]
-        [HttpPost("[action]")]
+        [HttpPost]
         public async Task<IActionResult> ChangePhoto(IFormCollection collection)
         {
             if (ModelState.IsValid&&collection.Files[0]!=null)
             {
-                if (await _photoService.ChangePhoto(new AddPhotoDto()
+                if (await _photoService.ChangePhotoAsync(new AddPhotoDto()
                 {
                     UserName = User.Identity.Name,
                     UploadedFile = collection.Files[0]
@@ -49,10 +49,10 @@ namespace MessengerAPI.Controllers
         }
 
         [Authorize]
-        [HttpGet("[action]")]
+        [HttpGet]
         public async Task<IActionResult> GetPhoto()
         {
-            var photo=await _photoService.GetPhoto(User.Identity.Name);
+            var photo=await _photoService.GetPhotoAsync(User.Identity.Name);
 
             if (photo != null)
                 return Ok(photo.Name);
@@ -61,12 +61,12 @@ namespace MessengerAPI.Controllers
         }
 
         [Authorize]
-        [HttpGet("[action]")]
+        [HttpGet]
         public async Task<IActionResult> GetPhotoById([FromQuery]GetPhotoDtoRequest request)
         {
             if (ModelState.IsValid)
             {
-                var photo = await _photoService.GetPhoto(request.id);
+                var photo = await _photoService.GetPhotoAsync(request.id);
 
                 if (photo != null)
                     return Ok(photo.Name);

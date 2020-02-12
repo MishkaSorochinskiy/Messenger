@@ -16,10 +16,19 @@ namespace Infrastructure.Repositories
             
         }
 
-        public async Task<User> GetWithPhoto(int id)
+        public async Task<User> GetWithPhotoAsync(int id)
         {
             return await this.db.Users.Where(u => u.Id == id)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<User>> SearchUsersAsync(string filter)
+        {
+          return await this.db.Users
+                .Where(u =>u.NickName.Contains(filter) || u.Email.Contains(filter))
+                .Take(5)
+                .Include(u=>u.Photo)
+                .ToListAsync();
         }
     }
 }
