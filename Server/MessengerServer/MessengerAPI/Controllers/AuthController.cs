@@ -18,12 +18,12 @@ namespace MessengerAPI.Controllers
     {
         private readonly AuthService _auth;
 
-        private readonly UserManager<SecurityUser> _usermanager;
-        public AuthController(AuthService auth,UserManager<SecurityUser> usermanager)
+        private readonly UserManager<SecurityUser> _userManager;
+        public AuthController(AuthService auth,UserManager<SecurityUser> userManager)
         {
             _auth = auth;
 
-            _usermanager = usermanager;
+            _userManager = userManager;
         }
 
         [HttpPost]
@@ -71,7 +71,7 @@ namespace MessengerAPI.Controllers
         [HttpPost]
         public async  Task<bool> EmailExist([FromBody]CheckRegisterModel model)
         {
-            return (await _usermanager.FindByEmailAsync(model.Email)) == null;
+            return (await _userManager.FindByEmailAsync(model.Email)) == null;
         }
     }
 }

@@ -24,15 +24,15 @@ namespace MessengerAPI.Controllers
 
         private readonly IMapper _mapper;
 
-        private readonly IMessageService _masservice;
+        private readonly IMessageService _masService;
 
-        public MessageController(IUnitOfWork unit,IMapper mapper,IMessageService masservice)
+        public MessageController(IUnitOfWork unit,IMapper mapper,IMessageService masService)
         {
             _unit = unit;
 
             _mapper = mapper;
 
-            _masservice = masservice;
+            _masService = masService;
 
         }
 
@@ -40,7 +40,7 @@ namespace MessengerAPI.Controllers
         [Authorize]
         public async Task<AllMessagesDto> GetChatMessages([FromQuery]GetChatMessagesRequest request)
         {
-            var responce=await this._masservice.GetMessageByChatAsync(request);
+            var responce=await this._masService.GetMessageByChatAsync(request);
 
             return responce;
         }
