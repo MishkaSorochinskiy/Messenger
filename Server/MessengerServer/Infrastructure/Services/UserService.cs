@@ -18,8 +18,8 @@ namespace Infrastructure.Services
         private readonly IUnitOfWork _unit;
         private readonly IMapper _map;
         private readonly AuthService _auth;
-        private readonly SecurityContext _seccontext;
-        public UserService(IUnitOfWork unit,IMapper map,AuthService auth,SecurityContext seccontext)
+        private readonly SecurityContext _secContext;
+        public UserService(IUnitOfWork unit,IMapper map,AuthService auth,SecurityContext secContext)
         {
             _unit = unit;
 
@@ -27,7 +27,7 @@ namespace Infrastructure.Services
 
             _map = map;
 
-            _seccontext = seccontext;
+            _secContext = secContext;
         }
 
         public async Task<GetUserDto> GetUserInfoAsync(GetUserInfoRequest request)
@@ -64,11 +64,11 @@ namespace Infrastructure.Services
 
         public  async Task<List<SearchUserDto>> SearchUserAsync(SearchUserDtoRequest request)
         {
-            var currentuser = await _auth.FindByNameUserAsync(request.UserName);
+            var currentUser = await _auth.FindByNameUserAsync(request.UserName);
 
             var users = (await _unit.UserRepository.SearchUsersAsync(request.Filter));
 
-            users.Remove(currentuser);
+            users.Remove(currentUser);
 
             var res = _map.Map<List<SearchUserDto>>(users);
 
