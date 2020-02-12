@@ -21,7 +21,7 @@ namespace Infrastructure
             await db.Set<T>().AddAsync(item);
         }
 
-        public async void Delete(int id)
+        public async Task Delete(int id)
         {
             T entity = await db.Set<T>().FindAsync(id);
             if (entity != null)
@@ -38,9 +38,9 @@ namespace Infrastructure
             return db.Set<T>().ToList();
         }
 
-        public void Update(T item)
+        public T Update(T item)
         {
-            db.Set<T>().Update(item);
+            return db.Set<T>().Update(item)?.Entity;
         }
     }
 }

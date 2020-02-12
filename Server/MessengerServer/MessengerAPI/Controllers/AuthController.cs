@@ -68,11 +68,6 @@ namespace MessengerAPI.Controllers
             return BadRequest("Model is not valid!");
         }
 
-        [HttpGet("[action]")]
-        public bool VerifyToken()
-        {
-            return User.Identity.IsAuthenticated;
-        }
 
         [HttpPost("[action]")]
         public async  Task<bool> EmailExist([FromBody]CheckRegisterModel model)

@@ -10,7 +10,7 @@ namespace Domain
         IEnumerable<T> GetAll();
         Task<T> Get(int id);
         Task Create(T item);
-        void Update(T item);
-        void Delete(int id);
+        T Update(T item);
+        Task Delete(int id);
     }
 }
