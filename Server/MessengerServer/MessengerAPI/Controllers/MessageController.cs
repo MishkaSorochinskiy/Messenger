@@ -24,15 +24,15 @@ namespace MessengerAPI.Controllers
 
         private readonly IMapper _mapper;
 
-        private readonly IMessageService _masService;
+        private readonly IMessageService _messageService;
 
-        public MessageController(IUnitOfWork unit,IMapper mapper,IMessageService masService)
+        public MessageController(IUnitOfWork unit,IMapper mapper,IMessageService messageService)
         {
             _unit = unit;
 
             _mapper = mapper;
 
-            _masService = masService;
+            _messageService = messageService;
 
         }
 

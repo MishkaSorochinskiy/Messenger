@@ -41,7 +41,9 @@ namespace MessengerAPI.Controllers
             if (user != null)
             {
                 var dto = _map.Map<GetUserDto>(user);
+
                 dto.Email = User.Identity.Name;
+
                 return Ok(dto);
             }
 

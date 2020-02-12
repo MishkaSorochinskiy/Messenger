@@ -12,11 +12,15 @@ namespace Infrastructure.Services
 {
     public class AuthService
     {
-        UserManager<SecurityUser> _userManager;
-        RoleManager<IdentityRole> _roleManager;
-        SignInManager<SecurityUser> _signInManager;
-        MessengerContext _db;
-        IConfiguration _config;
+        private readonly UserManager<SecurityUser> _userManager;
+        
+        private readonly RoleManager<IdentityRole> _roleManager;
+        
+        private readonly SignInManager<SecurityUser> _signInManager;
+       
+        private readonly MessengerContext _db;
+       
+        private readonly IConfiguration _config;
 
         public AuthService(UserManager<SecurityUser> userManager, RoleManager<IdentityRole> roleManager,
             SignInManager<SecurityUser> signInManager,MessengerContext db,IConfiguration config)
