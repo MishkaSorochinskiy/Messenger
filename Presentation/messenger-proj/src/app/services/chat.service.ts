@@ -164,6 +164,22 @@ export class ChatService {
       })
   }
 
+  public async UpdateChats(){
+    let url=await this.config.getConfig("getchats");
+    let imgpath=await this.config.getConfig("photopath");
+
+    return await this.http.get<Chat[]>(url).toPromise()
+      .then(res=>{
+        let mappedres= res.map(chat=>{
+          chat.photo=`${imgpath}/${chat.photo}`;
+          return chat;
+        })
+        this.getMessages(this.currentChatId);
+        this.ChatsUpdate(res);
+        return res;
+      })
+  }
+
   public Reconnect(){
     this.hubConnection.stop()
     .then(()=>this.hubConnection.start());

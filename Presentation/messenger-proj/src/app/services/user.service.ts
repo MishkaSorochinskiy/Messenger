@@ -84,7 +84,7 @@ export class UserService  {
     headers= headers.append('content-type', 'application/json');
             
     return this.http.post(url,JSON.stringify({UserIdToBlock:id}),{headers:headers}).toPromise()
-    .then(()=>this.chatservice.GetChats());
+    .then(()=>this.chatservice.UpdateChats());
   }
 
  async unblock(id:number){
@@ -94,6 +94,6 @@ export class UserService  {
     headers= headers.append('content-type', 'application/json');
             
     return this.http.post(url,JSON.stringify({UserIdToBlock:id}),{headers:headers}).toPromise()
-    .then(()=>this.chatservice.GetChats());
+    .then(()=>this.chatservice.UpdateChats());
   }
 }
