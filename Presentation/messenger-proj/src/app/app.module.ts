@@ -30,6 +30,7 @@ const appRoutes: Routes = [
    { path: 'chat', component:ChatComponent,canActivate:[AuthGuard]},
    { path: 'profile', component:ProfileComponent,canActivate:[AuthGuard]},
    { path: 'signin', component:LoginComponent },
+   { path: 'friendinfo', component:FriendinfoComponent },
    { path: 'register', component:RegisterComponent },
    { path: 'fillinfo', component:FilluserinfoComponent ,canActivate:[RegisterGuard]}
 ]

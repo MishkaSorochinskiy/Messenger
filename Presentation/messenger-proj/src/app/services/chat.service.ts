@@ -36,11 +36,14 @@ export class ChatService {
   private messages=new BehaviorSubject<Message[]>([]);
   messagessource=this.messages.asObservable();
 
-  private users=new BehaviorSubject<User[]>([]);
+  public users=new BehaviorSubject<User[]>([]);
   userssource=this.users.asObservable();
 
   private chats=new BehaviorSubject<Chat[]>([]);
   chatssource=this.chats.asObservable();
+
+  private currentChatUser=new BehaviorSubject<User>(null);
+  currentChatUserSource=this.currentChatUser.asObservable();
 
   public currentChatId:number;
 
@@ -55,14 +58,10 @@ export class ChatService {
     this.hubConnection = new signalR.HubConnectionBuilder()
                               .withUrl("https://localhost:44334/chat")
                               .build();
-    this.hubConnection.start()
-                    .then(()=>console.log("Connection started"))
-                    .catch(err=>console.log(`error occured: ${err}`));     
-                    
+    this.hubConnection.start();
   }
 
   public async getMessages(chatid:number){
-    console.log(this.hubConnection);
     this.currentChatId=chatid;
     let url = `${await this.config.getConfig("getchatmessages")}?id=${chatid}`;
     
@@ -107,10 +106,18 @@ export class ChatService {
 
   UsersUpdate(users:User[]){
     this.users.next(users);
+    let currentchat=this.chats.value.find(chat=>chat.id==this.currentChatId);
+    let currentUser=this.users.value.find(user=>user.id==currentchat.secondUserId);
+    this.CurrentChatUserUpdate(currentUser);
   }
 
   ChatsUpdate(chats:Chat[]){
     this.chats.next(chats);
+  }
+
+  CurrentChatUserUpdate(user:User){
+    this.currentChatUser.next(user);
+    console.log(user);
   }
 
   public async CreateChate(SecondUserId:number){
@@ -144,8 +151,6 @@ export class ChatService {
           return chat;
         })
 
-        console.log(mappedres);
-
         this.currentChatId=mappedres[0].id;
         this.getMessages(this.currentChatId);
 
@@ -156,10 +161,6 @@ export class ChatService {
 
   public Reconnect(){
     this.hubConnection.stop()
-    .then(()=>{
-      this.hubConnection.start()
-    .then(()=>console.log("Connection started"))
-    .catch(err=>console.log(`error occured: ${err}`));
-    });
+    .then(()=>this.hubConnection.start());
   }
 }

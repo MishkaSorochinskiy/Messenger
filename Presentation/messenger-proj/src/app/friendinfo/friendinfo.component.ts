@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ChatService } from '../services/chat.service';
+import { User } from '../services/user.service';
+import { WebdriverWebElement } from 'protractor/built/element';
 
 @Component({
   selector: 'app-friendinfo',
@@ -7,9 +10,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FriendinfoComponent implements OnInit {
 
-  constructor() { }
+  currentChatUser:User=new User();
+
+  constructor(private chatservice:ChatService) { }
 
   ngOnInit() {
+    this.chatservice.currentChatUserSource.subscribe(user=>this.currentChatUser=user);
+  }
+
+  public GetUrl(id:number){
+    return `${this.chatservice.photourl}/${this.chatservice.users.value.find(u=>u.id===id).photoName}`; 
+  }
+
+  turnAnim(){
+    let elem=document.getElementById("friendinfophone");
+    if(elem.classList.contains("phone")){
+      elem.classList.add("phoneanim");
+      elem.classList.remove("phone");
+    }
+    else{
+      elem.classList.remove("phoneanim");
+      elem.classList.add("phone");
+    }
   }
 
 }
