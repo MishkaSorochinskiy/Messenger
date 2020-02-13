@@ -1,4 +1,5 @@
 ﻿using Application.IServices;
+using Application.Models.MessageDto;
 using Application.Models.UserDto;
 using Application.Models.UserDto.Requests;
 using AutoMapper;
@@ -119,6 +120,32 @@ namespace Infrastructure.Services
                 await this._unit.Commit();
 
                 return true;
+            }
+
+            return false;
+        }
+
+        public async Task<bool> CheckStatusAsync(AddMessageDto request)
+        {
+            var chat = await this._unit.ChatRepository.GetAsync(request.chatId);
+
+            var currentUser = await this._auth.FindByNameUserAsync(request.UserName);
+
+            if (chat != null&&currentUser!=null)
+            {
+                var requestedUserId = chat.FirstUserId == currentUser.Id ? chat.SecondUserId : chat.FirstUserId;
+
+                var requestedUser = await this._unit.UserRepository.GetAsync(requestedUserId);
+
+                var requestUserBlackList = await this._unit.UserRepository.GetUserWithBlackList(requestedUser.Email);
+
+                if (requestUserBlackList.BlockedUsers.Any(bl => bl.UserToBlockId == currentUser.Id))
+                {
+                    return false;
+                }
+
+                return true;
+
             }
 
             return false;

@@ -1,4 +1,5 @@
-﻿using Application.Models.UserDto;
+﻿using Application.Models.MessageDto;
+using Application.Models.UserDto;
 using Application.Models.UserDto.Requests;
 using System;
 using System.Collections.Generic;
@@ -18,5 +19,7 @@ namespace Application.IServices
         Task<bool> BlockUserAsync(BlockUserRequest request);
 
         Task<bool> UnBlockUserAsync(BlockUserRequest request);
+
+        Task<bool> CheckStatusAsync(AddMessageDto request);
     }
 }

@@ -23,7 +23,9 @@ namespace MessengerAPI.Hubs
 
         private readonly IUnitOfWork _unit;
 
-        public Chat(IMessageService messageService,IMapper map,AuthService auth,IUnitOfWork unit)
+        private readonly IUserService _userService;
+
+        public Chat(IMessageService messageService,IMapper map,AuthService auth,IUnitOfWork unit,IUserService userService)
         {
             _messageService = messageService;
 
@@ -32,6 +34,8 @@ namespace MessengerAPI.Hubs
             _auth = auth;
 
             _unit = unit;
+
+            _userService = userService;
         }
 
         public override async Task OnConnectedAsync()
@@ -52,11 +56,14 @@ namespace MessengerAPI.Hubs
         {
             message.UserName = Context.User.Identity.Name;
 
-            var newmessage = await _messageService.AddMessageAsync(message);
-
-            if (newmessage!=null)
+            if(await this._userService.CheckStatusAsync(message))
             {
-                await Clients.Group(message.chatId.ToString()).SendAsync("update",newmessage,message.chatId);
+                var newmessage = await _messageService.AddMessageAsync(message);
+
+                if (newmessage != null)
+                {
+                    await Clients.Group(message.chatId.ToString()).SendAsync("update", newmessage, message.chatId);
+                }
             }
         }
 
