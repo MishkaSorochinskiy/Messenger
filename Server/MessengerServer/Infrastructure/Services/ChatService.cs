@@ -78,7 +78,7 @@ namespace Infrastructure.Services
                     Photo = chat.FirstUserId == user.Id ? chat.SecondUser.Photo.Name : chat.FirstUser.Photo.Name,
                     Content = chat.LastMessage == null ? null : chat.LastMessage.Content,
                     SecondUserId = chat.FirstUserId == user.Id ? chat.SecondUserId : chat.FirstUserId,
-                    IsBlocked = user.BlockedUsers.Any(bl => bl.UserToBlockId == chat.SecondUserId) ? true : false
+                    IsBlocked = user.BlockedUsers.Any(bl => bl.UserToBlockId == chat.SecondUserId || bl.UserToBlockId==chat.FirstUserId) ? true : false
                 }) ;
             }
 

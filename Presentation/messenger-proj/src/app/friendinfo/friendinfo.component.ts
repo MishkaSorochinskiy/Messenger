@@ -1,3 +1,5 @@
+import { UserService } from './../services/user.service';
+import { Chat } from './../services/chat.service';
 import { Component, OnInit } from '@angular/core';
 import { ChatService } from '../services/chat.service';
 import { User } from '../services/user.service';
@@ -12,10 +14,10 @@ export class FriendinfoComponent implements OnInit {
 
   currentChatUser:User=new User();
 
-  constructor(private chatservice:ChatService) { }
+  constructor(private chatservice:ChatService,private userservice:UserService) { }
 
   ngOnInit() {
-    this.chatservice.currentChatUserSource.subscribe(user=>this.currentChatUser=user);
+    this.chatservice.currentChatUserSource.subscribe(user=>{this.currentChatUser=user;console.log(user);});
   }
 
   public GetUrl(id:number){
@@ -34,4 +36,11 @@ export class FriendinfoComponent implements OnInit {
     }
   }
 
+  block(id:number){
+    this.userservice.block(id);
+  }
+
+  unblock(id:number){
+    this.userservice.unblock(id);
+  }
 }

@@ -1,3 +1,4 @@
+import { ChatService } from './chat.service';
 import { PhotoService } from './photo.service';
 import { ConfigService } from './config.service';
 import { HttpClient ,HttpHeaders} from '@angular/common/http';
@@ -24,7 +25,8 @@ export interface Chat{
   id:number,
   photo:string,
   content:string,
-  secondUserId:number
+  secondUserId:number,
+  isBlocked
 }
 
 @Injectable({
@@ -39,7 +41,7 @@ export class ChatService {
   public users=new BehaviorSubject<User[]>([]);
   userssource=this.users.asObservable();
 
-  private chats=new BehaviorSubject<Chat[]>([]);
+  public chats=new BehaviorSubject<Chat[]>([]);
   chatssource=this.chats.asObservable();
 
   private currentChatUser=new BehaviorSubject<User>(null);
@@ -116,8 +118,12 @@ export class ChatService {
   }
 
   CurrentChatUserUpdate(user:User){
-    this.currentChatUser.next(user);
+    console.log(this.chats.value);
+    let chat=this.chats.value.find(chat=>chat.secondUserId==user.id);
+    console.log(chat);
+    user.isblocked=chat.isBlocked;
     console.log(user);
+    this.currentChatUser.next(user);
   }
 
   public async CreateChate(SecondUserId:number){
@@ -153,7 +159,6 @@ export class ChatService {
 
         this.currentChatId=mappedres[0].id;
         this.getMessages(this.currentChatId);
-
         this.ChatsUpdate(res);
         return res;
       })
