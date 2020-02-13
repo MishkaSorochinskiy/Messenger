@@ -1,11 +1,12 @@
 import { PhotoService } from './photo.service';
 import { ConfigService } from './config.service';
 import { HttpClient ,HttpHeaders} from '@angular/common/http';
-import { Injectable, OnInit, ɵConsole } from '@angular/core';
+import { Injectable, OnInit, ɵConsole, ComponentFactoryResolver } from '@angular/core';
 import * as signalR from "@aspnet/signalr"
 import {DomSanitizer} from '@angular/platform-browser';
 import { User } from './user.service';
 import { BehaviorSubject } from 'rxjs';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 export interface Message{
   content:string,
@@ -56,10 +57,12 @@ export class ChatService {
                               .build();
     this.hubConnection.start()
                     .then(()=>console.log("Connection started"))
-                    .catch(err=>console.log(`error occured: ${err}`));                 
+                    .catch(err=>console.log(`error occured: ${err}`));     
+                    
   }
 
   public async getMessages(chatid:number){
+    console.log(this.hubConnection);
     this.currentChatId=chatid;
     let url = `${await this.config.getConfig("getchatmessages")}?id=${chatid}`;
     
@@ -112,22 +115,19 @@ export class ChatService {
 
   public async CreateChate(SecondUserId:number){
     let url=await this.config.getConfig("createchat");
-
     let headers = new HttpHeaders();
     headers= headers.append('content-type', 'application/json');
 
     this.http.post(url,JSON.stringify({SecondUserId}),{headers:headers}).toPromise()
       .then(res=>{
-        console.log(res);
         if(res===true){
           this.GetChats();
+          this.Reconnect();
         }
         else{
-          console.log(this.chats.getValue());
           var chat=this.chats.getValue()
               .find(c=>c.secondUserId==SecondUserId);
           this.currentChatId=chat.id;
-          console.log(chat);
           this.getMessages(this.currentChatId);
         }
       });
@@ -152,5 +152,14 @@ export class ChatService {
         this.ChatsUpdate(res);
         return res;
       })
+  }
+
+  public Reconnect(){
+    this.hubConnection.stop()
+    .then(()=>{
+      this.hubConnection.start()
+    .then(()=>console.log("Connection started"))
+    .catch(err=>console.log(`error occured: ${err}`));
+    });
   }
 }

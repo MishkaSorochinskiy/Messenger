@@ -70,6 +70,7 @@ export class UserService  {
         })
 
         this.updateSearchUsers(mappedres);
+        console.log(mappedres);
         return mappedres;
       });
   }
