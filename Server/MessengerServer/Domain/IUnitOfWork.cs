@@ -11,6 +11,8 @@ namespace Domain
         IPhotoRepository PhotoRepository { get; }
         IMessageRepository MessageRepository { get; }
         IUserRepository UserRepository { get; }
+        IChatRepository ChatRepository { get; }
+        IBlockedUserRepository BlockedUserRepository { get; }
        
         Task Commit();
     }

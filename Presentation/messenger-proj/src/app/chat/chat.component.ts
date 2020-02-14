@@ -18,6 +18,8 @@ export class ChatComponent implements OnInit {
 
   users:User[]=null;
 
+  currentChatUser:User=new User();
+
   constructor(private http:HttpClient,private chatservice:ChatService,private userservice:UserService) 
   { 
     chatservice.messagesUpdate.subscribe(res=>this.messages=res);
@@ -34,12 +36,13 @@ export class ChatComponent implements OnInit {
     this.userservice.data.subscribe(user=>this.currentUser=user);
 
     this.chatservice.userssource.subscribe(users=>this.users=users);
+
+    this.chatservice.currentChatUserSource.subscribe(user=>this.currentChatUser=user);
   }
 
   sendMessage(){
     this.chatservice.sendMessage({content:this.newMessage} as Message);
     this.newMessage=null;
-    console.log(this.messages);
   }
 
   public GetUrl(id:number){

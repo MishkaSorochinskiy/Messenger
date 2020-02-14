@@ -32,10 +32,10 @@ export class AuthService {
       return this.http.post(url,JSON.stringify(this.userInfo),{responseType:'text',headers:headers})
           .subscribe(
             async res=>{
+              localStorage.setItem('token',res);
               await this.userservice.SetCurrentUser();
-              this.router.navigate(['/chat']);
-              localStorage.setItem('token',res[0]);
-            });
+              await this.router.navigate(['/chat']);
+            },err=>console.log(err));
     }
 
     async signin(user){

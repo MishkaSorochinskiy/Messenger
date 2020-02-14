@@ -10,7 +10,7 @@
   }
 
   #contentdiv{
-    min-height: 80vh;
+    min-height: 75vh;
     margin-bottom: 10px;
     max-height: 75vh;
   }
@@ -131,12 +131,14 @@
     height: 50px;
     text-align: center;
     padding-top: 10px;
+    cursor:default;
   }
 
   .customtooltip:hover{
     opacity: 1;
     margin-top:-23px ;
     margin-left: -25px;
+    cursor:default;
   }
 
   .customtooltipright{
@@ -147,12 +149,14 @@
     text-align: center;
     padding-top: 10px;
     word-break: break-all;
+    cursor:default;
   }
 
   .customtooltipright:hover{
     opacity: 1;
     margin-top:-25px ;
     margin-left: 30px;
+    cursor:default;
   }
 
   #chatbox{
@@ -165,4 +169,27 @@
 
 #sendform{
   background-color: #4D7DF6;
+}
+
+#chatempty{
+  font-size: 30px;
+  text-align: center;
+  padding-top: 50px;
+  color: #6F89C8;
+}
+
+.contentrigth ,.contentleft{
+  word-break: break-all;
+}
+
+#curuser{
+  background-color: lavender;
+  height: 33px;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: lightgray;
+}
+
+#contentdiv::-webkit-scrollbar{
+  width:1px;
 }

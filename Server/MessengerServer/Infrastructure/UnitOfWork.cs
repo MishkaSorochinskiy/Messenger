@@ -12,46 +12,45 @@ namespace Infrastructure
     {
         public MessengerContext _db { get; private set; }
 
-        private IUserRepository userRepository;      
-        private IPhotoRepository photoRepository;     
-        private IMessageRepository messageRepository;
+        private Lazy<IUserRepository> userRepository;     
+        private Lazy<IPhotoRepository> photoRepository;     
+        private Lazy<IMessageRepository> messageRepository;
+        private Lazy<IChatRepository> chatRepository;
+        private Lazy<IBlockedUserRepository> blockeduserRepository;
 
+        public IChatRepository ChatRepository
+        {
+            get
+            {
+                return this.chatRepository.Value;
+            }
+        }
+        public IBlockedUserRepository BlockedUserRepository
+        {
+            get
+            {
+               return this.blockeduserRepository.Value;
+            }
+        }
         public IPhotoRepository PhotoRepository
         {
             get
             {
-                if (photoRepository == null)
-                {
-                    photoRepository = new PhotoRepository(_db);
-                }
-
-                return photoRepository;
+                return this.photoRepository.Value;
             }
         }
-
         public IMessageRepository MessageRepository
         {
             get
             {
-                if (messageRepository == null)
-                {
-                    messageRepository = new MessageRepository(_db);
-                }
-
-                return messageRepository;
+                return this.messageRepository.Value;
             }
         }
-
         public IUserRepository UserRepository 
         {
             get
             {
-                if (userRepository == null)
-                {
-                    userRepository = new UserRepository(_db);
-                }
-
-                return UserRepository;
+                return this.userRepository.Value;
             }
         }
 
@@ -59,6 +58,17 @@ namespace Infrastructure
         public UnitOfWork(MessengerContext db)
         {
             _db = db;
+
+            this.userRepository= new Lazy<IUserRepository>(() => new UserRepository(_db));
+
+            this.chatRepository = new Lazy<IChatRepository>(() => new ChatRepository(_db));
+
+            this.blockeduserRepository = new Lazy<IBlockedUserRepository>(() => new BlockedUserRepository(_db));
+
+            this.messageRepository = new Lazy<IMessageRepository>(() => new MessageRepository(_db));
+
+            this.photoRepository = new Lazy<IPhotoRepository>(() => new PhotoRepository(_db));
+
         }
 
         public async Task Commit()

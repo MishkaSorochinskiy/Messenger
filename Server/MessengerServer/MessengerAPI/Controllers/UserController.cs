@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.IServices;
+using Application.Models.ChatDto.Requests;
 using Application.Models.UserDto;
+using Application.Models.UserDto.Requests;
 using AutoMapper;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -12,19 +14,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MessengerAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUserService _userservice;
+        private readonly IUserService _userService;
 
         private readonly AuthService _auth;
 
         private readonly IMapper _map;
 
-        public UserController(IUserService userservice,AuthService auth,IMapper map)
+        public UserController(IUserService userService, AuthService auth, IMapper map)
         {
-            _userservice = userservice;
+            _userService = userService;
 
             _auth = auth;
 
@@ -32,7 +34,7 @@ namespace MessengerAPI.Controllers
         }
 
         [Authorize]
-        [HttpGet("[action]")]
+        [HttpGet]
         public async Task<IActionResult> UserInfo()
         {
             var user = await _auth.FindByNameUserAsync(User.Identity.Name);
@@ -40,7 +42,9 @@ namespace MessengerAPI.Controllers
             if (user != null)
             {
                 var dto = _map.Map<GetUserDto>(user);
+
                 dto.Email = User.Identity.Name;
+
                 return Ok(dto);
             }
 
@@ -48,15 +52,46 @@ namespace MessengerAPI.Controllers
         }
 
         [Authorize]
-        [HttpPost("[action]")]
+        [HttpPost]
         public async Task<IActionResult> UpdateUser(UpdateUserDto model)
         {
-            var res= await _userservice.UpdateUser(model);
+            var res = await _userService.UpdateUserAsync(model);
 
             if (res)
                 return Ok();
 
             return BadRequest();
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<List<SearchUserDto>> Search([FromQuery]SearchUserDtoRequest request )
+        {
+            request.UserName = User.Identity.Name;
+
+           return await this._userService.SearchUserAsync(request);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<bool> BlockUser([FromBody]BlockUserRequest request)
+        {
+            request.UserName = User.Identity.Name;
+
+            var res= await this._userService.BlockUserAsync(request);
+
+            return res;
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<bool> UnBlockUser([FromBody]BlockUserRequest request)
+        {
+            request.UserName = User.Identity.Name;
+
+            var res = await this._userService.UnBlockUserAsync(request);
+
+            return res;
         }
     }
 }

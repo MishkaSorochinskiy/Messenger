@@ -1,4 +1,5 @@
-﻿using Application.Models.MessageDto;
+﻿using Application.Models.ChatDto.Requests;
+using Application.Models.MessageDto;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,8 +9,10 @@ namespace Application.IServices
 {
     public interface IMessageService
     {
-        Task<GetMessageDto> AddMessage(AddMessageDto message);
+        Task<GetMessageDto> AddMessageAsync(AddMessageDto message);
 
-        AllMessagesDto GetAllMessages();
+        Task<AllMessagesDto> GetAllMessagesAsync();
+
+        Task<AllMessagesDto> GetMessageByChatAsync(GetChatMessagesRequest request);
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.IServices;
+using Application.Models.ChatDto.Requests;
 using Application.Models.MessageDto;
 using AutoMapper;
 using Domain;
@@ -15,7 +16,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace MessengerAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class MessageController : ControllerBase
     {
@@ -23,23 +24,25 @@ namespace MessengerAPI.Controllers
 
         private readonly IMapper _mapper;
 
-        private readonly IMessageService _masservice;
+        private readonly IMessageService _messageService;
 
-        public MessageController(IUnitOfWork unit,IMapper mapper,IMessageService masservice)
+        public MessageController(IUnitOfWork unit,IMapper mapper,IMessageService messageService)
         {
             _unit = unit;
 
             _mapper = mapper;
 
-            _masservice = masservice;
+            _messageService = messageService;
 
         }
 
         [HttpGet]
         [Authorize]
-        public AllMessagesDto Get()
+        public async Task<AllMessagesDto> GetChatMessages([FromQuery]GetChatMessagesRequest request)
         {
-            return _masservice.GetAllMessages();
+            var responce=await this._messageService.GetMessageByChatAsync(request);
+
+            return responce;
         }
     }
 }

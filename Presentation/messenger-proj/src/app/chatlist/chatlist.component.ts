@@ -1,4 +1,6 @@
+import { Chat } from './../services/chat.service';
 import { Component, OnInit } from '@angular/core';
+import { ChatService } from '../services/chat.service';
 
 @Component({
   selector: 'app-chatlist',
@@ -7,9 +9,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ChatlistComponent implements OnInit {
 
-  constructor() { }
+  chats:Chat[];
+
+  constructor(private chatservice:ChatService) { }
 
   ngOnInit() {
+    this.chatservice.GetChats();
+    this.chatservice.chatssource.subscribe(res=>{
+      this.chats=res;
+    })
+  }
+
+  getMessages(id:number){
+    this.chatservice.getMessages(id);
+  }
+
+  chatclick(event){
+    console.log(event);
   }
 
 }

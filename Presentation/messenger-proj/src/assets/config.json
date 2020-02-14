@@ -9,5 +9,12 @@
     "getphotobyid":"https://localhost:44334/api/Photo/GetPhotoById",
     "getuserinfo":"https://localhost:44334/api/User/UserInfo",
     "checkemail":"https://localhost:44334/api/Auth/EmailExist",
-    "updateuser":"https://localhost:44334/api/User/UpdateUser"
+    "updateuser":"https://localhost:44334/api/User/UpdateUser",
+    "search":"https://localhost:44334/api/User/Search",
+    "createchat":"https://localhost:44334/api/Chat/Create",
+    "getchats":"https://localhost:44334/api/Chat/GetChats",
+    "getchatmessages":"https://localhost:44334/api/Message/GetChatMessages",
+    "blockuser":"https://localhost:44334/api/User/BlockUser",
+    "unblockuser":"https://localhost:44334/api/User/UnBlockUser"
+
 }

@@ -14,9 +14,11 @@ namespace Domain.Entities
     {
         public int Id { get; set; }
 
-        public int Age { get; set; }
+        public string Email { get; set; }
 
         public string NickName { get; set; }
+
+        public int Age { get; set; }
 
         public string PhoneNumber { get; set; }
 
@@ -26,9 +28,17 @@ namespace Domain.Entities
 
         public ICollection<Message> Messages { get; private set; }
 
+        public ICollection<Chat> Chats { get; private set; }
+
+        public ICollection<BlockedUser> BlockedUsers { get; private set; }
+
         public User()
         {
             Messages = new List<Message>();
+
+            Chats = new List<Chat>();
+
+            BlockedUsers = new List<BlockedUser>();
         }
     }
 }
