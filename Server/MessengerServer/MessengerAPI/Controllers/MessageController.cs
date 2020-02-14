@@ -40,7 +40,7 @@ namespace MessengerAPI.Controllers
         [Authorize]
         public async Task<AllMessagesDto> GetChatMessages([FromQuery]GetChatMessagesRequest request)
         {
-            var responce=await this._masService.GetMessageByChatAsync(request);
+            var responce=await this._messageService.GetMessageByChatAsync(request);
 
             return responce;
         }

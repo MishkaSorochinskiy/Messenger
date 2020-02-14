@@ -23,6 +23,7 @@ export class SearchComponent implements OnInit {
 
   createChat(userid:number){
     this.chatservice.CreateChate(userid);
+    this.userservice.updateSearchUsers([]);
   }
 
 }
