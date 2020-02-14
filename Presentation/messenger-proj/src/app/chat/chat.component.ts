@@ -1,3 +1,4 @@
+import { PhotoService } from './../services/photo.service';
 import { UserService, User } from './../services/user.service';
 import { ChatService, Message } from './../services/chat.service';
 import { HttpClient } from '@angular/common/http';
@@ -20,7 +21,7 @@ export class ChatComponent implements OnInit {
 
   currentChatUser:User=new User();
 
-  constructor(private http:HttpClient,private chatservice:ChatService,private userservice:UserService) 
+  constructor(private http:HttpClient,private chatservice:ChatService,private userservice:UserService,private photoservice:PhotoService) 
   { 
     chatservice.messagesUpdate.subscribe(res=>this.messages=res);
   }
