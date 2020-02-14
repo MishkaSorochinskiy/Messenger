@@ -40,12 +40,12 @@
           <div class="col-sm">
             <p id="friendemailcontent">{{currentChatUser.email}}</p>
           </div>
-          <div class="col-1 m-0 p-0 mt-1" *ngIf="currentChatUser.isblocked">
+          <div class="col-1 m-0 p-0 mt-2 mr-2" *ngIf="currentChatUser.isblocked">
             <a (click)="unblock(currentChatUser.id)" title="unblock">
               <img src="../../assets/block.png" width="30" height="30" class="d-inline-block align-top mr-1">
             </a>
           </div>
-          <div class="col-1 m-0 p-0 mt-1" *ngIf="!currentChatUser.isblocked">
+          <div class="col-1 m-0 p-0 mt-2 mr-2" *ngIf="!currentChatUser.isblocked">
             <a (click)="block(currentChatUser.id)" title="block">
               <img src="../../assets/unblock.png" width="30" height="30" class="d-inline-block align-top mr-1">
             </a>

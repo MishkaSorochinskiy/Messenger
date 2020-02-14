@@ -1,4 +1,3 @@
-import { ChatService } from './chat.service';
 import { PhotoService } from './photo.service';
 import { ConfigService } from './config.service';
 import { HttpClient ,HttpHeaders} from '@angular/common/http';
