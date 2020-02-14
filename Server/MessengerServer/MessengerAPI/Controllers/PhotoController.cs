@@ -20,12 +20,9 @@ namespace MessengerAPI.Controllers
     {
         private readonly IPhotoService _photoService;
 
-        private readonly IUnitOfWork _unit;
-        public PhotoController(IPhotoService photoService,IUnitOfWork unit)
+        public PhotoController(IPhotoService photoService)
         {
             _photoService = photoService;
-
-            _unit = unit;
 
         }
 
