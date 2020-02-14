@@ -3,6 +3,8 @@ using Application.Models.PhotoDto;
 using AutoMapper;
 using Domain;
 using Domain.Entities;
+using Domain.Exceptions.PhotoExceptions;
+using Domain.Exceptions.UserExceptions;
 using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;
@@ -35,13 +37,16 @@ namespace Infrastructure.Services
             _env = env;
         }
 
-        public async Task<bool> ChangePhotoAsync(AddPhotoDto model)
+        public async Task ChangePhotoAsync(AddPhotoDto model)
         {
             var user = await _auth.FindByNameUserAsync(model.UserName);
 
+            if (user == null)
+                throw new UserNotExistException("Given user not exist!!", 400);
+
             var ext = model.UploadedFile.FileName.Substring(model.UploadedFile.FileName.LastIndexOf('.'));
 
-            if (user != null&&this.extensions.Contains(ext))
+            if (this.extensions.Contains(ext))
             {
                 var photo = await _unit.PhotoRepository.GetPhotoByUserAsync(user.Id);
 
@@ -54,36 +59,37 @@ namespace Infrastructure.Services
                     await model.UploadedFile.CopyToAsync(fileStream);
                 }
 
-                await _unit.Commit();
-
-                return true;
+                 await _unit.Commit();
             }
-
-            return false;
-
+            else
+            {
+                throw new PhotoInCorrectException("Given extension is incorrect!!", 400);
+            }
         }
 
         public async Task<GetPhotoDto> GetPhotoAsync(string username)
         {
             var user = await _auth.FindByNameUserAsync(username);
 
-            if (user != null)
-            {
-               return _map.Map<GetPhotoDto>(await _unit.PhotoRepository.GetPhotoByUserAsync(user.Id));
-            }
+            if (user == null)
+                throw new UserNotExistException("Given user not exist!!",400);
 
-            return default(GetPhotoDto);
+            var photo = await _unit.PhotoRepository.GetPhotoByUserAsync(user.Id);
+
+            if (photo == null)
+                throw new PhotoNotExistException("Given user haven't got any photos!!",400);
+
+            return _map.Map<GetPhotoDto>(photo);
         }
 
         public async Task<GetPhotoDto> GetPhotoAsync(int id)
         {            
             var photo = await _unit.PhotoRepository.GetPhotoByUserAsync(id);
 
-            if (photo != null)
-                return  _map.Map<GetPhotoDto>(photo);
+            if (photo == null)
+                throw new PhotoNotExistException("Given user haven't got any photos!!",400);
 
-            return default(GetPhotoDto);
-
+            return  _map.Map<GetPhotoDto>(photo);
         }
     }
 }

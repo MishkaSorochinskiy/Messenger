@@ -8,7 +8,7 @@ namespace Application.IServices
 {
    public interface  IPhotoService
     {
-        Task<bool> ChangePhotoAsync(AddPhotoDto model);
+        Task ChangePhotoAsync(AddPhotoDto model);
 
         Task<GetPhotoDto> GetPhotoAsync(string username);
 

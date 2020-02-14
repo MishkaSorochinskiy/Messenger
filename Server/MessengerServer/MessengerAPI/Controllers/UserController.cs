@@ -55,12 +55,9 @@ namespace MessengerAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateUser(UpdateUserDto model)
         {
-            var res = await _userService.UpdateUserAsync(model);
+            await _userService.UpdateUserAsync(model);
 
-            if (res)
-                return Ok();
-
-            return BadRequest();
+            return Ok();
         }
 
         [HttpGet]
@@ -74,24 +71,24 @@ namespace MessengerAPI.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<bool> BlockUser([FromBody]BlockUserRequest request)
+        public async Task<IActionResult> BlockUser([FromBody]BlockUserRequest request)
         {
             request.UserName = User.Identity.Name;
 
-            var res= await this._userService.BlockUserAsync(request);
+            await this._userService.BlockUserAsync(request);
 
-            return res;
+            return Ok();
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<bool> UnBlockUser([FromBody]BlockUserRequest request)
+        public async Task<IActionResult> UnBlockUser([FromBody]BlockUserRequest request)
         {
             request.UserName = User.Identity.Name;
 
-            var res = await this._userService.UnBlockUserAsync(request);
+            await this._userService.UnBlockUserAsync(request);
 
-            return res;
+            return Ok();
         }
     }
 }

@@ -60,10 +60,7 @@ namespace MessengerAPI.Hubs
             {
                 var newmessage = await _messageService.AddMessageAsync(message);
 
-                if (newmessage != null)
-                {
-                    await Clients.Group(message.chatId.ToString()).SendAsync("update", newmessage, message.chatId);
-                }
+                await Clients.Group(message.chatId.ToString()).SendAsync("update", newmessage, message.chatId);
             }
         }
 
