@@ -59,7 +59,7 @@ export class ChatService {
     this.hubConnection = new signalR.HubConnectionBuilder()
                               .withUrl("https://localhost:44334/chat")
                               .build();
-    this.hubConnection.start();
+    this.hubConnection.start().then(()=>console.log("Connection started!!"));
   }
 
   public async getMessages(chatid:number){
@@ -117,11 +117,8 @@ export class ChatService {
   }
 
   CurrentChatUserUpdate(user:User){
-    console.log(this.chats.value);
     let chat=this.chats.value.find(chat=>chat.secondUserId==user.id);
-    console.log(chat);
     user.isblocked=chat.isBlocked;
-    console.log(user);
     this.currentChatUser.next(user);
   }
 

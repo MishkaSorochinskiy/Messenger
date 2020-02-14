@@ -12,7 +12,7 @@ import { WebdriverWebElement } from 'protractor/built/element';
 })
 export class FriendinfoComponent implements OnInit {
 
-  currentChatUser:User=new User();
+  currentChatUser:User=null;
 
   constructor(private chatservice:ChatService,private userservice:UserService) { }
 

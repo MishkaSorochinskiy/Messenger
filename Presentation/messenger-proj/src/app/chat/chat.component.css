@@ -189,3 +189,7 @@
   border-bottom-style: solid;
   border-bottom-color: lightgray;
 }
+
+#contentdiv::-webkit-scrollbar{
+  width:1px;
+}

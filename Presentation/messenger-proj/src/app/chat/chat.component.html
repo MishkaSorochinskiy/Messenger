@@ -3,13 +3,13 @@
     <div class="container-fluid col-sm-2 m-0 p-0" id="chatbox">
       <app-chatlist></app-chatlist>
     </div>
-    <div class="container-fluid overflow-auto col-sm p-0 m-0">
+    <div class="container-fluid col-sm p-0 m-0">
       <div class="row m-0 p-0">
         <div class="col-sm" id="curuser">
           <app-friendinfo></app-friendinfo>
         </div>
       </div>
-      <div class="col-sm p-0 m-0" id="contentdiv">
+      <div class="col-sm p-0 m-0 overflow-auto" id="contentdiv">
         <div *ngIf="messages.length==0" id="chatempty">
           <img src="../../assets/running.png" width="30" height="30" class="d-inline-block align-top mr-1" alt="">
           Type smth to your Friend...
@@ -45,8 +45,8 @@
     
           </div>
         </div>
-        <nav class="navbar navbar-dark" id="sendform">
-          <form class="form-inline my-2 my-lg-0" (ngSubmit)="sendMessage()">
+        <nav class="navbar navbar-dark mt-2" id="sendform">
+          <form class="form-inline col-sm" (ngSubmit)="sendMessage()">
             <input class="form-control col-sm" id="sendinput" type="text" placeholder="Type"  [(ngModel)]="newMessage" name="message" aria-label="Search" autocomplete="off">
             <button class="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" type="submit">Send</button>
           </form>
