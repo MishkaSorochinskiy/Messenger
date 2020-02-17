@@ -5,6 +5,9 @@ using Application.Models.UserDto.Requests;
 using AutoMapper;
 using Domain;
 using Domain.Entities;
+using Domain.Exceptions.BlockedUserExceptions;
+using Domain.Exceptions.ChatExceptions;
+using Domain.Exceptions.UserExceptions;
 using Infrastructure.AppSecurity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -34,39 +37,36 @@ namespace Infrastructure.Services
 
         public async Task<GetUserDto> GetUserInfoAsync(GetUserInfoRequest request)
         {
-            var user= await _unit.UserRepository.GetWithPhotoAsync(request.UserId);
+            var user= await _unit.UserRepository.GetWithPhotoAsync(request.UserName);
 
-            if (user != null)
-            {
-                return _map.Map<GetUserDto>(user);
-            }
-
-            return default(GetUserDto);
+            if (user == null)
+                throw new UserNotExistException("Given user not exist!!",400);
+            
+            return _map.Map<GetUserDto>(user);
         }
 
-        public async Task<bool> UpdateUserAsync(UpdateUserDto model)
+        public async Task UpdateUserAsync(UpdateUserDto model)
         {
             var user = await _auth.FindByNameUserAsync(model.Email);
 
-            if (user != null)
-            {
-                user.Age = model.Age;
+            if (user == null)
+                throw new UserNotExistException("Given user not exist!!", 400);
+      
+            user.Age = model.Age;
 
-                user.PhoneNumber = model.Phone;
+            user.PhoneNumber = model.Phone;
 
-                user.NickName = model.NickName;
+            user.NickName = model.NickName;
 
-                await _unit.Commit();
-
-                return true;
-            }
-
-            return false;
+            await _unit.Commit();         
         }
 
         public  async Task<List<SearchUserDto>> SearchUserAsync(SearchUserDtoRequest request)
         {
             var currentUser = await _auth.FindByNameUserAsync(request.UserName);
+
+            if (currentUser == null)
+                throw new UserNotExistException("Given user not exist!!", 400);
 
             var users = (await _unit.UserRepository.SearchUsersAsync(request.Filter));
 
@@ -77,78 +77,82 @@ namespace Infrastructure.Services
             return res;
         }
 
-        public async Task<bool> BlockUserAsync(BlockUserRequest request) 
+        public async Task BlockUserAsync(BlockUserRequest request) 
         {
             var currentUser = await this._auth.FindByNameUserAsync(request.UserName);
+
+            if (currentUser == null)
+                throw new UserNotExistException("Given user not exist!!",400);
             
             var userToBlock = await this._unit.UserRepository.GetAsync(request.UserIdToBlock);
 
+            if (userToBlock == null)
+                throw new UserNotExistException("User to block not exist!!", 400);
 
-            var blockedUser = await this._unit.BlockedUserRepository
-                              .IsBlockedUserAsync(currentUser.Id, request.UserIdToBlock);
-
-            if (blockedUser == null && userToBlock!=null)
-            {
-                var newBlockedUser = new BlockedUser()
-                {
-                    UserId = currentUser.Id,
-                    UserToBlockId = request.UserIdToBlock
-                };
-
-                await this._unit.BlockedUserRepository
-                        .CreateAsync(newBlockedUser);
-
-                await this._unit.Commit();
-
-                return true;
-            }
-
-            return false;
-        }
-
-        public async Task<bool> UnBlockUserAsync(BlockUserRequest request)
-        {
-            var currentUser = await this._auth.FindByNameUserAsync(request.UserName);
 
             var blockedUser = await this._unit.BlockedUserRepository
                               .IsBlockedUserAsync(currentUser.Id, request.UserIdToBlock);
 
             if (blockedUser != null)
+                throw new BlockedUserAlreadyExistException("Given user to block is already blocked!!",400);
+
+            
+            var newBlockedUser = new BlockedUser()
             {
-                await this._unit.BlockedUserRepository.DeleteAsync(blockedUser.Id);
+                UserId = currentUser.Id,
+                UserToBlockId = request.UserIdToBlock
+            };
 
-                await this._unit.Commit();
+            await this._unit.BlockedUserRepository
+                    .CreateAsync(newBlockedUser);
 
-                return true;
-            }
+            await this._unit.Commit();
+        }
 
-            return false;
+        public async Task UnBlockUserAsync(BlockUserRequest request)
+        {
+            var currentUser = await this._auth.FindByNameUserAsync(request.UserName);
+
+            if (currentUser == null)
+                throw new UserNotExistException("Given user not exist!!", 400);
+
+            var blockedUser = await this._unit.BlockedUserRepository
+                              .IsBlockedUserAsync(currentUser.Id, request.UserIdToBlock);
+
+            if (blockedUser == null)
+                throw new UserNotExistException("User to unblock not exist!!", 400);
+
+            
+            await this._unit.BlockedUserRepository.DeleteAsync(blockedUser.Id);
+
+            await this._unit.Commit();
         }
 
         public async Task<bool> CheckStatusAsync(AddMessageDto request)
         {
             var chat = await this._unit.ChatRepository.GetAsync(request.chatId);
 
+            if (chat == null)
+                throw new ChatNotExistException("Given chat not exist!!",400);
+
             var currentUser = await this._auth.FindByNameUserAsync(request.UserName);
 
-            if (chat != null&&currentUser!=null)
+            if (currentUser == null)
+                throw new UserNotExistException("Given user not exist!!",400);
+
+            
+            var requestedUserId = chat.FirstUserId == currentUser.Id ? chat.SecondUserId : chat.FirstUserId;
+
+            var requestedUser = await this._unit.UserRepository.GetAsync(requestedUserId);
+
+            var requestUserBlackList = await this._unit.UserRepository.GetUserWithBlackList(requestedUser.Email);
+
+            if (requestUserBlackList.BlockedUsers.Any(bl => bl.UserToBlockId == currentUser.Id))
             {
-                var requestedUserId = chat.FirstUserId == currentUser.Id ? chat.SecondUserId : chat.FirstUserId;
-
-                var requestedUser = await this._unit.UserRepository.GetAsync(requestedUserId);
-
-                var requestUserBlackList = await this._unit.UserRepository.GetUserWithBlackList(requestedUser.Email);
-
-                if (requestUserBlackList.BlockedUsers.Any(bl => bl.UserToBlockId == currentUser.Id))
-                {
-                    return false;
-                }
-
-                return true;
-
+                return false;
             }
 
-            return false;
+            return true;
         }
     }
 }

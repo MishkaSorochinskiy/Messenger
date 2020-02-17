@@ -7,7 +7,6 @@ namespace Application.Models.UserDto
 {
    public class GetUserInfoRequest
     {
-        [Required]
-        public int UserId { get; set; }
+        public string UserName { get; set; }
     }
 }

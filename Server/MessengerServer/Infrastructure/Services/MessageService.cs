@@ -5,6 +5,9 @@ using Application.Models.UserDto;
 using AutoMapper;
 using Domain;
 using Domain.Entities;
+using Domain.Exceptions.ChatExceptions;
+using Domain.Exceptions.MessageExceptions;
+using Domain.Exceptions.UserExceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,9 +37,15 @@ namespace Infrastructure.Services
         {
             var user = await _auth.FindByNameUserAsync(message.UserName);
 
+            if (user == null)
+                throw new UserNotExistException("Given user not exist!!", 400);
+
             var chat = await _unit.ChatRepository.GetAsync(message.chatId);
 
-            if (user != null & !string.IsNullOrEmpty(message.Content)&& chat!=null)
+            if (chat == null)
+                throw new ChatNotExistException("Given chatid is incorrect!!",400);
+
+            if (!string.IsNullOrEmpty(message.Content))
             {
                 var newmessage= new Message()
                 {
@@ -55,7 +64,8 @@ namespace Infrastructure.Services
                 return _map.Map<GetMessageDto>(newmessage);
             }
 
-            return default(GetMessageDto);
+            throw new MessageInCorrectException("Given message is incorrect!!",400);
+
         }
 
         public async Task<AllMessagesDto> GetAllMessagesAsync()
@@ -76,7 +86,10 @@ namespace Infrastructure.Services
 
         public async Task<AllMessagesDto> GetMessageByChatAsync(GetChatMessagesRequest request)
         {
-           var chatContent= await this._unit.ChatRepository.GetChatContentAsync(request.Id);
+            var chatContent= await this._unit.ChatRepository.GetChatContentAsync(request.Id);
+
+            if (chatContent == null)
+                throw new ChatNotExistException("Given chat not exist!!", 400);
 
             var result = new AllMessagesDto()
             {

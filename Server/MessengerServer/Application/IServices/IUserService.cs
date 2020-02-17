@@ -12,13 +12,13 @@ namespace Application.IServices
     {
         Task<GetUserDto> GetUserInfoAsync(GetUserInfoRequest request);
 
-        Task<bool> UpdateUserAsync(UpdateUserDto model);
+        Task UpdateUserAsync(UpdateUserDto model);
 
         Task<List<SearchUserDto>> SearchUserAsync(SearchUserDtoRequest request);
 
-        Task<bool> BlockUserAsync(BlockUserRequest request);
+        Task BlockUserAsync(BlockUserRequest request);
 
-        Task<bool> UnBlockUserAsync(BlockUserRequest request);
+        Task UnBlockUserAsync(BlockUserRequest request);
 
         Task<bool> CheckStatusAsync(AddMessageDto request);
     }

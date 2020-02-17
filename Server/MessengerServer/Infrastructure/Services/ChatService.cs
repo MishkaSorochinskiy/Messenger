@@ -3,6 +3,7 @@ using Application.Models.ChatDto.Requests;
 using Application.Models.ChatDto.Responces;
 using Domain;
 using Domain.Entities;
+using Domain.Exceptions.UserExceptions;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -65,6 +66,9 @@ namespace Infrastructure.Services
         public async Task<List<GetChatDto>> GetChatsAsync(GetChatsRequestDto request)
         {
             var user = await this._unit.UserRepository.GetUserWithBlackList(request.UserName);
+
+            if (user == null)
+                throw new UserNotExistException("Given user not exist!",400);
 
             var chatres= await _unit.ChatRepository.GetUserChatsAsync(user.Id);
 
