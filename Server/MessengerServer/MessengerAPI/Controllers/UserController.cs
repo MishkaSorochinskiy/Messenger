@@ -37,18 +37,12 @@ namespace MessengerAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> UserInfo()
         {
-            var user = await _auth.FindByNameUserAsync(User.Identity.Name);
+            var userInfo=await this._userService.GetUserInfoAsync(new GetUserInfoRequest() 
+            { 
+                UserName = User.Identity.Name 
+            });
 
-            if (user != null)
-            {
-                var dto = _map.Map<GetUserDto>(user);
-
-                dto.Email = User.Identity.Name;
-
-                return Ok(dto);
-            }
-
-            return BadRequest();
+            return Ok(userInfo);
         }
 
         [Authorize]

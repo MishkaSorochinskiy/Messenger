@@ -37,7 +37,7 @@ namespace Infrastructure.Services
 
         public async Task<GetUserDto> GetUserInfoAsync(GetUserInfoRequest request)
         {
-            var user= await _unit.UserRepository.GetWithPhotoAsync(request.UserId);
+            var user= await _unit.UserRepository.GetWithPhotoAsync(request.UserName);
 
             if (user == null)
                 throw new UserNotExistException("Given user not exist!!",400);
