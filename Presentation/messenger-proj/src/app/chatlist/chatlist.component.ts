@@ -24,4 +24,8 @@ export class ChatlistComponent implements OnInit {
     this.chatservice.getMessages(id);
   }
 
+  chatclick(event){
+    console.log(event);
+  }
+
 }

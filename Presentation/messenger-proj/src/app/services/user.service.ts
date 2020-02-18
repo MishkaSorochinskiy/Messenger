@@ -1,3 +1,4 @@
+import { ChatService } from './chat.service';
 import { PhotoService } from './photo.service';
 import { ConfigService } from './config.service';
 import { HttpClient,HttpHeaders } from '@angular/common/http';
@@ -11,6 +12,7 @@ export class User{
   phone:string;
   email:string;
   age:number;
+  isblocked:boolean
 }
 
 @Injectable({
@@ -24,7 +26,7 @@ export class UserService  {
   private searchUsers=new BehaviorSubject<User[]>([]);
   searchdata=this.searchUsers.asObservable();
 
-  constructor(private http:HttpClient,private config:ConfigService,private photoservice:PhotoService) { }
+  constructor(private http:HttpClient,private config:ConfigService,private photoservice:PhotoService,private chatservice:ChatService) { }
 
   public async UpdateUser(data) {
     let url=await this.config.getConfig("updateuser");
@@ -70,7 +72,27 @@ export class UserService  {
         })
 
         this.updateSearchUsers(mappedres);
+        console.log(mappedres);
         return mappedres;
       });
+  }
+
+ async block(id:number){
+    let url=await this.config.getConfig("blockuser");
+
+    let headers = new HttpHeaders();
+    headers= headers.append('content-type', 'application/json');
+            
+    return this.http.post(url,JSON.stringify({UserIdToBlock:id}),{headers:headers}).toPromise()
+    .then(()=>this.chatservice.UpdateChats());
+  }
+
+ async unblock(id:number){
+    let url=await this.config.getConfig("unblockuser");
+    let headers = new HttpHeaders();
+    headers= headers.append('content-type', 'application/json');
+            
+    return this.http.post(url,JSON.stringify({UserIdToBlock:id}),{headers:headers}).toPromise()
+    .then(()=>this.chatservice.UpdateChats());
   }
 }

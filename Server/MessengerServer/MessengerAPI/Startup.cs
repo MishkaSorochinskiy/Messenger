@@ -105,6 +105,8 @@ namespace MessengerAPI
 
             app.UseCors("CorsPolicy");
 
+            app.UseErrorHandling();
+
             app.UseAuthentication();
 
             app.UseAuthorization();

@@ -1,0 +1,76 @@
+#friendinfolink{
+    margin-left: 10px;
+    font-size: 20px;
+}
+
+#friendinfolink:hover{
+    color: lightskyblue;
+}
+
+#userinfophoto{
+    width: 70px;
+    height: 70px;
+    border-radius: 10px;
+}
+
+#friendinfonick{
+    font-size: 25px;
+}
+
+#friendinfophoto{
+    text-align: center;
+}
+
+#friendinfoemail{
+    text-align: center;
+    font-size: 20px;
+    background-color: lightsteelblue;
+    border-radius: 10px;
+}
+
+#friendemailcontent{
+    margin-top:10px;
+}
+
+#call{
+    width: 25px;
+    height: 25px;
+    margin-left: 20px;
+}
+
+.phone{
+    visibility: hidden;
+}
+
+.phoneanim{
+    visibility: visible;
+    animation: phone 0.5s;
+}
+
+@keyframes phone{
+    0%{
+        visibility: hidden;
+        margin-left:-35px;
+    }
+
+    15%{
+        margin-left: -30px;
+    }
+
+    25%{
+        margin-left: -25px;
+    }
+
+    35% {
+        visibility: visible;
+        margin-left: -20px;
+    }
+
+    45%{
+        margin-left: -15px;
+    }
+
+    85% {
+        margin-left: 0px;
+    }
+}

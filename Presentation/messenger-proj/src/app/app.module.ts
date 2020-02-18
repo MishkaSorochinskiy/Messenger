@@ -23,12 +23,14 @@ import { ProfileComponent } from './profile/profile.component';
 import { FilluserinfoComponent } from './filluserinfo/filluserinfo.component';
 import { ChatlistComponent } from './chatlist/chatlist.component';
 import { SearchComponent } from './search/search.component';
+import { FriendinfoComponent } from './friendinfo/friendinfo.component';
 
 const appRoutes: Routes = [
    { path: '', redirectTo:'/chat',pathMatch:'full' },
    { path: 'chat', component:ChatComponent,canActivate:[AuthGuard]},
    { path: 'profile', component:ProfileComponent,canActivate:[AuthGuard]},
    { path: 'signin', component:LoginComponent },
+   { path: 'friendinfo', component:FriendinfoComponent },
    { path: 'register', component:RegisterComponent },
    { path: 'fillinfo', component:FilluserinfoComponent ,canActivate:[RegisterGuard]}
 ]
@@ -46,7 +48,8 @@ const appRoutes: Routes = [
       FilluserinfoComponent,
       DatePipe,
       ChatlistComponent,
-      SearchComponent
+      SearchComponent,
+      FriendinfoComponent
    ],
    imports: [
       RouterModule.forRoot(appRoutes),

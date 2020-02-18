@@ -1,8 +1,11 @@
 ﻿using Domain.Entities;
 using Domain.IRepositories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
@@ -11,6 +14,13 @@ namespace Infrastructure.Repositories
         public BlockedUserRepository(MessengerContext db):base(db)
         {
 
+        }
+
+        public async Task<BlockedUser> IsBlockedUserAsync(int userId,int blockedUserId)
+        {
+            return await this.db.BlockedUsers
+                .Where(blockedUser => blockedUser.UserId == userId && blockedUser.UserToBlockId == blockedUserId)
+                .FirstOrDefaultAsync();
         }
     }
 }
