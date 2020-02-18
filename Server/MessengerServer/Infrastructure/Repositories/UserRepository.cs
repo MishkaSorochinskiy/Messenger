@@ -16,9 +16,9 @@ namespace Infrastructure.Repositories
             
         }
 
-        public async Task<User> GetWithPhotoAsync(int id)
+        public async Task<User> GetWithPhotoAsync(string userName)
         {
-            return await this.db.Users.Where(u => u.Id == id)
+            return await this.db.Users.Where(u => u.Email == userName)
                 .FirstOrDefaultAsync();
         }
 
@@ -29,6 +29,13 @@ namespace Infrastructure.Repositories
                 .Take(5)
                 .Include(u=>u.Photo)
                 .ToListAsync();
+        }
+
+        public async Task<User> GetUserWithBlackList(string userName)
+        {
+            return await this.db.Users.Where(user => user.Email == userName)
+                    .Include(user => user.BlockedUsers)
+                    .FirstOrDefaultAsync();
         }
     }
 }

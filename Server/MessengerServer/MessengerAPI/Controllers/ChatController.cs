@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Application.IServices;
 using Application.Models.ChatDto.Requests;
 using Application.Models.ChatDto.Responces;
+using MessengerAPI.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace MessengerAPI.Controllers
 {
@@ -15,10 +17,11 @@ namespace MessengerAPI.Controllers
     [ApiController]
     public class ChatController : ControllerBase
     {
-        private readonly IChatService _chatservice;
-        public ChatController(IChatService chatservice)
+        private readonly IChatService _chatService;
+
+        public ChatController(IChatService chatService)
         {
-            _chatservice = chatservice;
+            _chatService = chatService;
         }
 
         [HttpPost]
@@ -27,7 +30,7 @@ namespace MessengerAPI.Controllers
         {
             request.UserName = User.Identity.Name;
 
-            return await _chatservice.CreateChatAsync(request);
+            return await _chatService.CreateChatAsync(request);
         }
 
         [HttpGet]
@@ -36,7 +39,7 @@ namespace MessengerAPI.Controllers
         {
             request.UserName = User.Identity.Name;
 
-            return await _chatservice.GetChatsAsync(request);
+            return await _chatService.GetChatsAsync(request);
         }
     }
 }

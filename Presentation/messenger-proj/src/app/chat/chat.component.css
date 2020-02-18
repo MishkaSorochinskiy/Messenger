@@ -10,7 +10,7 @@
   }
 
   #contentdiv{
-    min-height: 80vh;
+    min-height: 75vh;
     margin-bottom: 10px;
     max-height: 75vh;
   }
@@ -180,4 +180,16 @@
 
 .contentrigth ,.contentleft{
   word-break: break-all;
+}
+
+#curuser{
+  background-color: lavender;
+  height: 33px;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: lightgray;
+}
+
+#contentdiv::-webkit-scrollbar{
+  width:1px;
 }

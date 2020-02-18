@@ -8,8 +8,10 @@ namespace Domain.IRepositories
 {
     public interface IUserRepository:IRepository<User>
     {
-        Task<User> GetWithPhotoAsync(int id);
+        Task<User> GetWithPhotoAsync(string userName);
 
         Task<List<User>> SearchUsersAsync(string filter);
+
+        Task<User> GetUserWithBlackList(string userName);
     }
 }
