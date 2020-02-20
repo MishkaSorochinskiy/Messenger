@@ -11,7 +11,7 @@ namespace Infrastructure
     {
         public static void AddServices(this IServiceCollection services)
         {
-            services.AddScoped<AuthService>();
+            services.AddScoped<IAuthService,AuthService>();
 
             services.AddScoped<IPhotoService, PhotoService>();
 
