@@ -37,13 +37,11 @@ namespace MessengerAPI.Controllers
                     UserName = User.Identity.Name,
                     UploadedFile = collection.Files[0]
                 });
-            }
-            else
-            {
-                return BadRequest();
-            }
 
-            return Ok();
+                return Ok();
+            }
+           
+            return BadRequest();
         }
 
         [Authorize]
@@ -53,20 +51,6 @@ namespace MessengerAPI.Controllers
             var photo=await _photoService.GetPhotoAsync(User.Identity.Name);
 
             return Ok(photo.Name);
-        }
-
-        [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> GetPhotoById([FromQuery]GetPhotoDtoRequest request)
-        {
-            if (ModelState.IsValid)
-            {
-                var photo = await _photoService.GetPhotoAsync(request.id);
-                
-                return Ok(photo.Name);
-            }
-
-            return BadRequest();
         }
     }
 }

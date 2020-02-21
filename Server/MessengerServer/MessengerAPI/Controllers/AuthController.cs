@@ -16,10 +16,10 @@ namespace MessengerAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly AuthService _auth;
+        private readonly IAuthService _auth;
 
         private readonly UserManager<SecurityUser> _userManager;
-        public AuthController(AuthService auth,UserManager<SecurityUser> userManager)
+        public AuthController(IAuthService auth,UserManager<SecurityUser> userManager)
         {
             _auth = auth;
 

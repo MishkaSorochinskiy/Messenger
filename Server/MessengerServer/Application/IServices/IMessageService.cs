@@ -11,8 +11,6 @@ namespace Application.IServices
     {
         Task<GetMessageDto> AddMessageAsync(AddMessageDto message);
 
-        Task<AllMessagesDto> GetAllMessagesAsync();
-
         Task<AllMessagesDto> GetMessageByChatAsync(GetChatMessagesRequest request);
     }
 }

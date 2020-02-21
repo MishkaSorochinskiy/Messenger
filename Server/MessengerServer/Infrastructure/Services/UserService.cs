@@ -22,9 +22,8 @@ namespace Infrastructure.Services
     {
         private readonly IUnitOfWork _unit;
         private readonly IMapper _map;
-        private readonly AuthService _auth;
-        private readonly SecurityContext _secContext;
-        public UserService(IUnitOfWork unit,IMapper map,AuthService auth,SecurityContext secContext)
+        private readonly IAuthService _auth;
+        public UserService(IUnitOfWork unit,IMapper map,IAuthService auth)
         {
             _unit = unit;
 
@@ -32,7 +31,6 @@ namespace Infrastructure.Services
 
             _map = map;
 
-            _secContext = secContext;
         }
 
         public async Task<GetUserDto> GetUserInfoAsync(GetUserInfoRequest request)
@@ -120,7 +118,7 @@ namespace Infrastructure.Services
                               .IsBlockedUserAsync(currentUser.Id, request.UserIdToBlock);
 
             if (blockedUser == null)
-                throw new UserNotExistException("User to unblock not exist!!", 400);
+                throw new BlockedUserNotExistException("User to unblock not exist!!", 400);
 
             
             await this._unit.BlockedUserRepository.DeleteAsync(blockedUser.Id);
@@ -139,20 +137,15 @@ namespace Infrastructure.Services
 
             if (currentUser == null)
                 throw new UserNotExistException("Given user not exist!!",400);
-
-            
+        
             var requestedUserId = chat.FirstUserId == currentUser.Id ? chat.SecondUserId : chat.FirstUserId;
 
-            var requestedUser = await this._unit.UserRepository.GetAsync(requestedUserId);
-
-            var requestUserBlackList = await this._unit.UserRepository.GetUserWithBlackList(requestedUser.Email);
-
-            if (requestUserBlackList.BlockedUsers.Any(bl => bl.UserToBlockId == currentUser.Id))
+            if ((await _unit.BlockedUserRepository.IsBlockedUserAsync(requestedUserId,currentUser.Id))==null)
             {
-                return false;
+                return true;
             }
 
-            return true;
+            return false;
         }
     }
 }

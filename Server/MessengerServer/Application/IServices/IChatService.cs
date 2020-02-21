@@ -9,7 +9,7 @@ namespace Application.IServices
 {
     public interface IChatService
     {
-        Task<bool> CreateChatAsync(AddChatRequest request);
+        Task CreateChatAsync(AddChatRequest request);
 
         Task<List<GetChatDto>> GetChatsAsync(GetChatsRequestDto request);
     }

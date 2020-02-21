@@ -20,11 +20,11 @@ namespace MessengerAPI.Controllers
     {
         private readonly IUserService _userService;
 
-        private readonly AuthService _auth;
+        private readonly IAuthService _auth;
 
         private readonly IMapper _map;
 
-        public UserController(IUserService userService, AuthService auth, IMapper map)
+        public UserController(IUserService userService, IAuthService auth, IMapper map)
         {
             _userService = userService;
 
