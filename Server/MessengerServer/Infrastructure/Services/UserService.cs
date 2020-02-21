@@ -137,20 +137,15 @@ namespace Infrastructure.Services
 
             if (currentUser == null)
                 throw new UserNotExistException("Given user not exist!!",400);
-
-            
+        
             var requestedUserId = chat.FirstUserId == currentUser.Id ? chat.SecondUserId : chat.FirstUserId;
 
-            var requestedUser = await this._unit.UserRepository.GetAsync(requestedUserId);
-
-            var requestUserBlackList = await this._unit.UserRepository.GetUserWithBlackList(requestedUser.Email);
-
-            if (requestUserBlackList.BlockedUsers.Any(bl => bl.UserToBlockId == currentUser.Id))
+            if ((await _unit.BlockedUserRepository.IsBlockedUserAsync(requestedUserId,currentUser.Id))==null)
             {
-                return false;
+                return true;
             }
 
-            return true;
+            return false;
         }
     }
 }

@@ -55,7 +55,7 @@ namespace Infrastructure.Services
                     ChatId=message.chatId
                 };
 
-                user.Messages.Add(newmessage);
+                await this._unit.MessageRepository.CreateAsync(newmessage);
 
                 chat.LastMessage = newmessage;
 
@@ -66,22 +66,6 @@ namespace Infrastructure.Services
 
             throw new MessageInCorrectException("Given message is incorrect!!",400);
 
-        }
-
-        public async Task<AllMessagesDto> GetAllMessagesAsync()
-        {
-            var messages = await _unit.MessageRepository.GetAllWithUsersAsync();
-
-            var users = messages.Distinct(new MessageComparer()).Select(m=>m.User);
-
-            var result = new AllMessagesDto()
-            {
-                Users = _map.Map<List<GetUserDto>>(users),
-
-                Messages = _map.Map<List<GetMessageDto>>(messages)
-            };
-
-            return result;
         }
 
         public async Task<AllMessagesDto> GetMessageByChatAsync(GetChatMessagesRequest request)

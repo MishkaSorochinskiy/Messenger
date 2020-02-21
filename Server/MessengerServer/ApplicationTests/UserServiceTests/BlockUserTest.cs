@@ -36,10 +36,6 @@ namespace ApplicationTests.UserServiceTests
         {
             //arrange
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
-            var mockAuth = fixture.Freeze<Mock<IAuthService>>();
-            mockAuth.Setup(a => a.FindByNameUserAsync(It.IsAny<string>()))
-                    .ReturnsAsync(new User());
-
             var mockUnit = fixture.Freeze<Mock<IUnitOfWork>>();
             mockUnit.Setup(u => u.BlockedUserRepository.IsBlockedUserAsync(It.IsAny<int>(), It.IsAny<int>()))
                 .ReturnsAsync(new BlockedUser());
@@ -55,9 +51,6 @@ namespace ApplicationTests.UserServiceTests
         {
             //arrange
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
-            var mockAuth = fixture.Freeze<Mock<IAuthService>>();
-            mockAuth.Setup(a => a.FindByNameUserAsync(It.IsAny<string>()))
-                    .ReturnsAsync(new User());
 
             var mockUnit = fixture.Freeze<Mock<IUnitOfWork>>();
             mockUnit.Setup(u => u.BlockedUserRepository.IsBlockedUserAsync(It.IsAny<int>(), It.IsAny<int>()))

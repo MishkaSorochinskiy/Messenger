@@ -17,19 +17,15 @@ namespace MessengerAPI.Hubs
     {
         private readonly IMessageService _messageService;
 
-        private readonly IMapper _map;
-
         private readonly IAuthService _auth;
 
         private readonly IUnitOfWork _unit;
 
         private readonly IUserService _userService;
 
-        public Chat(IMessageService messageService,IMapper map,IAuthService auth,IUnitOfWork unit,IUserService userService)
+        public Chat(IMessageService messageService,IAuthService auth,IUnitOfWork unit,IUserService userService)
         {
             _messageService = messageService;
-
-            _map = map;
 
             _auth = auth;
 
