@@ -19,14 +19,14 @@ namespace Infrastructure.Services
     {
         private readonly IUnitOfWork _unit;
 
-        private readonly AuthService _auth;
+        private readonly IAuthService _auth;
 
         private readonly IMapper _map;
 
         private readonly IHostingEnvironment _env;
 
         private readonly List<string>extensions=new List<string> { ".jpg", ".png",".jpeg"};
-        public PhotoService(IUnitOfWork unit, AuthService auth,IMapper map,IHostingEnvironment env)
+        public PhotoService(IUnitOfWork unit, IAuthService auth,IMapper map,IHostingEnvironment env)
         {
             _unit = unit;
 

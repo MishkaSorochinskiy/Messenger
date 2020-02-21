@@ -17,10 +17,10 @@ namespace Infrastructure.Services
     {
         private readonly IUnitOfWork _unit;
 
-        private readonly AuthService _auth;
+        private readonly IAuthService _auth;
 
         private readonly IConfiguration _config;
-        public ChatService(IUnitOfWork unit, AuthService auth,IConfiguration config)
+        public ChatService(IUnitOfWork unit, IAuthService auth,IConfiguration config)
         {
             _unit = unit;
 

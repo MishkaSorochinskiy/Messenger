@@ -20,11 +20,11 @@ namespace Infrastructure.Services
     {
         private readonly IUnitOfWork _unit;
 
-        private readonly AuthService _auth;
+        private readonly IAuthService _auth;
 
         private readonly IMapper _map;
 
-        public MessageService(IUnitOfWork unit,AuthService auth,IMapper map)
+        public MessageService(IUnitOfWork unit,IAuthService auth,IMapper map)
         {
             _unit = unit;
 
