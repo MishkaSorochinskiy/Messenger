@@ -26,11 +26,13 @@ namespace MessengerAPI.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<bool> Create([FromBody]AddChatRequest request)
+        public async Task<IActionResult> Create([FromBody]AddChatRequest request)
         {
             request.UserName = User.Identity.Name;
 
-            return await _chatService.CreateChatAsync(request);
+            await _chatService.CreateChatAsync(request);
+
+            return Ok();
         }
 
         [HttpGet]
