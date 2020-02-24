@@ -20,12 +20,9 @@ namespace MessengerAPI.Controllers
     {
         private readonly IPhotoService _photoService;
 
-        private readonly IUnitOfWork _unit;
-        public PhotoController(IPhotoService photoService,IUnitOfWork unit)
+        public PhotoController(IPhotoService photoService)
         {
             _photoService = photoService;
-
-            _unit = unit;
 
         }
 
@@ -33,18 +30,17 @@ namespace MessengerAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> ChangePhoto(IFormCollection collection)
         {
-            if (ModelState.IsValid&&collection.Files[0]!=null)
+            if (ModelState.IsValid && collection.Files[0] != null)
             {
-                if (await _photoService.ChangePhotoAsync(new AddPhotoDto()
+                await _photoService.ChangePhotoAsync(new AddPhotoDto()
                 {
                     UserName = User.Identity.Name,
                     UploadedFile = collection.Files[0]
-                }))
-                    return Ok();
+                });
 
-                return BadRequest();
+                return Ok();
             }
-
+           
             return BadRequest();
         }
 
@@ -54,25 +50,7 @@ namespace MessengerAPI.Controllers
         {
             var photo=await _photoService.GetPhotoAsync(User.Identity.Name);
 
-            if (photo != null)
-                return Ok(photo.Name);
-
-            return BadRequest();
-        }
-
-        [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> GetPhotoById([FromQuery]GetPhotoDtoRequest request)
-        {
-            if (ModelState.IsValid)
-            {
-                var photo = await _photoService.GetPhotoAsync(request.id);
-
-                if (photo != null)
-                    return Ok(photo.Name);
-            }
-
-            return BadRequest();
+            return Ok(photo.Name);
         }
     }
 }

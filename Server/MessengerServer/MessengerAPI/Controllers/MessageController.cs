@@ -20,18 +20,10 @@ namespace MessengerAPI.Controllers
     [ApiController]
     public class MessageController : ControllerBase
     {
-        private readonly IUnitOfWork _unit;
-
-        private readonly IMapper _mapper;
-
         private readonly IMessageService _messageService;
 
-        public MessageController(IUnitOfWork unit,IMapper mapper,IMessageService messageService)
+        public MessageController(IMapper mapper,IMessageService messageService)
         {
-            _unit = unit;
-
-            _mapper = mapper;
-
             _messageService = messageService;
 
         }

@@ -3,10 +3,14 @@ using Application.Models.PhotoDto;
 using AutoMapper;
 using Domain;
 using Domain.Entities;
+using Domain.Exceptions.PhotoExceptions;
+using Domain.Exceptions.UserExceptions;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -17,14 +21,22 @@ namespace Infrastructure.Services
     {
         private readonly IUnitOfWork _unit;
 
-        private readonly AuthService _auth;
+        private readonly IAuthService _auth;
 
         private readonly IMapper _map;
 
         private readonly IHostingEnvironment _env;
+        
+        private readonly IConfiguration _config;
 
-        private readonly List<string>extensions=new List<string> { ".jpg", ".png",".jpeg"};
-        public PhotoService(IUnitOfWork unit, AuthService auth,IMapper map,IHostingEnvironment env)
+        List<string> Extensions 
+        {
+            get
+            {
+                return this._config.GetSection("PhotoExtensions").Get<string[]>().ToList();
+            }
+        }
+        public PhotoService(IUnitOfWork unit, IAuthService auth,IMapper map,IHostingEnvironment env,IConfiguration config)
         {
             _unit = unit;
 
@@ -33,15 +45,20 @@ namespace Infrastructure.Services
             _map = map;
 
             _env = env;
+
+            _config = config;
         }
 
-        public async Task<bool> ChangePhotoAsync(AddPhotoDto model)
+        public async Task ChangePhotoAsync(AddPhotoDto model)
         {
             var user = await _auth.FindByNameUserAsync(model.UserName);
 
+            if (user == null)
+                throw new UserNotExistException("Given user not exist!!", 400);
+
             var ext = model.UploadedFile.FileName.Substring(model.UploadedFile.FileName.LastIndexOf('.'));
 
-            if (user != null&&this.extensions.Contains(ext))
+            if (this.Extensions.Contains(ext))
             {
                 var photo = await _unit.PhotoRepository.GetPhotoByUserAsync(user.Id);
 
@@ -54,36 +71,28 @@ namespace Infrastructure.Services
                     await model.UploadedFile.CopyToAsync(fileStream);
                 }
 
-                await _unit.Commit();
-
-                return true;
+                 await _unit.Commit();
             }
-
-            return false;
-
+            else
+            {
+                throw new PhotoInCorrectException("Given extension is incorrect!!", 400);
+            }
         }
 
         public async Task<GetPhotoDto> GetPhotoAsync(string username)
         {
             var user = await _auth.FindByNameUserAsync(username);
 
-            if (user != null)
-            {
-               return _map.Map<GetPhotoDto>(await _unit.PhotoRepository.GetPhotoByUserAsync(user.Id));
-            }
+            if (user == null)
+                throw new UserNotExistException("Given user not exist!!",400);
 
-            return default(GetPhotoDto);
+            var photo = await _unit.PhotoRepository.GetPhotoByUserAsync(user.Id);
+
+            if (photo == null)
+                throw new PhotoNotExistException("Given user haven't got any photos!!",400);
+
+            return _map.Map<GetPhotoDto>(photo);
         }
 
-        public async Task<GetPhotoDto> GetPhotoAsync(int id)
-        {            
-            var photo = await _unit.PhotoRepository.GetPhotoByUserAsync(id);
-
-            if (photo != null)
-                return  _map.Map<GetPhotoDto>(photo);
-
-            return default(GetPhotoDto);
-
-        }
     }
 }

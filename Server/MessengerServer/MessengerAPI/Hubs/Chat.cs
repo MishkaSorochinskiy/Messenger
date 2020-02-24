@@ -5,6 +5,7 @@ using Domain;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,25 +18,25 @@ namespace MessengerAPI.Hubs
     {
         private readonly IMessageService _messageService;
 
-        private readonly IMapper _map;
-
-        private readonly AuthService _auth;
+        private readonly IAuthService _auth;
 
         private readonly IUnitOfWork _unit;
 
         private readonly IUserService _userService;
 
-        public Chat(IMessageService messageService,IMapper map,AuthService auth,IUnitOfWork unit,IUserService userService)
+        private readonly IMemoryCache _cache;
+
+        public Chat(IMemoryCache cache,IMessageService messageService,IAuthService auth,IUnitOfWork unit,IUserService userService)
         {
             _messageService = messageService;
-
-            _map = map;
 
             _auth = auth;
 
             _unit = unit;
 
             _userService = userService;
+
+            _cache = cache;
         }
 
         public override async Task OnConnectedAsync()
@@ -56,14 +57,23 @@ namespace MessengerAPI.Hubs
         {
             message.UserName = Context.User.Identity.Name;
 
-            if(await this._userService.CheckStatusAsync(message))
+            var isblocked = _cache.Get($"{message.UserName}:{message.chatId}");
+
+            if (isblocked == null)
+            {
+                isblocked = await this._userService.CheckStatusAsync(message);
+
+                _cache.Set($"{message.UserName}:{message.chatId}", isblocked, new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+                });
+            }
+
+            if((bool)isblocked)
             {
                 var newmessage = await _messageService.AddMessageAsync(message);
 
-                if (newmessage != null)
-                {
-                    await Clients.Group(message.chatId.ToString()).SendAsync("update", newmessage, message.chatId);
-                }
+                await Clients.Group(message.chatId.ToString()).SendAsync("update", newmessage, message.chatId);
             }
         }
 

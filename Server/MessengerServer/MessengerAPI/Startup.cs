@@ -73,6 +73,8 @@ namespace MessengerAPI
 
             services.AddAutoMapper(typeof(MappingProfile));
 
+            services.AddMemoryCache();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -90,6 +92,8 @@ namespace MessengerAPI
             app.UseStaticFiles();
 
             app.UseCors("CorsPolicy");
+
+            app.UseErrorHandling();
 
             app.UseAuthentication();
 

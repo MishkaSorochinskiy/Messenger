@@ -10,7 +10,20 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
-    public class AuthService
+    public interface IAuthService
+    {
+        Task SignOut();
+
+        Task<SignInResult> SignIn(LoginModel model);
+
+        Task<IdentityResult> Register(RegisterModel model);
+
+        Task<SecurityUser> FindByNameAsync(string name);
+
+        Task<User> FindByNameUserAsync(string name);
+    }
+
+    public class AuthService:IAuthService
     {
         private readonly UserManager<SecurityUser> _userManager;
         

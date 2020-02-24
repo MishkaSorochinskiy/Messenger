@@ -3,6 +3,8 @@ using Application.Models.ChatDto.Requests;
 using Application.Models.ChatDto.Responces;
 using Domain;
 using Domain.Entities;
+using Domain.Exceptions.ChatExceptions;
+using Domain.Exceptions.UserExceptions;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -16,10 +18,10 @@ namespace Infrastructure.Services
     {
         private readonly IUnitOfWork _unit;
 
-        private readonly AuthService _auth;
+        private readonly IAuthService _auth;
 
         private readonly IConfiguration _config;
-        public ChatService(IUnitOfWork unit, AuthService auth,IConfiguration config)
+        public ChatService(IUnitOfWork unit, IAuthService auth,IConfiguration config)
         {
             _unit = unit;
 
@@ -28,43 +30,45 @@ namespace Infrastructure.Services
             _config = config;
         }
 
-        public async Task<bool> CreateChatAsync(AddChatRequest request)
+        public async Task CreateChatAsync(AddChatRequest request)
         {
             var user = await _auth.FindByNameUserAsync(request.UserName);
 
+            if (user == null)
+                throw new UserNotExistException("user not exist", 400);
+
             if ((await this._unit.ChatRepository.ChatExistAsync(user.Id, request.SecondUserId)))
             {
-                var chat = new Chat()
-                {
-                    FirstUserId = user.Id,
-                    SecondUserId = request.SecondUserId
-                };
-
                 var grettingMessage = new Message()
                 {
                     Content = _config.GetValue<string>("greetmessage"),
                     TimeCreated = DateTime.Now,
                     UserId = user.Id,
-                    Chat = chat
                 };
 
-                await this._unit.MessageRepository.CreateAsync(grettingMessage);
+                var chat = new Chat()
+                {
+                    FirstUserId = user.Id,
+                    SecondUserId = request.SecondUserId,
+                    LastMessage = grettingMessage
+                };
+
+                await this._unit.ChatRepository.CreateAsync(chat);
 
                 await this._unit.Commit();
-
-                chat.LastMessage = grettingMessage;
-
-                await this._unit.Commit();
-
-                return true;
             }
-
-            return false;
+            else
+            {
+                throw new ChatAlreadyExistException("chat already exist", 400);
+            }
         }
 
         public async Task<List<GetChatDto>> GetChatsAsync(GetChatsRequestDto request)
         {
             var user = await this._unit.UserRepository.GetUserWithBlackList(request.UserName);
+
+            if (user == null)
+                throw new UserNotExistException("Given user not exist!",400);
 
             var chatres= await _unit.ChatRepository.GetUserChatsAsync(user.Id);
 
