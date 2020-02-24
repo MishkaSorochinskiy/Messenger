@@ -5,6 +5,7 @@ using Domain;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,9 @@ namespace MessengerAPI.Hubs
 
         private readonly IUserService _userService;
 
-        public Chat(IMessageService messageService,IAuthService auth,IUnitOfWork unit,IUserService userService)
+        private readonly IMemoryCache _cache;
+
+        public Chat(IMemoryCache cache,IMessageService messageService,IAuthService auth,IUnitOfWork unit,IUserService userService)
         {
             _messageService = messageService;
 
@@ -32,6 +35,8 @@ namespace MessengerAPI.Hubs
             _unit = unit;
 
             _userService = userService;
+
+            _cache = cache;
         }
 
         public override async Task OnConnectedAsync()
@@ -52,7 +57,19 @@ namespace MessengerAPI.Hubs
         {
             message.UserName = Context.User.Identity.Name;
 
-            if(await this._userService.CheckStatusAsync(message))
+            var isblocked = _cache.Get($"{message.UserName}:{message.chatId}");
+
+            if (isblocked == null)
+            {
+                isblocked = await this._userService.CheckStatusAsync(message);
+
+                _cache.Set($"{message.UserName}:{message.chatId}", isblocked, new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+                });
+            }
+
+            if((bool)isblocked)
             {
                 var newmessage = await _messageService.AddMessageAsync(message);
 

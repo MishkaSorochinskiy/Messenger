@@ -54,7 +54,6 @@ export class ChatService {
 
   constructor(private http:HttpClient,private config:ConfigService,private sanitizer:DomSanitizer, private photo: PhotoService) { }
 
-
   startConnection=async()=>{
     this.hubConnection = new signalR.HubConnectionBuilder()
                               .withUrl("https://localhost:44334/chat")
@@ -80,6 +79,7 @@ export class ChatService {
 
   public sendMessage (data:Message) {
     data.chatId=this.currentChatId;
+    console.log("send");
     this.hubConnection.invoke('SendToAll', data)
     .catch(err => console.error(err));
   }
