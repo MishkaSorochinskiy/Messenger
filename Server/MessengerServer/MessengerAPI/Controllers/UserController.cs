@@ -49,6 +49,8 @@ namespace MessengerAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateUser(UpdateUserDto model)
         {
+            model.Email = User.Identity.Name;
+
             await _userService.UpdateUserAsync(model);
 
             return Ok();

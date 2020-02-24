@@ -28,6 +28,8 @@ export class UserService  {
 
   valid:boolean=false;
 
+  updated:boolean=false;
+
   constructor(private http:HttpClient,private config:ConfigService,private photoservice:PhotoService,private chatservice:ChatService) { }
 
   public async UpdateUser(data) {
@@ -40,6 +42,7 @@ export class UserService  {
       ()=>{
         this.updateCurrentUser(data);
         this.valid=false;
+        this.updated=true;
       },
       error=>{
         this.valid=true;

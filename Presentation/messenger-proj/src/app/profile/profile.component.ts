@@ -18,7 +18,7 @@ export class ProfileComponent implements OnInit {
   }
 
   UpdateUser(){
-    console.log(this.currentUser);
+    this.userservice.updated=false;
     if(this.currentUser.age>100 || this.currentUser.age<0 || this.currentUser.nickname){
       this.userservice.valid=true;
     }
