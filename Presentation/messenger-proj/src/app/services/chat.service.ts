@@ -141,17 +141,6 @@ export class ChatService {
         this.getMessages(this.currentChatId);
       }
     )
-      // .then(res=>{
-      //   if(res===true){
-          
-      //   }
-      //   else{
-      //     var chat=this.chats.getValue()
-      //         .find(c=>c.secondUserId==SecondUserId);
-      //     this.currentChatId=chat.id;
-      //     this.getMessages(this.currentChatId);
-      //   }
-      // });
   }
 
   public async GetChats(){

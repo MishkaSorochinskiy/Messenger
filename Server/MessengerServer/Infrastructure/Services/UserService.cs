@@ -142,10 +142,10 @@ namespace Infrastructure.Services
 
             if ((await _unit.BlockedUserRepository.IsBlockedUserAsync(requestedUserId,currentUser.Id))==null)
             {
-                return true;
+                return false;
             }
 
-            return false;
+            return true;
         }
     }
 }
