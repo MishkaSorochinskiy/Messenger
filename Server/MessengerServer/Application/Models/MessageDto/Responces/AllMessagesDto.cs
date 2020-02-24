@@ -1,7 +1,5 @@
 ﻿using Application.Models.UserDto;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Models.MessageDto
 {

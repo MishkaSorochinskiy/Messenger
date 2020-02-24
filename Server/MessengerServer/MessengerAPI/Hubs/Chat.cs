@@ -69,7 +69,7 @@ namespace MessengerAPI.Hubs
                 });
             }
 
-            if((bool)isblocked)
+            if(!(bool)isblocked)
             {
                 var newmessage = await _messageService.AddMessageAsync(message);
 
