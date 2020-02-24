@@ -12,6 +12,7 @@ namespace Application.Models.MessageDto
 
         public string UserName { get; set; }
 
+        [Required]
         public int chatId { get; set; }
     }
 }

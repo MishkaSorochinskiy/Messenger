@@ -75,7 +75,6 @@ export class UserService  {
   public async SearchUsers(filter:string){
     let url =await this.config.getConfig("search")+`?Filter=${filter}`;
     let imgpath=await this.config.getConfig("photopath");
-    console.log(imgpath);
     return await this.http.get<User[]>(url).toPromise()
     .then(res=>
       {
@@ -85,7 +84,6 @@ export class UserService  {
         })
 
         this.updateSearchUsers(mappedres);
-        console.log(mappedres);
         return mappedres;
       });
   }
