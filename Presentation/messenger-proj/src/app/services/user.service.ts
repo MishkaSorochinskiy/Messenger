@@ -26,6 +26,8 @@ export class UserService  {
   private searchUsers=new BehaviorSubject<User[]>([]);
   searchdata=this.searchUsers.asObservable();
 
+  valid:boolean=false;
+
   constructor(private http:HttpClient,private config:ConfigService,private photoservice:PhotoService,private chatservice:ChatService) { }
 
   public async UpdateUser(data) {
@@ -34,7 +36,15 @@ export class UserService  {
     let headers = new HttpHeaders();
     headers= headers.append('content-type', 'application/json');
             
-    return this.http.post(url,JSON.stringify(data),{headers:headers}).toPromise();
+    return this.http.post(url,JSON.stringify(data),{headers:headers}).subscribe(
+      ()=>{
+        this.updateCurrentUser(data);
+        this.valid=false;
+      },
+      error=>{
+        this.valid=true;
+      }
+    );
   }
 
   public async SetCurrentUser(){
