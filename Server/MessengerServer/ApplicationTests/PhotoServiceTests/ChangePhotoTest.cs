@@ -4,8 +4,11 @@ using AutoFixture.AutoMoq;
 using Domain.Entities;
 using Domain.Exceptions.UserExceptions;
 using Infrastructure.Services;
-using Moq;
 using Xunit;
+using Moq;
+using Microsoft.Extensions.Configuration;
+using Domain.Exceptions.PhotoExceptions;
+using Microsoft.AspNetCore.Http;
 
 namespace ApplicationTests.PhotoServiceTests
 {
@@ -26,6 +29,30 @@ namespace ApplicationTests.PhotoServiceTests
             //assert
             await Assert.ThrowsAsync<UserNotExistException>
                 (async () => await photoService.ChangePhotoAsync(new AddPhotoDto()));
+        }
+
+        [Fact]
+        public async void ChangePhoto_ExtensionNotExist_ThrowsException()
+        {
+            //arrange
+            var fixture = new Fixture().Customize(new AutoMoqCustomization());
+
+            var mockConfig = fixture.Freeze<Mock<IConfiguration>>();
+            mockConfig.SetupGet(c => c[It.IsAny<string>()])
+                .Returns(default(string));
+
+            var fileMock = new Mock<IFormFile>();
+            fileMock.SetupGet(file => file.FileName)
+                .Returns("photo.extension");
+
+            var request = fixture.Build<AddPhotoDto>()
+                .With(p => p.UploadedFile,fileMock.Object)
+                .Create();
+
+            var photoService = fixture.Create<PhotoService>();
+
+            //assert
+            await Assert.ThrowsAsync<PhotoInCorrectException>(async () => await photoService.ChangePhotoAsync(request));
         }
     }
 }
