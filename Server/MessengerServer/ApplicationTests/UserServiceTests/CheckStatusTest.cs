@@ -64,7 +64,7 @@ namespace ApplicationTests.UserServiceTests
 
 
             //assert
-            Assert.False(result);
+            Assert.True(result);
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace ApplicationTests.UserServiceTests
 
 
             //assert
-            Assert.True(result);
+            Assert.False(result);
         }
     }
 }

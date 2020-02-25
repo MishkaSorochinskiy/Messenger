@@ -29,13 +29,6 @@ namespace Infrastructure.Services
         
         private readonly IConfiguration _config;
 
-        List<string> Extensions 
-        {
-            get
-            {
-                return this._config.GetSection("PhotoExtensions").Get<string[]>().ToList();
-            }
-        }
         public PhotoService(IUnitOfWork unit, IAuthService auth,IMapper map,IHostingEnvironment env,IConfiguration config)
         {
             _unit = unit;
@@ -58,7 +51,7 @@ namespace Infrastructure.Services
 
             var ext = model.UploadedFile.FileName.Substring(model.UploadedFile.FileName.LastIndexOf('.'));
 
-            if (this.Extensions.Contains(ext))
+            if (this._config[$"PhotoExtensions:{ext}"]!=null)
             {
                 var photo = await _unit.PhotoRepository.GetPhotoByUserAsync(user.Id);
 
@@ -71,7 +64,7 @@ namespace Infrastructure.Services
                     await model.UploadedFile.CopyToAsync(fileStream);
                 }
 
-                 await _unit.Commit();
+                await _unit.Commit();
             }
             else
             {
