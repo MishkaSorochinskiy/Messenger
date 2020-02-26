@@ -50,20 +50,20 @@ namespace MessengerAPI.Hubs
         {
             message.userId =Convert.ToInt32(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            var isblocked = _cache.Get($"{message.userId}:{message.chatId}");
+            var isBlocked = _cache.Get($"{message.userId}:{message.chatId}");
 
-            if (isblocked == null)
+            if (isBlocked == null)
             {
-                isblocked = await this._userService.CheckStatusAsync(message);
+                isBlocked = await this._userService.CheckStatusAsync(message);
 
-                _cache.Set($"{message.userId}:{message.chatId}", isblocked, TimeSpan.FromMinutes(10));
+                _cache.Set($"{message.userId}:{message.chatId}", isBlocked, TimeSpan.FromMinutes(10));
             }
 
-            if(!(bool)isblocked)
+            if(!(bool)isBlocked)
             {
-                var newmessage = await _messageService.AddMessageAsync(message);
+                var newMessage = await _messageService.AddMessageAsync(message);
 
-                await Clients.Group(message.chatId.ToString()).SendAsync("update", newmessage, message.chatId);
+                await Clients.Group(message.chatId.ToString()).SendAsync("update", newMessage, message.chatId);
             }
         }
 

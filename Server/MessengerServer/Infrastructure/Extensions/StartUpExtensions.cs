@@ -1,5 +1,6 @@
 ﻿using Application;
 using Application.IServices;
+using Infrastructure.Cache;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
