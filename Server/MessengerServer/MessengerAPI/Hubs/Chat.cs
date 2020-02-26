@@ -1,14 +1,10 @@
-﻿using Application.IServices;
+﻿using Application;
+using Application.IServices;
 using Application.Models.MessageDto;
-using AutoMapper;
 using Domain;
-using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Caching.Memory;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -19,19 +15,15 @@ namespace MessengerAPI.Hubs
     {
         private readonly IMessageService _messageService;
 
-        private readonly IAuthService _auth;
-
         private readonly IUnitOfWork _unit;
 
         private readonly IUserService _userService;
 
-        private readonly IMemoryCache _cache;
+        private readonly ICache _cache;
 
-        public Chat(IMemoryCache cache,IMessageService messageService,IAuthService auth,IUnitOfWork unit,IUserService userService)
+        public Chat(ICache cache,IMessageService messageService,IUnitOfWork unit,IUserService userService)
         {
             _messageService = messageService;
-
-            _auth = auth;
 
             _unit = unit;
 
@@ -58,23 +50,20 @@ namespace MessengerAPI.Hubs
         {
             message.userId =Convert.ToInt32(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            var isblocked = _cache.Get($"{message.userId}:{message.chatId}");
+            var isBlocked = _cache.Get($"{message.userId}:{message.chatId}");
 
-            if (isblocked == null)
+            if (isBlocked == null)
             {
-                isblocked = await this._userService.CheckStatusAsync(message);
+                isBlocked = await this._userService.CheckStatusAsync(message);
 
-                _cache.Set($"{message.userId}:{message.chatId}", isblocked, new MemoryCacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
-                });
+                _cache.Set($"{message.userId}:{message.chatId}", isBlocked, TimeSpan.FromMinutes(10));
             }
 
-            if(!(bool)isblocked)
+            if(!(bool)isBlocked)
             {
-                var newmessage = await _messageService.AddMessageAsync(message);
+                var newMessage = await _messageService.AddMessageAsync(message);
 
-                await Clients.Group(message.chatId.ToString()).SendAsync("update", newmessage, message.chatId);
+                await Clients.Group(message.chatId.ToString()).SendAsync("update", newMessage, message.chatId);
             }
         }
 

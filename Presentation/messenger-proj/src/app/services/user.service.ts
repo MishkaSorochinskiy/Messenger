@@ -8,7 +8,7 @@ import {BehaviorSubject} from 'rxjs';
 export class User{
   id:number;
   photoName:string;
-  nickname:string;
+  nickName:string;
   phone:string;
   email:string;
   age:number;
@@ -20,7 +20,7 @@ export class User{
 })
 export class UserService  {
 
-  private currentUser=new BehaviorSubject<User>(new User());
+  public currentUser=new BehaviorSubject<User>(new User());
   data=this.currentUser.asObservable();
 
   private searchUsers=new BehaviorSubject<User[]>([]);

@@ -15,7 +15,7 @@ using AutoFixture.AutoMoq;
 
 namespace ApplicationTests.UserServiceTests
 {
-    public class GetUserInfoTest
+    public class GetUserInfoTests
     {
         [Fact]
         public async void GetUserInfo_UserNotExist_ThrowsException()

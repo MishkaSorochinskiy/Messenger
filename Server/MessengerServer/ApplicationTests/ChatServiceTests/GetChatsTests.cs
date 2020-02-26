@@ -13,7 +13,7 @@ using Xunit;
 
 namespace ApplicationTests.ChatServiceTests
 {
-    public class GetChatsTest
+    public class GetChatsTests
     {
         [Fact]
         public async void GetChats_UserNotExist_ThrowsException()

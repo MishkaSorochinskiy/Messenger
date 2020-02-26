@@ -15,7 +15,7 @@ using Xunit;
 
 namespace ApplicationTests.MessageServiceTests
 {
-    public class GetMessageByChatTest
+    public class GetMessageByChatTests
     {
         [Fact]
         public async void GetMessageByChat_ChatNotExist_ThrowsException()
