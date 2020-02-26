@@ -9,3 +9,24 @@ img{
     height: 40px;
     border-radius: 10px;
 }
+
+#notvalid{
+    color: lightcoral;
+}
+
+#updated{
+    color:green;
+    animation: update 5s;
+    visibility: hidden;
+}
+
+@keyframes update{
+
+    15%{
+        visibility: visible;
+    }
+
+    100% {
+        visibility: hidden;
+    }
+}

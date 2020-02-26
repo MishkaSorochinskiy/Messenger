@@ -9,6 +9,7 @@ using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MessengerAPI.Hubs
@@ -41,35 +42,35 @@ namespace MessengerAPI.Hubs
 
         public override async Task OnConnectedAsync()
         {
-           var userId=(await this._auth.FindByNameAsync(Context.User.Identity.Name)).UserId;
+            var userId =Context.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-           var userChats =await this._unit.ChatRepository.GetUserChatsAsync(userId);
+            var userChats = await this._unit.ChatRepository.GetUserChatsAsync(Convert.ToInt32(userId));
 
             userChats.ForEach(async chat =>
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, chat.Id.ToString());
             });
 
-           await base.OnConnectedAsync();
+            await base.OnConnectedAsync();
         }
 
         public async Task SendToAll(AddMessageDto message)
         {
-            message.UserName = Context.User.Identity.Name;
+            message.userId =Convert.ToInt32(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            var isblocked = _cache.Get($"{message.UserName}:{message.chatId}");
+            var isblocked = _cache.Get($"{message.userId}:{message.chatId}");
 
             if (isblocked == null)
             {
                 isblocked = await this._userService.CheckStatusAsync(message);
 
-                _cache.Set($"{message.UserName}:{message.chatId}", isblocked, new MemoryCacheEntryOptions
+                _cache.Set($"{message.userId}:{message.chatId}", isblocked, new MemoryCacheEntryOptions
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
                 });
             }
 
-            if((bool)isblocked)
+            if(!(bool)isblocked)
             {
                 var newmessage = await _messageService.AddMessageAsync(message);
 
@@ -79,9 +80,9 @@ namespace MessengerAPI.Hubs
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            var userId = (await this._auth.FindByNameAsync(Context.User.Identity.Name)).UserId;
+            var userId = Context.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var userChats = await this._unit.ChatRepository.GetUserChatsAsync(userId);
+            var userChats = await this._unit.ChatRepository.GetUserChatsAsync(Convert.ToInt32(userId));
 
             userChats.ForEach(async chat =>
             {

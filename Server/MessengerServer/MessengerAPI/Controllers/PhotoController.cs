@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Application.IServices;
 using Application.Models.PhotoDto;
@@ -34,7 +35,7 @@ namespace MessengerAPI.Controllers
             {
                 await _photoService.ChangePhotoAsync(new AddPhotoDto()
                 {
-                    UserName = User.Identity.Name,
+                    UserId = (int)HttpContext.Items["id"],
                     UploadedFile = collection.Files[0]
                 });
 
@@ -48,7 +49,9 @@ namespace MessengerAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPhoto()
         {
-            var photo=await _photoService.GetPhotoAsync(User.Identity.Name);
+            var userId = (int)HttpContext.Items["id"];
+
+            var photo=await _photoService.GetPhotoAsync(Convert.ToInt32(userId));
 
             return Ok(photo.Name);
         }

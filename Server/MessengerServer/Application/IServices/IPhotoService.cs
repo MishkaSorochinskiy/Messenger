@@ -10,6 +10,6 @@ namespace Application.IServices
     {
         Task ChangePhotoAsync(AddPhotoDto model);
 
-        Task<GetPhotoDto> GetPhotoAsync(string username);
+        Task<GetPhotoDto> GetPhotoAsync(int userId);
     }
 }

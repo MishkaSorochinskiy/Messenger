@@ -32,7 +32,7 @@ namespace Infrastructure.Services
 
         public async Task CreateChatAsync(AddChatRequest request)
         {
-            var user = await _auth.FindByNameUserAsync(request.UserName);
+            var user = await _auth.FindByIdUserAsync(request.userId);
 
             if (user == null)
                 throw new UserNotExistException("user not exist", 400);

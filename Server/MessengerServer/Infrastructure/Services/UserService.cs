@@ -45,7 +45,7 @@ namespace Infrastructure.Services
 
         public async Task UpdateUserAsync(UpdateUserDto model)
         {
-            var user = await _auth.FindByNameUserAsync(model.Email);
+            var user = await _auth.FindByIdUserAsync(model.UserId);
 
             if (user == null)
                 throw new UserNotExistException("Given user not exist!!", 400);
@@ -61,7 +61,7 @@ namespace Infrastructure.Services
 
         public  async Task<List<SearchUserDto>> SearchUserAsync(SearchUserDtoRequest request)
         {
-            var currentUser = await _auth.FindByNameUserAsync(request.UserName);
+            var currentUser = await _auth.FindByIdUserAsync(request.UserId);
 
             if (currentUser == null)
                 throw new UserNotExistException("Given user not exist!!", 400);
@@ -77,7 +77,7 @@ namespace Infrastructure.Services
 
         public async Task BlockUserAsync(BlockUserRequest request) 
         {
-            var currentUser = await this._auth.FindByNameUserAsync(request.UserName);
+            var currentUser = await this._auth.FindByIdUserAsync(request.UserId);
 
             if (currentUser == null)
                 throw new UserNotExistException("Given user not exist!!",400);
@@ -109,7 +109,7 @@ namespace Infrastructure.Services
 
         public async Task UnBlockUserAsync(BlockUserRequest request)
         {
-            var currentUser = await this._auth.FindByNameUserAsync(request.UserName);
+            var currentUser = await this._auth.FindByIdUserAsync(request.UserId);
 
             if (currentUser == null)
                 throw new UserNotExistException("Given user not exist!!", 400);
@@ -133,7 +133,7 @@ namespace Infrastructure.Services
             if (chat == null)
                 throw new ChatNotExistException("Given chat not exist!!",400);
 
-            var currentUser = await this._auth.FindByNameUserAsync(request.UserName);
+            var currentUser = await this._auth.FindByIdUserAsync(request.userId);
 
             if (currentUser == null)
                 throw new UserNotExistException("Given user not exist!!",400);
@@ -142,10 +142,10 @@ namespace Infrastructure.Services
 
             if ((await _unit.BlockedUserRepository.IsBlockedUserAsync(requestedUserId,currentUser.Id))==null)
             {
-                return true;
+                return false;
             }
 
-            return false;
+            return true;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Application.IServices;
 using Application.Models.ChatDto.Requests;
@@ -28,7 +29,7 @@ namespace MessengerAPI.Controllers
         [Authorize]
         public async Task<IActionResult> Create([FromBody]AddChatRequest request)
         {
-            request.UserName = User.Identity.Name;
+            request.userId= (int)HttpContext.Items["id"];
 
             await _chatService.CreateChatAsync(request);
 

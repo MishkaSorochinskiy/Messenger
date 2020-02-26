@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Application.IServices;
 using Application.Models.ChatDto.Requests;
@@ -49,6 +50,8 @@ namespace MessengerAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateUser(UpdateUserDto model)
         {
+            model.UserId = (int)HttpContext.Items["id"];
+
             await _userService.UpdateUserAsync(model);
 
             return Ok();
@@ -58,16 +61,16 @@ namespace MessengerAPI.Controllers
         [Authorize]
         public async Task<List<SearchUserDto>> Search([FromQuery]SearchUserDtoRequest request )
         {
-            request.UserName = User.Identity.Name;
+           request.UserId = (int)HttpContext.Items["id"];
 
-           return await this._userService.SearchUserAsync(request);
+            return await this._userService.SearchUserAsync(request);
         }
 
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> BlockUser([FromBody]BlockUserRequest request)
         {
-            request.UserName = User.Identity.Name;
+            request.UserId = (int)HttpContext.Items["id"]; ;
 
             await this._userService.BlockUserAsync(request);
 
@@ -78,7 +81,7 @@ namespace MessengerAPI.Controllers
         [Authorize]
         public async Task<IActionResult> UnBlockUser([FromBody]BlockUserRequest request)
         {
-            request.UserName = User.Identity.Name;
+            request.UserId = (int)HttpContext.Items["id"];
 
             await this._userService.UnBlockUserAsync(request);
 

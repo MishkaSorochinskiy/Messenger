@@ -19,7 +19,9 @@ export class UserInfo{
 })
 export class AuthService {
 
-  userInfo:UserInfo=new UserInfo();
+   userInfo:UserInfo=new UserInfo();
+
+   errorOccured:boolean=false;
 
     constructor(private http:HttpClient,private config:ConfigService,private router:Router,private userservice:UserService) {}
 
@@ -35,7 +37,7 @@ export class AuthService {
               localStorage.setItem('token',res);
               await this.userservice.SetCurrentUser();
               await this.router.navigate(['/chat']);
-            },err=>console.log(err));
+            },err=>this.errorOccured=true);
     }
 
     async signin(user){
@@ -44,12 +46,13 @@ export class AuthService {
       let headers = new HttpHeaders();
       headers= headers.append('content-type', 'application/json');
       
-      return await this.http.post(url,JSON.stringify(user),{responseType:'text',headers:headers}).toPromise()
-            .then(async res=>{
-              localStorage.setItem('token',res);
-              await this.userservice.SetCurrentUser();
-              await this.router.navigate(['/chat']);
-            });
+      return await this.http.post(url,JSON.stringify(user),{responseType:'text',headers:headers})
+      .subscribe(
+        async res=>{
+          localStorage.setItem('token',res);
+          await this.userservice.SetCurrentUser();
+          await this.router.navigate(['/chat']);
+        },err=>this.errorOccured=true);
     }
 
     async fillRegister(data){

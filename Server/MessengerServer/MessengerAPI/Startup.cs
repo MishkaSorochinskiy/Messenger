@@ -44,7 +44,7 @@ namespace MessengerAPI
               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
               builder => builder.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name)));
 
-            services.AddIdentity<SecurityUser, IdentityRole>()
+            services.AddIdentity<SecurityUser, IdentityRole<int>>()
                     .AddEntityFrameworkStores<SecurityContext>();
 
             services.Configure<IdentityOptions>(options =>
@@ -98,6 +98,8 @@ namespace MessengerAPI
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseIdHandler();
 
             app.UseEndpoints(endpoints =>
             {

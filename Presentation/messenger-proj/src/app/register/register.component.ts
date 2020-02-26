@@ -15,13 +15,16 @@ export class RegisterComponent implements OnInit {
   constructor(private auth:AuthService,private router:Router,private guard: RegisterGuard) { }
 
   ngOnInit() {
+    this.auth.errorOccured=false;
   }
 
   async register(){
      if(this.userdata.password==this.userdata.passwordconfirm&&this.isPossiblyValidEmail(this.userdata.email))
      {
         let res=await this.auth.fillRegister(this.userdata);
-        
+
+        this.auth.errorOccured=!res;
+
         if(res){
           this.guard.isenabled=true;
           this.router.navigate(['/fillinfo']);

@@ -11,7 +11,6 @@ using Domain.Exceptions.UserExceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Services
@@ -35,7 +34,7 @@ namespace Infrastructure.Services
 
         public async Task<GetMessageDto> AddMessageAsync(AddMessageDto message)
         {
-            var user = await _auth.FindByNameUserAsync(message.UserName);
+            var user = await _auth.FindByIdUserAsync(message.userId);
 
             if (user == null)
                 throw new UserNotExistException("Given user not exist!!", 400);

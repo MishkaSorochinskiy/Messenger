@@ -79,7 +79,6 @@ export class ChatService {
 
   public sendMessage (data:Message) {
     data.chatId=this.currentChatId;
-    console.log("send");
     this.hubConnection.invoke('SendToAll', data)
     .catch(err => console.error(err));
   }
@@ -129,29 +128,16 @@ export class ChatService {
 
     this.http.post(url,JSON.stringify({SecondUserId}),{headers:headers}).subscribe(
       res=>{
-        console.log("chat create ok");
         this.GetChats();
         this.Reconnect();
       },
       err=>{
-        console.log("chat create error");
         var chat=this.chats.getValue()
         .find(c=>c.secondUserId==SecondUserId);
         this.currentChatId=chat.id;
         this.getMessages(this.currentChatId);
       }
     )
-      // .then(res=>{
-      //   if(res===true){
-          
-      //   }
-      //   else{
-      //     var chat=this.chats.getValue()
-      //         .find(c=>c.secondUserId==SecondUserId);
-      //     this.currentChatId=chat.id;
-      //     this.getMessages(this.currentChatId);
-      //   }
-      // });
   }
 
   public async GetChats(){

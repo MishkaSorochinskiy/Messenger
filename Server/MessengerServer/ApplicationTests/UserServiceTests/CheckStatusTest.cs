@@ -37,7 +37,7 @@ namespace ApplicationTests.UserServiceTests
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
             var mockUnit = fixture.Freeze<Mock<IAuthService>>();
-            mockUnit.Setup(u => u.FindByNameUserAsync(It.IsAny<string>()))
+            mockUnit.Setup(u => u.FindByIdUserAsync(It.IsAny<int>()))
                 .ReturnsAsync(default(User));
 
             var userService = fixture.Create<UserService>();
@@ -64,7 +64,7 @@ namespace ApplicationTests.UserServiceTests
 
 
             //assert
-            Assert.False(result);
+            Assert.True(result);
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace ApplicationTests.UserServiceTests
 
 
             //assert
-            Assert.True(result);
+            Assert.False(result);
         }
     }
 }
