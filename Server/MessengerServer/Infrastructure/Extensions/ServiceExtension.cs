@@ -1,4 +1,5 @@
-﻿using Application.IServices;
+﻿using Application;
+using Application.IServices;
 using Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -20,6 +21,8 @@ namespace Infrastructure
             services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<IChatService, ChatService>();
+
+            services.AddScoped<ICache, MemoryCache>();
 
         }
     }
