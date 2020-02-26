@@ -99,6 +99,8 @@ namespace MessengerAPI
 
             app.UseAuthorization();
 
+            app.UseIdHandler();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

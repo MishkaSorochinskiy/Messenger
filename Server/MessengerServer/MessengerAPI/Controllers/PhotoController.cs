@@ -35,7 +35,7 @@ namespace MessengerAPI.Controllers
             {
                 await _photoService.ChangePhotoAsync(new AddPhotoDto()
                 {
-                    UserId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                    UserId = (int)HttpContext.Items["id"],
                     UploadedFile = collection.Files[0]
                 });
 
@@ -49,7 +49,7 @@ namespace MessengerAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPhoto()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = (int)HttpContext.Items["id"];
 
             var photo=await _photoService.GetPhotoAsync(Convert.ToInt32(userId));
 
