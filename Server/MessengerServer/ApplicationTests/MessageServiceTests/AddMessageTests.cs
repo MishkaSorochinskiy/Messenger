@@ -13,7 +13,7 @@ using Xunit;
 
 namespace ApplicationTests.MessageServiceTests
 {
-    public class AddMessageTest
+    public class AddMessageTests
     {
 
         [Fact]

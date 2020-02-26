@@ -15,7 +15,7 @@ using Xunit;
 
 namespace ApplicationTests.PhotoServiceTests
 {
-    public class GetPhotoTest
+    public class GetPhotoTests
     {
         [Fact]
         public async void GetPhoto_UserNotExist_ThrowsException()

@@ -13,7 +13,7 @@ using Xunit;
 
 namespace ApplicationTests.UserServiceTests
 {
-   public class UpdateUserTest
+   public class UpdateUserTests
     {
         [Fact]
         public async void UpdateUser_UserNotExist_ThrowsException()

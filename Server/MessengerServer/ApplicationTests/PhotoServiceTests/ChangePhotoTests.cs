@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace ApplicationTests.PhotoServiceTests
 {
-    public class ChangePhotoTest
+    public class ChangePhotoTests
     {
         [Fact]
         public async void ChangePhoto_UserNotExist_ThrowsException()

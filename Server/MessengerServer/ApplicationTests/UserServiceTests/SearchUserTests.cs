@@ -14,7 +14,7 @@ using Xunit;
 
 namespace ApplicationTests.UserServiceTests
 {
-    public class SearchUserTest
+    public class SearchUserTests
     {
         [Fact]
         public async void SearchUser_UserNotExist_ThrowsException()
