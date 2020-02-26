@@ -29,7 +29,7 @@ namespace MessengerAPI.Controllers
         [Authorize]
         public async Task<IActionResult> Create([FromBody]AddChatRequest request)
         {
-            request.userId= Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            request.userId= (int)HttpContext.Items["id"];
 
             await _chatService.CreateChatAsync(request);
 

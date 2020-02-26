@@ -50,7 +50,7 @@ namespace MessengerAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateUser(UpdateUserDto model)
         {
-            model.UserId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            model.UserId = (int)HttpContext.Items["id"];
 
             await _userService.UpdateUserAsync(model);
 
@@ -61,16 +61,16 @@ namespace MessengerAPI.Controllers
         [Authorize]
         public async Task<List<SearchUserDto>> Search([FromQuery]SearchUserDtoRequest request )
         {
-            request.UserId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+           request.UserId = (int)HttpContext.Items["id"];
 
-           return await this._userService.SearchUserAsync(request);
+            return await this._userService.SearchUserAsync(request);
         }
 
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> BlockUser([FromBody]BlockUserRequest request)
         {
-            request.UserId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            request.UserId = (int)HttpContext.Items["id"]; ;
 
             await this._userService.BlockUserAsync(request);
 
@@ -81,7 +81,7 @@ namespace MessengerAPI.Controllers
         [Authorize]
         public async Task<IActionResult> UnBlockUser([FromBody]BlockUserRequest request)
         {
-            request.UserId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            request.UserId = (int)HttpContext.Items["id"];
 
             await this._userService.UnBlockUserAsync(request);
 
