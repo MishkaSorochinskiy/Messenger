@@ -10,6 +10,6 @@ namespace Application.Models.ChatDto.Requests
         [Required]
         public int SecondUserId { get; set; }
 
-        public string UserName { get; set; }
+        public int userId { get; set; }
     }
 }

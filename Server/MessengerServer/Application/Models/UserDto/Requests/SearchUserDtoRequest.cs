@@ -10,6 +10,6 @@ namespace Application.Models.UserDto
         [Required]
         public string Filter { get; set; }
 
-        public string UserName { get; set; }
+        public int UserId { get; set; }
     }
 }

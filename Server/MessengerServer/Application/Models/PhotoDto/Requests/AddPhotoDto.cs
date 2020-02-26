@@ -6,7 +6,7 @@ namespace Application.Models.PhotoDto
 {
     public class AddPhotoDto
     {
-        public string UserName { get; set; }
+        public int UserId { get; set; }
 
         [Required]
         public IFormFile UploadedFile { get; set; }

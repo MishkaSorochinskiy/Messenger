@@ -34,7 +34,7 @@ namespace Infrastructure.Services
 
         public async Task<GetMessageDto> AddMessageAsync(AddMessageDto message)
         {
-            var user = await _auth.FindByNameUserAsync(message.UserName);
+            var user = await _auth.FindByIdUserAsync(message.userId);
 
             if (user == null)
                 throw new UserNotExistException("Given user not exist!!", 400);

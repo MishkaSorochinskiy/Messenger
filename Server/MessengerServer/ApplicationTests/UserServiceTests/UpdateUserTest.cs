@@ -22,7 +22,7 @@ namespace ApplicationTests.UserServiceTests
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
             var mock = fixture.Freeze<Mock<IAuthService>>();
 
-            mock.Setup(u => u.FindByNameUserAsync(It.IsAny<string>()))
+            mock.Setup(u => u.FindByIdUserAsync(It.IsAny<int>()))
                     .ReturnsAsync(default(User));
 
             var userService = fixture.Create<UserService>();
@@ -38,7 +38,7 @@ namespace ApplicationTests.UserServiceTests
             var mockUnit = new Mock<IUnitOfWork>();
 
             var mockAuth = new Mock<IAuthService>();
-            mockAuth.Setup(a => a.FindByNameUserAsync(It.IsAny<string>()))
+            mockAuth.Setup(a => a.FindByIdUserAsync(It.IsAny<int>()))
                 .ReturnsAsync(new User());
 
             var userService = new UserService(mockUnit.Object, null, mockAuth.Object);
@@ -62,7 +62,7 @@ namespace ApplicationTests.UserServiceTests
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
             var mockAuth = fixture.Freeze<Mock<IAuthService>>();
 
-            mockAuth.Setup(a => a.FindByNameUserAsync(It.IsAny<string>()))
+            mockAuth.Setup(a => a.FindByIdUserAsync(It.IsAny<int>()))
                 .ReturnsAsync(user);
 
             var userService = fixture.Create<UserService>();
@@ -70,7 +70,7 @@ namespace ApplicationTests.UserServiceTests
             //act
             await userService.UpdateUserAsync(new UpdateUserDto()
             {
-                Email = "TestEmail",
+                UserId = 10,
                 Age = 20
             });
 

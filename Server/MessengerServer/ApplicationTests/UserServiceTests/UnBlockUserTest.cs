@@ -23,7 +23,7 @@ namespace ApplicationTests.UserServiceTests
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
             
             var mock = fixture.Freeze<Mock<IAuthService>>();
-            mock.Setup(a => a.FindByNameUserAsync(It.IsAny<string>()))
+            mock.Setup(a => a.FindByIdUserAsync(It.IsAny<int>()))
                     .ReturnsAsync(default(User));
 
             var userService = fixture.Create<UserService>();

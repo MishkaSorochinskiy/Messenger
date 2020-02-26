@@ -13,6 +13,7 @@ export class LoginComponent implements OnInit {
   constructor(private auth:AuthService) { }
 
   ngOnInit() {
+    this.auth.errorOccured=false;
   }
 
   async signin(){

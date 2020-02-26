@@ -1,114 +1,105 @@
 ﻿using Application.Models;
+using Domain;
 using Domain.Entities;
 using Infrastructure.AppSecurity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
     public interface IAuthService
     {
-        Task SignOut();
+        Task SignOutAsync();
 
-        Task<SignInResult> SignIn(LoginModel model);
+        Task<SignInResult> SignInAsync(LoginModel model);
 
-        Task<IdentityResult> Register(RegisterModel model);
+        Task<IdentityResult> RegisterAsync(RegisterModel model);
 
-        Task<SecurityUser> FindByNameAsync(string name);
+        Task<bool> EmailExistAsync(CheckRegisterModel model);
 
-        Task<User> FindByNameUserAsync(string name);
+        Task<User> FindByIdUserAsync(int id);
     }
 
     public class AuthService:IAuthService
     {
         private readonly UserManager<SecurityUser> _userManager;
         
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<IdentityRole<int>> _roleManager;
         
         private readonly SignInManager<SecurityUser> _signInManager;
        
-        private readonly MessengerContext _db;
-       
+        private readonly IUnitOfWork _unit;
+
         private readonly IConfiguration _config;
 
-        public AuthService(UserManager<SecurityUser> userManager, RoleManager<IdentityRole> roleManager,
-            SignInManager<SecurityUser> signInManager,MessengerContext db,IConfiguration config)
+        public AuthService(UserManager<SecurityUser> userManager, RoleManager<IdentityRole<int>> roleManager,
+            SignInManager<SecurityUser> signInManager,IUnitOfWork unit,IConfiguration config)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
-            _db = db;
+            _unit = unit;
             _config = config;
         }
 
-        public async Task SignOut()
+        public async Task SignOutAsync()
         {
             await _signInManager.SignOutAsync();
         }
 
-        public async Task<SignInResult> SignIn(LoginModel model)
+        public async Task<SignInResult> SignInAsync(LoginModel model)
         {
             return await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
         }
 
-        public async Task<IdentityResult> Register(RegisterModel model)
+        public async Task<IdentityResult> RegisterAsync(RegisterModel model)
         {
-            var appUser = new User() 
-            {
-                NickName=model.NickName,
-                Age=model.Age,
-                PhoneNumber=model.PhoneNumber,
-                Sex=model.Sex,
-                Email=model.Email
-            };
-
-            await _db.Users.AddAsync(appUser);
-            await _db.SaveChangesAsync();
-
-            var photo = new Photo()
-            {
-                UserId=appUser.Id,
-                Path=$"{_config.GetValue<string>("defaultimagepath")}{(model.Sex == Sex.Male ? "defaultmale.png":"defaultfemale.png")}",
-                Name= model.Sex==Sex.Male? _config.GetValue<string>("defaultmale"): _config.GetValue<string>("defaultfemale")
-            };
-
-            await _db.Photos.AddAsync(photo);
-            await _db.SaveChangesAsync();
-
             SecurityUser user = new SecurityUser();
             user.Email = model.Email;
             user.UserName = model.Email;
-            user.UserId = appUser.Id;
 
             IdentityResult result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, "Chatter");
                 await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
+
+                var appUser = new User()
+                {
+                    NickName = model.NickName,
+                    Age = model.Age,
+                    PhoneNumber = model.PhoneNumber,
+                    Sex = model.Sex,
+                    Email = model.Email,
+                    Id = user.Id
+                };
+
+                var photo = new Photo()
+                {
+                    UserId = user.Id,
+                    Path = $"{_config.GetValue<string>("defaultimagepath")}{(model.Sex == Sex.Male ? "defaultmale.png" : "defaultfemale.png")}",
+                    Name = model.Sex == Sex.Male ? _config.GetValue<string>("defaultmale") : _config.GetValue<string>("defaultfemale")
+                };
+
+                await _unit.UserRepository.CreateAsync(appUser);
+
+                await _unit.PhotoRepository.CreateAsync(photo);
+
+                await _unit.Commit();
             }
 
             return result;
         }
 
-        public async Task<SecurityUser> FindByNameAsync(string name)
+        public async Task<User> FindByIdUserAsync(int id)
         {
-            return await _userManager.FindByNameAsync(name);
+            return await _unit.UserRepository.GetAsync(id);
         }
 
-        public async Task<User> FindByNameUserAsync(string name)
+        public async Task<bool> EmailExistAsync(CheckRegisterModel model)
         {
-            var secuser= await _userManager.FindByNameAsync(name);
-
-            if (secuser != null)
-            {
-                return await _db.Users.FindAsync(secuser.UserId);
-            }
-
-            return default(User);
+            return await _userManager.FindByEmailAsync(model.Email) == null;
         }
     }
 }

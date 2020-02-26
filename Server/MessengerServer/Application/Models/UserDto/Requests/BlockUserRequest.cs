@@ -10,6 +10,6 @@ namespace Application.Models.UserDto.Requests
         [Required]
         public int UserIdToBlock { get; set; }
 
-        public string UserName { get; set; }
+        public int UserId { get; set; }
     }
 }

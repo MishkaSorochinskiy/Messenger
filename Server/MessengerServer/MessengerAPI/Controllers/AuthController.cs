@@ -27,7 +27,7 @@ namespace MessengerAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _auth.SignIn(model);
+                var result = await _auth.SignInAsync(model);
 
                 if (result.Succeeded)
                     return Ok(Response.Headers["set-cookie"]);
@@ -42,7 +42,7 @@ namespace MessengerAPI.Controllers
         [Authorize]
         public async Task SignOut()
         {
-             await _auth.SignOut();
+             await _auth.SignOutAsync();
         }
 
         [HttpPost]
@@ -50,15 +50,12 @@ namespace MessengerAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(await _auth.FindByNameAsync(model.Email) == null)
-                {
-                    var result = await _auth.Register(model);
+                var result = await _auth.RegisterAsync(model);
 
-                    if (result.Succeeded)
-                        return Ok(Response.Headers["set-cookie"]);
-                    else
-                        return BadRequest("Register denied!");
-                }
+                if (result.Succeeded)
+                    return Ok(Response.Headers["set-cookie"]);
+                else
+                    return BadRequest("Register denied!");
             }
 
             return BadRequest("Model is not valid!");
@@ -67,7 +64,7 @@ namespace MessengerAPI.Controllers
         [HttpPost]
         public async  Task<bool> EmailExist([FromBody]CheckRegisterModel model)
         {
-            return (await _userManager.FindByEmailAsync(model.Email)) == null;
+            return await this._auth.EmailExistAsync(model);
         }
     }
 }

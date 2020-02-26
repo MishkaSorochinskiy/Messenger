@@ -23,7 +23,7 @@ namespace ApplicationTests.MessageServiceTests
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
             var mockAuth = fixture.Freeze<Mock<IAuthService>>();
-            mockAuth.Setup(a => a.FindByNameUserAsync(It.IsAny<string>()))
+            mockAuth.Setup(a => a.FindByIdUserAsync(It.IsAny<int>()))
                 .ReturnsAsync(default(User));
 
             var messageService = fixture.Create<MessageService>();

@@ -24,14 +24,14 @@ namespace ApplicationTests.PhotoServiceTests
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
             var mockAuth = fixture.Freeze<Mock<IAuthService>>();
-            mockAuth.Setup(a => a.FindByNameUserAsync(It.IsAny<string>()))
+            mockAuth.Setup(a => a.FindByIdUserAsync(It.IsAny<int>()))
                 .ReturnsAsync(default(User));
 
             var photoService = fixture.Create<PhotoService>();
 
             //assert
             await Assert.ThrowsAsync<UserNotExistException>
-                (async () => await photoService.GetPhotoAsync(default(string)));
+                (async () => await photoService.GetPhotoAsync(10));
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace ApplicationTests.PhotoServiceTests
 
             //assert
             await Assert.ThrowsAsync<PhotoNotExistException>
-                (async () => await photoService.GetPhotoAsync(default(string)));
+                (async () => await photoService.GetPhotoAsync(10));
         }
 
         [Fact]
@@ -62,7 +62,8 @@ namespace ApplicationTests.PhotoServiceTests
             var photoService = fixture.Create<PhotoService>();
 
             //act
-            await photoService.GetPhotoAsync(default(string));
+            await photoService.GetPhotoAsync(10);
+
 
             //assert
             mockUnit.Verify(u => u.PhotoRepository.GetPhotoByUserAsync(It.IsAny<int>()), Times.Once);
@@ -90,7 +91,7 @@ namespace ApplicationTests.PhotoServiceTests
             var photoService = fixture.Create<PhotoService>();
 
             //act
-            var result=await photoService.GetPhotoAsync(default(string));
+            var result=await photoService.GetPhotoAsync(10);
 
             //assert
             Assert.True(photo.Name == result.Name);
