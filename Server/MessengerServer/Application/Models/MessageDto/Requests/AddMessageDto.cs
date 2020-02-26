@@ -10,7 +10,7 @@ namespace Application.Models.MessageDto
         [Required]
         public string Content { get; set; }
 
-        public string UserName { get; set; }
+        public int userId { get; set; }
 
         [Required]
         public int chatId { get; set; }

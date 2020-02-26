@@ -5,8 +5,7 @@ namespace Application.Models.UserDto
 {
     public class UpdateUserDto
     {
-        [EmailAddress]
-        public string Email { get; set; }
+        public int UserId { get; set; }
  
         [Range(0,100)]
         public int Age { get; set; }

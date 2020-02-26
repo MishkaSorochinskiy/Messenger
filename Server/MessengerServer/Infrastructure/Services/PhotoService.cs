@@ -2,18 +2,12 @@
 using Application.Models.PhotoDto;
 using AutoMapper;
 using Domain;
-using Domain.Entities;
 using Domain.Exceptions.PhotoExceptions;
 using Domain.Exceptions.UserExceptions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Infrastructure.Services
 {
@@ -44,7 +38,7 @@ namespace Infrastructure.Services
 
         public async Task ChangePhotoAsync(AddPhotoDto model)
         {
-            var user = await _auth.FindByNameUserAsync(model.UserName);
+            var user = await _auth.FindByIdUserAsync(model.UserId);
 
             if (user == null)
                 throw new UserNotExistException("Given user not exist!!", 400);
@@ -72,9 +66,9 @@ namespace Infrastructure.Services
             }
         }
 
-        public async Task<GetPhotoDto> GetPhotoAsync(string username)
+        public async Task<GetPhotoDto> GetPhotoAsync(int userId)
         {
-            var user = await _auth.FindByNameUserAsync(username);
+            var user = await _auth.FindByIdUserAsync(userId);
 
             if (user == null)
                 throw new UserNotExistException("Given user not exist!!",400);
