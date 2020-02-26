@@ -49,9 +49,9 @@ export class AuthService {
       return await this.http.post(url,JSON.stringify(user),{responseType:'text',headers:headers})
       .subscribe(
         async res=>{
-          localStorage.setItem('token',res);
-          await this.userservice.SetCurrentUser();
-          await this.router.navigate(['/chat']);
+           localStorage.setItem('token',res);
+           await this.userservice.SetCurrentUser();
+           await this.router.navigate(['/chat']);
         },err=>this.errorOccured=true);
     }
 

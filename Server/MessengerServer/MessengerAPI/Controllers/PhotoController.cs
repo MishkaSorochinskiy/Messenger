@@ -8,6 +8,7 @@ using Application.Models.PhotoDto;
 using Domain;
 using Infrastructure;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

@@ -4,7 +4,14 @@ using Domain.Entities;
 using Infrastructure.AppSecurity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Linq;
+using Domain.Exceptions.UserExceptions;
+using System.Collections.Generic;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Services
 {
@@ -13,6 +20,8 @@ namespace Infrastructure.Services
         Task SignOutAsync();
 
         Task<SignInResult> SignInAsync(LoginModel model);
+
+        Task<string> AuthenticateAsync(LoginModel model);
 
         Task<IdentityResult> RegisterAsync(RegisterModel model);
 
@@ -100,6 +109,50 @@ namespace Infrastructure.Services
         public async Task<bool> EmailExistAsync(CheckRegisterModel model)
         {
             return await _userManager.FindByEmailAsync(model.Email) == null;
+        }
+
+        public async Task<string> AuthenticateAsync(LoginModel model)
+        {
+            var identity =await this.GetIdentityAsync(model);
+
+            var now = DateTime.UtcNow;
+
+            var jwt = new JwtSecurityToken(
+                    issuer: AuthOptions.ISSUER,
+                    audience: AuthOptions.AUDIENCE,
+                    notBefore: now,
+                    claims: identity.Claims,
+                    expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
+                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+
+            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            return encodedJwt;
+        }
+
+        private async Task<ClaimsIdentity> GetIdentityAsync(LoginModel model)
+        {
+            var user = await this._userManager.FindByNameAsync(model.Email);
+
+            if (user == null)
+                throw new UserNotExistException("User with the given email not exist!!", 400);
+
+            var isSasswordValid =await _userManager.CheckPasswordAsync(user, model.Password);
+
+            if (isSasswordValid)
+            {
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name,user.Email),
+                    new Claim(ClaimTypes.Role,(await _userManager.GetRolesAsync(user))[0])
+                };
+
+                var claimsIdentity = new ClaimsIdentity(claims);
+
+                return claimsIdentity;
+            }
+
+            throw new UserAlreadyExistException("Password is invalid", 400);             
         }
     }
 }
