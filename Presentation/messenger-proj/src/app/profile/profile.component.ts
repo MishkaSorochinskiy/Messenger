@@ -15,12 +15,15 @@ export class ProfileComponent implements OnInit {
 
  ngOnInit() {
     this.userservice.data.subscribe(user=>this.currentUser=user);
+    this.userservice.valid=false;
   }
 
   UpdateUser(){
+    console.log(this.currentUser);
     this.userservice.updated=false;
-    if(this.currentUser.age>100 || this.currentUser.age<0 || this.currentUser.nickname){
+    if(this.currentUser.age>100 || this.currentUser.age<0 || this.currentUser.nickName==""){
       this.userservice.valid=true;
+      this.userservice.SetCurrentUser();
     }
     else{
       this.userservice.valid=false;
