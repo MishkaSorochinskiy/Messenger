@@ -1,10 +1,15 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using AutoMapper;
 using Domain;
 using Infrastructure;
 using Infrastructure.AppSecurity;
 using Infrastructure.Extensions;
 using MessengerAPI.Hubs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -12,6 +17,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Primitives;
+using Microsoft.IdentityModel.Tokens;
 
 namespace MessengerAPI
 {
@@ -39,6 +46,49 @@ namespace MessengerAPI
 
             services.AddIdentity<SecurityUser, IdentityRole<int>>()
                     .AddEntityFrameworkStores<SecurityContext>();
+
+            services.AddAuthentication(options=> 
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                {
+                    options.RequireHttpsMetadata = false;
+
+                    options.SaveToken = true;
+
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = AuthOptions.ISSUER,
+                        ValidAudience = AuthOptions.AUDIENCE,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                        ValidateIssuerSigningKey = true,
+                        ClockSkew = TimeSpan.FromMinutes(AuthOptions.LIFETIME)
+                    };
+
+                    options.Events= new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            if (context.Request.Query.TryGetValue("token", out StringValues token)
+                            )
+                            {
+                                context.Token = token;
+                            }
+
+                            return Task.CompletedTask;
+                        },
+                        OnAuthenticationFailed = context =>
+                        {
+                            var te = context.Exception;
+                            return Task.CompletedTask;
+                        }
+                   };
+                });
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -73,7 +123,6 @@ namespace MessengerAPI
                 options.Configuration = "localhost";
                 options.InstanceName = "RedisCache";
             });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

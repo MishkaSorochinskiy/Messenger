@@ -55,9 +55,13 @@ export class ChatService {
   constructor(private http:HttpClient,private config:ConfigService,private sanitizer:DomSanitizer, private photo: PhotoService) { }
 
   startConnection=async()=>{
+    const options: signalR.IHttpConnectionOptions = {
+      transport:signalR.HttpTransportType.WebSockets
+    };
     this.hubConnection = new signalR.HubConnectionBuilder()
-                              .withUrl("https://localhost:44334/chat")
+                              .withUrl(`https://localhost:44334/chat/?token=${localStorage["token"]}`,options)
                               .build();
+
     this.hubConnection.start().then(()=>console.log("Connection started!!"));
   }
 

@@ -27,12 +27,7 @@ namespace MessengerAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _auth.SignInAsync(model);
-
-                if (result.Succeeded)
-                    return Ok(Response.Headers["set-cookie"]);
-                else
-                    return BadRequest("Sign in denied!!");
+                return Ok(await _auth.AuthenticateAsync(model));
             }
 
             return BadRequest("Model is not valid!!");

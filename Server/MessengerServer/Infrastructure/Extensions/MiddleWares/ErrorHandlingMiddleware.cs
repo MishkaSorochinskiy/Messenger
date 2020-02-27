@@ -1,8 +1,5 @@
 ﻿using Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure
@@ -16,11 +13,11 @@ namespace Infrastructure
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        public async Task Invoke(HttpContext context)
         {
             try
             {
-                await _next(context);
+                  await _next(context);
             }
             catch(BaseException ex)
             {
