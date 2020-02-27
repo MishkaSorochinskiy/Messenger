@@ -2,7 +2,6 @@
     "photopath":"https://localhost:44334/avatars",
     "signin":"https://localhost:44334/api/Auth/SignIn",
     "signup":"https://localhost:44334/api/Auth/Register",
-    "signout":"https://localhost:44334/api/Auth/SignOut",
     "getmessages":"https://localhost:44334/api/Message",
     "updatephoto":"https://localhost:44334/api/Photo/ChangePhoto",
     "getphoto":"https://localhost:44334/api/Photo/GetPhoto",
@@ -15,6 +14,6 @@
     "getchats":"https://localhost:44334/api/Chat/GetChats",
     "getchatmessages":"https://localhost:44334/api/Message/GetChatMessages",
     "blockuser":"https://localhost:44334/api/User/BlockUser",
-    "unblockuser":"https://localhost:44334/api/User/UnBlockUser"
-
+    "unblockuser":"https://localhost:44334/api/User/UnBlockUser",
+    "exchangetokens":"https://localhost:44334/api/Auth/ExchangeTokens"
 }

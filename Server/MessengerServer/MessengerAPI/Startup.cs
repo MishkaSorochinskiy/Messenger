@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -74,8 +72,7 @@ namespace MessengerAPI
                     {
                         OnMessageReceived = context =>
                         {
-                            if (context.Request.Query.TryGetValue("token", out StringValues token)
-                            )
+                            if (context.Request.Query.TryGetValue("token", out StringValues token))
                             {
                                 context.Token = token;
                             }

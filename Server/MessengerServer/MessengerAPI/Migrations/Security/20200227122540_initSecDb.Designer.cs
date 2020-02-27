@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MessengerAPI.Migrations.Security
 {
     [DbContext(typeof(SecurityContext))]
-    [Migration("20200225143812_InitDbSecurity")]
-    partial class InitDbSecurity
+    [Migration("20200227122540_initSecDb")]
+    partial class initSecDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -64,6 +64,9 @@ namespace MessengerAPI.Migrations.Security
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
