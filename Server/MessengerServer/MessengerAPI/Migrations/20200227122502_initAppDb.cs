@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MessengerAPI.Migrations
 {
-    public partial class InitDb : Migration
+    public partial class initAppDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

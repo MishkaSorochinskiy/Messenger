@@ -3,6 +3,8 @@ import { UserService } from './services/user.service';
 import { DatePipe } from './pipes/date.pipe';
 import { RegisterGuard } from './register.guard';
 import { TokeninterceptorService } from './services/tokeninterceptor.service';
+import { RefreshTokeninterceptorService } from './services/RefreshTokenInrceptor.service';
+
 import { AuthGuard } from './auth.guard';
 import { ConfigService } from './services/config.service';
 import { AuthService } from './services/auth.service';
@@ -69,6 +71,11 @@ const appRoutes: Routes = [
       {
          provide: HTTP_INTERCEPTORS,
          useClass: TokeninterceptorService,
+         multi: true
+       },
+       {
+         provide: HTTP_INTERCEPTORS,
+         useClass: RefreshTokeninterceptorService,
          multi: true
        }
    ],

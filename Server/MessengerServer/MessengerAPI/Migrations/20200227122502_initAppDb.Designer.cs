@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MessengerAPI.Migrations
 {
     [DbContext(typeof(MessengerContext))]
-    [Migration("20200225143741_InitDb")]
-    partial class InitDb
+    [Migration("20200227122502_initAppDb")]
+    partial class initAppDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

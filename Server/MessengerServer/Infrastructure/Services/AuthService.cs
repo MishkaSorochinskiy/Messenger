@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Linq;
+using System.Security.Cryptography;
 using Domain.Exceptions.UserExceptions;
 using System.Collections.Generic;
 using System;
@@ -17,49 +17,34 @@ namespace Infrastructure.Services
 {
     public interface IAuthService
     {
-        Task SignOutAsync();
-
-        Task<SignInResult> SignInAsync(LoginModel model);
-
-        Task<string> AuthenticateAsync(LoginModel model);
+        Task<SignInResponce> AuthenticateAsync(LoginModel model);
 
         Task<IdentityResult> RegisterAsync(RegisterModel model);
 
         Task<bool> EmailExistAsync(CheckRegisterModel model);
 
         Task<User> FindByIdUserAsync(int id);
+
+        Task<SignInResponce> ExchangeTokensAsync(ExchangeTokenRequest request);
     }
 
     public class AuthService:IAuthService
     {
         private readonly UserManager<SecurityUser> _userManager;
-        
-        private readonly RoleManager<IdentityRole<int>> _roleManager;
-        
+                
         private readonly SignInManager<SecurityUser> _signInManager;
        
         private readonly IUnitOfWork _unit;
 
         private readonly IConfiguration _config;
 
-        public AuthService(UserManager<SecurityUser> userManager, RoleManager<IdentityRole<int>> roleManager,
+        public AuthService(UserManager<SecurityUser> userManager,
             SignInManager<SecurityUser> signInManager,IUnitOfWork unit,IConfiguration config)
         {
             _userManager = userManager;
-            _roleManager = roleManager;
             _signInManager = signInManager;
             _unit = unit;
             _config = config;
-        }
-
-        public async Task SignOutAsync()
-        {
-            await _signInManager.SignOutAsync();
-        }
-
-        public async Task<SignInResult> SignInAsync(LoginModel model)
-        {
-            return await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
         }
 
         public async Task<IdentityResult> RegisterAsync(RegisterModel model)
@@ -72,7 +57,6 @@ namespace Infrastructure.Services
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, "Chatter");
-                await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
 
                 var appUser = new User()
                 {
@@ -111,33 +95,82 @@ namespace Infrastructure.Services
             return await _userManager.FindByEmailAsync(model.Email) == null;
         }
 
-        public async Task<string> AuthenticateAsync(LoginModel model)
-        {
-            var identity =await this.GetIdentityAsync(model);
-
-            var now = DateTime.UtcNow;
-
-            var jwt = new JwtSecurityToken(
-                    issuer: AuthOptions.ISSUER,
-                    audience: AuthOptions.AUDIENCE,
-                    notBefore: now,
-                    claims: identity.Claims,
-                    expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
-                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-
-            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-            return encodedJwt;
-        }
-
-        private async Task<ClaimsIdentity> GetIdentityAsync(LoginModel model)
+        public async Task<SignInResponce> AuthenticateAsync(LoginModel model)
         {
             var user = await this._userManager.FindByNameAsync(model.Email);
 
             if (user == null)
                 throw new UserNotExistException("User with the given email not exist!!", 400);
 
-            var isSasswordValid =await _userManager.CheckPasswordAsync(user, model.Password);
+            var identity =await this.GetIdentityAsync(model);
+
+            var refreshToken = this.GenerateRefreshToken();
+
+            user.RefreshToken = refreshToken;
+
+            await _userManager.UpdateAsync(user);
+
+            var now = DateTime.Now;
+
+            var jwt = new JwtSecurityToken(
+                    issuer: AuthOptions.ISSUER,
+                    audience: AuthOptions.AUDIENCE,
+                    notBefore: now,
+                    claims: identity.Claims,
+                    expires: now.Add(TimeSpan.FromSeconds(AuthOptions.LIFETIME)),
+                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+
+            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            return new SignInResponce { Access_Token=encodedJwt,ExpiresIn= now.Add(TimeSpan.FromSeconds(AuthOptions.LIFETIME)),
+                Refresh_Token=refreshToken};
+        }
+
+        public async Task<SignInResponce> ExchangeTokensAsync(ExchangeTokenRequest request)
+        {
+            var principal = GetPrincipalFromExpiredToken(request.AccessToken);
+
+            var userName = principal.Identity.Name;
+
+            var user = await this._userManager.FindByNameAsync(userName);
+
+            if (user == null)
+                throw new UserNotExistException("User not exist!!", 400);
+
+            if (user.RefreshToken != request.RefreshToken)
+                throw new SecurityTokenException("Invalid refresh token");
+
+            var newRefreshToken = this.GenerateRefreshToken();
+
+            user.RefreshToken = newRefreshToken;
+
+            await _userManager.UpdateAsync(user);
+
+            var now = DateTime.Now;
+
+            var jwt = new JwtSecurityToken(
+                    issuer: AuthOptions.ISSUER,
+                    audience: AuthOptions.AUDIENCE,
+                    notBefore: now,
+                    claims: principal.Claims,
+                    expires: now.Add(TimeSpan.FromSeconds(AuthOptions.LIFETIME)),
+                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+
+            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            return new SignInResponce
+            {
+                Access_Token = encodedJwt,
+                ExpiresIn = now.Add(TimeSpan.FromSeconds(AuthOptions.LIFETIME)),
+                Refresh_Token = newRefreshToken
+            };
+        }
+
+        private async Task<ClaimsIdentity> GetIdentityAsync(LoginModel model)
+        {
+            var user = await this._userManager.FindByNameAsync(model.Email);
+
+            var isSasswordValid = await _userManager.CheckPasswordAsync(user, model.Password);
 
             if (isSasswordValid)
             {
@@ -147,18 +180,54 @@ namespace Infrastructure.Services
                     new Claim(ClaimTypes.NameIdentifier,user.Id.ToString())
                 };
 
-                foreach(var role in await _userManager.GetRolesAsync(user))
+                foreach (var role in await _userManager.GetRolesAsync(user))
                 {
-                    claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType,role));
+                    claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, role));
                 }
 
-                var claimsIdentity = new ClaimsIdentity(claims,"Token",
-                    ClaimsIdentity.DefaultNameClaimType,ClaimsIdentity.DefaultRoleClaimType);
+                var claimsIdentity = new ClaimsIdentity(claims, "Token",
+                    ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
 
                 return claimsIdentity;
             }
 
-            throw new UserAlreadyExistException("Password is invalid", 400);             
+            throw new UserAlreadyExistException("Password is invalid", 400);
+        }
+
+        private string GenerateRefreshToken(int size = 32)
+        {
+            var randomNumber = new byte[size];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
+        }
+
+        private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = true,
+                ValidateIssuer = true,
+                ValidIssuer=AuthOptions.ISSUER,
+                ValidAudience=AuthOptions.AUDIENCE,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                ValidateLifetime = false 
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+           
+            SecurityToken securityToken;
+            
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+            
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256))
+                throw new SecurityTokenException("Invalid token");
+
+            return principal;
         }
     }
 }
