@@ -2,6 +2,7 @@
 using Application.IServices;
 using Application.Models.MessageDto;
 using Domain;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MessengerAPI.Hubs
 {
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class Chat:Hub
     {
         private readonly IMessageService _messageService;

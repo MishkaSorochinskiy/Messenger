@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
-using System.Security.Claims;
+using System.Threading.Tasks;
 using AutoMapper;
 using Domain;
 using Infrastructure;
@@ -8,7 +10,6 @@ using Infrastructure.AppSecurity;
 using Infrastructure.Extensions;
 using MessengerAPI.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -17,7 +18,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 
 namespace MessengerAPI
 {
@@ -59,23 +59,33 @@ namespace MessengerAPI
 
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuer = false,
+                        ValidateIssuer = true,
                         ValidIssuer = AuthOptions.ISSUER,
                         ValidAudience = AuthOptions.AUDIENCE,
-                        ValidateAudience = false,
-                        ValidateLifetime = false,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
                         IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
                         ValidateIssuerSigningKey = true,
                         ClockSkew = TimeSpan.FromMinutes(AuthOptions.LIFETIME)
                     };
-                });
 
-            services.AddAuthorization(options =>
-            {
-                options.DefaultPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
-                .RequireAuthenticatedUser()
-                .Build();
-            });
+                    options.Events= new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Headers["authorization"];
+
+                            var path = context.HttpContext.Request.Path;
+                            var res = path.StartsWithSegments("/chat");
+                            if (!string.IsNullOrEmpty(accessToken) &&
+                                (path.StartsWithSegments("/chat")))
+                            {
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -110,13 +120,6 @@ namespace MessengerAPI
                 options.Configuration = "localhost";
                 options.InstanceName = "RedisCache";
             });
-
-
-            //services.AddSwaggerGen(c =>
-            //{
-            //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Chatter Messenger", Version = "v1" });
-            //});
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -129,26 +132,19 @@ namespace MessengerAPI
 
             app.UseHttpsRedirection();
 
-            //app.UseSwagger();
-
-            //app.UseSwaggerUI(c =>
-            //{
-            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            //});
-
             app.UseRouting();
 
             app.UseStaticFiles();
 
             app.UseCors("CorsPolicy");
 
-            //app.UseErrorHandling();
+            app.UseErrorHandling();
 
             app.UseAuthentication();
 
             app.UseAuthorization();
 
-            //app.UseIdHandler();
+            app.UseIdHandler();
 
             app.UseEndpoints(endpoints =>
             {

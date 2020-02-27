@@ -144,6 +144,7 @@ namespace Infrastructure.Services
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimsIdentity.DefaultNameClaimType,user.Email),
+                    new Claim(ClaimTypes.NameIdentifier,user.Id.ToString())
                 };
 
                 foreach(var role in await _userManager.GetRolesAsync(user))
