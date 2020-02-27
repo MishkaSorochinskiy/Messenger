@@ -143,11 +143,16 @@ namespace Infrastructure.Services
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name,user.Email),
-                    new Claim(ClaimTypes.Role,(await _userManager.GetRolesAsync(user))[0])
+                    new Claim(ClaimsIdentity.DefaultNameClaimType,user.Email),
                 };
 
-                var claimsIdentity = new ClaimsIdentity(claims);
+                foreach(var role in await _userManager.GetRolesAsync(user))
+                {
+                    claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType,role));
+                }
+
+                var claimsIdentity = new ClaimsIdentity(claims,"Token",
+                    ClaimsIdentity.DefaultNameClaimType,ClaimsIdentity.DefaultRoleClaimType);
 
                 return claimsIdentity;
             }

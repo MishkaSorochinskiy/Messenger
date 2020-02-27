@@ -46,7 +46,7 @@ namespace MessengerAPI.Controllers
             return BadRequest();
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet]
         public async Task<IActionResult> GetPhoto()
         {

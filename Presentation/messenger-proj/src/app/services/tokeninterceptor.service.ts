@@ -11,7 +11,6 @@ constructor(private auth:AuthService) { }
 
 intercept(req,next){
   let tokenizedreq=req.clone({
-    withCredentials:true,
     setHeaders: {
       Authorization: `Bearer ${localStorage["token"]}`
   }

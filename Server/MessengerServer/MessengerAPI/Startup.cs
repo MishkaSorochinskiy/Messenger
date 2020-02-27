@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using System.Security.Claims;
 using AutoMapper;
@@ -7,6 +8,7 @@ using Infrastructure.AppSecurity;
 using Infrastructure.Extensions;
 using MessengerAPI.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -44,8 +46,12 @@ namespace MessengerAPI
             services.AddIdentity<SecurityUser, IdentityRole<int>>()
                     .AddEntityFrameworkStores<SecurityContext>();
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
+            services.AddAuthentication(options=> 
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
                     options.RequireHttpsMetadata = false;
 
@@ -53,20 +59,23 @@ namespace MessengerAPI
 
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuer = true,
+                        ValidateIssuer = false,
                         ValidIssuer = AuthOptions.ISSUER,
-                        ValidAudience=AuthOptions.AUDIENCE,
-                        ValidateAudience=true,
-                        ValidateLifetime=false,
-                        IssuerSigningKey=AuthOptions.GetSymmetricSecurityKey(),
-                        ValidateIssuerSigningKey=true
+                        ValidAudience = AuthOptions.AUDIENCE,
+                        ValidateAudience = false,
+                        ValidateLifetime = false,
+                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                        ValidateIssuerSigningKey = true,
+                        ClockSkew = TimeSpan.FromMinutes(AuthOptions.LIFETIME)
                     };
                 });
 
-            //services.AddAuthorization(options =>
-            //{
-            //    options.AddPolicy("ApiUser", policy => policy.RequireClaim(ClaimTypes.Name));
-            //});
+            services.AddAuthorization(options =>
+            {
+                options.DefaultPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+                .RequireAuthenticatedUser()
+                .Build();
+            });
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -120,12 +129,12 @@ namespace MessengerAPI
 
             app.UseHttpsRedirection();
 
-            app.UseSwagger();
+            //app.UseSwagger();
 
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            //});
 
             app.UseRouting();
 
@@ -133,13 +142,13 @@ namespace MessengerAPI
 
             app.UseCors("CorsPolicy");
 
-            app.UseErrorHandling();
+            //app.UseErrorHandling();
 
             app.UseAuthentication();
 
             app.UseAuthorization();
 
-            app.UseIdHandler();
+            //app.UseIdHandler();
 
             app.UseEndpoints(endpoints =>
             {

@@ -16,7 +16,7 @@ namespace Infrastructure.Extensions
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        public  async Task Invoke(HttpContext context)
         {
             if (context.User.Identity.IsAuthenticated)
             {
