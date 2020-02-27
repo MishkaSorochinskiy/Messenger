@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 
 namespace MessengerAPI
@@ -73,18 +74,20 @@ namespace MessengerAPI
                     {
                         OnMessageReceived = context =>
                         {
-                            var accessToken = context.Request.Headers["authorization"];
-
-                            var path = context.HttpContext.Request.Path;
-                            var res = path.StartsWithSegments("/chat");
-                            if (!string.IsNullOrEmpty(accessToken) &&
-                                (path.StartsWithSegments("/chat")))
+                            if (context.Request.Query.TryGetValue("token", out StringValues token)
+                            )
                             {
-                                context.Token = accessToken;
+                                context.Token = token;
                             }
+
+                            return Task.CompletedTask;
+                        },
+                        OnAuthenticationFailed = context =>
+                        {
+                            var te = context.Exception;
                             return Task.CompletedTask;
                         }
-                    };
+                   };
                 });
 
             services.Configure<IdentityOptions>(options =>
