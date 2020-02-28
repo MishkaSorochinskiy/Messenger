@@ -34,11 +34,6 @@ namespace Infrastructure.Configurations
                    .WithOne(p => p.User)
                    .HasForeignKey(p => p.UserId)
                    .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasMany(u => u.Conversations)
-               .WithOne(p => p.User)
-               .HasForeignKey(p => p.UserId)
-               .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

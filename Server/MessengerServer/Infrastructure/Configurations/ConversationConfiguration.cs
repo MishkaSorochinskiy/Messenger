@@ -11,11 +11,6 @@ namespace Infrastructure.Configurations
             builder.ToTable("Conversations");
 
             builder.HasKey(c => c.Id);
-
-            builder.HasMany(c => c.Users)
-                .WithOne(u => u.Conversation)
-                .HasForeignKey(c => c.ConversationId)
-                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

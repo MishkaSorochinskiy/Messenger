@@ -1,12 +1,8 @@
-﻿using Application.Models.ChatDto.Responces;
-using Application.Models.MessageDto;
+﻿using Application.Models.MessageDto;
 using Application.Models.PhotoDto;
 using Application.Models.UserDto;
 using AutoMapper;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure
 {
@@ -16,7 +12,7 @@ namespace Infrastructure
         {
             CreateMap<Message, GetMessageDto>();
 
-            CreateMap<Photo, GetPhotoDto>();
+            CreateMap<User, GetPhotoDto>();
 
             CreateMap<User, GetUserDto>()
                 .ForMember(dest => dest.Id, src => src.MapFrom(u => u.Id))

@@ -11,6 +11,14 @@ namespace Infrastructure.Configurations
             builder.ToTable("UserConversations");
 
             builder.HasKey(bu => bu.Id);
+
+            builder.HasOne(uc => uc.Conversation)
+                .WithMany(uc => uc.Users)
+                .HasForeignKey(uc => uc.ConversationId);
+
+            builder.HasOne(uc => uc.User)
+                .WithMany(uc => uc.Conversations)
+                .HasForeignKey(uc => uc.UserId);
         }
     }
 }

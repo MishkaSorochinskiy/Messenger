@@ -2,7 +2,6 @@
 using Application.Models.PhotoDto;
 using AutoMapper;
 using Domain;
-using Domain.Exceptions.PhotoExceptions;
 using Domain.Exceptions.UserExceptions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -47,13 +46,11 @@ namespace Infrastructure.Services
 
             if (this._config[$"PhotoExtensions:{ext}"]!=null)
             {
-                var photo = await _unit.ConversationInfoRepository.GetPhotoByUserAsync(user.Id);
+                user.Photo = $"{user.Id}{model.UploadedFile.Name}";
 
-                photo.Name = $"{user.Id}{model.UploadedFile.Name}";
+               var path = $"{_env.WebRootPath}\\avatars\\{user.Photo}";
 
-                photo.Path = $"{_env.WebRootPath}\\avatars\\{photo.Name}";
-
-                using (var fileStream = new FileStream(photo.Path, FileMode.Create))
+                using (var fileStream = new FileStream(path, FileMode.Create))
                 {
                     await model.UploadedFile.CopyToAsync(fileStream);
                 }
@@ -73,13 +70,7 @@ namespace Infrastructure.Services
             if (user == null)
                 throw new UserNotExistException("Given user not exist!!",400);
 
-            var photo = await _unit.ConversationInfoRepository.GetPhotoByUserAsync(user.Id);
-
-            if (photo == null)
-                throw new PhotoNotExistException("Given user haven't got any photos!!",400);
-
-            return _map.Map<GetPhotoDto>(photo);
+            return _map.Map<GetPhotoDto>(user);
         }
-
     }
 }
