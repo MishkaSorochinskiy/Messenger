@@ -47,7 +47,7 @@ namespace Infrastructure.Services
 
             if (this._config[$"PhotoExtensions:{ext}"]!=null)
             {
-                var photo = await _unit.PhotoRepository.GetPhotoByUserAsync(user.Id);
+                var photo = await _unit.ConversationInfoRepository.GetPhotoByUserAsync(user.Id);
 
                 photo.Name = $"{user.Id}{model.UploadedFile.Name}";
 
@@ -73,7 +73,7 @@ namespace Infrastructure.Services
             if (user == null)
                 throw new UserNotExistException("Given user not exist!!",400);
 
-            var photo = await _unit.PhotoRepository.GetPhotoByUserAsync(user.Id);
+            var photo = await _unit.ConversationInfoRepository.GetPhotoByUserAsync(user.Id);
 
             if (photo == null)
                 throw new PhotoNotExistException("Given user haven't got any photos!!",400);

@@ -41,7 +41,7 @@ namespace ApplicationTests.PhotoServiceTests
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
             var mockAuth = fixture.Freeze<Mock<IUnitOfWork>>();
-            mockAuth.Setup(a => a.PhotoRepository.GetPhotoByUserAsync(It.IsAny<int>()))
+            mockAuth.Setup(a => a.ConversationInfoRepository.GetPhotoByUserAsync(It.IsAny<int>()))
                 .ReturnsAsync(default(Photo));
 
             var photoService = fixture.Create<PhotoService>();
@@ -66,7 +66,7 @@ namespace ApplicationTests.PhotoServiceTests
 
 
             //assert
-            mockUnit.Verify(u => u.PhotoRepository.GetPhotoByUserAsync(It.IsAny<int>()), Times.Once);
+            mockUnit.Verify(u => u.ConversationInfoRepository.GetPhotoByUserAsync(It.IsAny<int>()), Times.Once);
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace ApplicationTests.PhotoServiceTests
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
             var mockUnit = fixture.Freeze<Mock<IUnitOfWork>>();
-            mockUnit.Setup(u => u.PhotoRepository.GetPhotoByUserAsync(It.IsAny<int>()))
+            mockUnit.Setup(u => u.ConversationInfoRepository.GetPhotoByUserAsync(It.IsAny<int>()))
                 .ReturnsAsync(photo);
 
             var mockMap = fixture.Freeze<Mock<IMapper>>();

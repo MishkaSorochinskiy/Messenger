@@ -25,7 +25,7 @@ namespace ApplicationTests.MessageServiceTests
 
             var mockAuth = fixture.Freeze<Mock<IUnitOfWork>>();
             mockAuth.Setup(a => a.ChatRepository.GetChatContentAsync(It.IsAny<int>()))
-                .ReturnsAsync(default(Chat));
+                .ReturnsAsync(default(Conversation));
 
             var messageService = fixture.Create<MessageService>();
 
@@ -38,7 +38,7 @@ namespace ApplicationTests.MessageServiceTests
         public async void GetMessageByChat_ReturnsValidValues()
         {
             //arrange
-            var chat = new Chat
+            var chat = new Conversation
             {
                 FirstUser = new User
                 {

@@ -42,7 +42,7 @@ namespace ApplicationTests.MessageServiceTests
 
             var mockAuth = fixture.Freeze<Mock<IUnitOfWork>>();
             mockAuth.Setup(a => a.ChatRepository.GetAsync(It.IsAny<int>()))
-                .ReturnsAsync(default(Chat));
+                .ReturnsAsync(default(Conversation));
 
             var messageService = fixture.Create<MessageService>();
 

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-   public class ChatRepository: Repository<Chat>, IChatRepository
+   public class ChatRepository: Repository<Conversation>, IChatRepository
     {
         public ChatRepository(MessengerContext db):base(db)
         {
@@ -17,15 +17,15 @@ namespace Infrastructure.Repositories
 
         public async Task<bool> ChatExistAsync(int firstUserId, int secondUserId)
         {
-            return (await this.db.Chats
+            return (await this.db.Conversations
                 .Where(c => (c.FirstUserId == firstUserId && c.SecondUserId == secondUserId)||
                         (c.FirstUserId == secondUserId && c.SecondUserId == firstUserId))
                 .CountAsync())==0;
         }
 
-        public async Task<List<Chat>> GetUserChatsAsync(int userid)
+        public async Task<List<Conversation>> GetUserChatsAsync(int userid)
         {
-            var res = await this.db.Chats
+            var res = await this.db.Conversations
                 .Where(c => c.SecondUserId == userid || c.FirstUserId == userid)
                 .Include(c => c.FirstUser)
                  .ThenInclude(u=>u.Photo)
@@ -39,9 +39,9 @@ namespace Infrastructure.Repositories
                 
         }
 
-        public async Task<Chat> GetChatContentAsync(int id)
+        public async Task<Conversation> GetChatContentAsync(int id)
         {
-           return await this.db.Chats
+           return await this.db.Conversations
                  .Where(c => c.Id == id)
                  .Include(c => c.Messages)
                  .Include(c => c.FirstUser)

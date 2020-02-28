@@ -65,7 +65,7 @@ namespace ApplicationTests.ChatServiceTests
             await chatService.CreateChatAsync(new AddChatRequest());
 
             //assert
-            mockUnit.Verify(u => u.ChatRepository.CreateAsync(It.IsAny<Chat>()), Times.Once);
+            mockUnit.Verify(u => u.ChatRepository.CreateAsync(It.IsAny<Conversation>()), Times.Once);
         }
     }
 }

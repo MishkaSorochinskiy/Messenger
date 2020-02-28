@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    public class PhotoRepository:Repository<Photo>,IPhotoRepository
+    public class PhotoRepository:Repository<Photo>,IConversationInfoRepository
     {
         public PhotoRepository(MessengerContext db):base(db)
         {

@@ -77,7 +77,7 @@ namespace Infrastructure.Services
 
                 await _unit.UserRepository.CreateAsync(appUser);
 
-                await _unit.PhotoRepository.CreateAsync(photo);
+                await _unit.ConversationInfoRepository.CreateAsync(photo);
 
                 await _unit.Commit();
             }

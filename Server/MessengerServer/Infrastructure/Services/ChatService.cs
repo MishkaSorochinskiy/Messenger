@@ -46,7 +46,7 @@ namespace Infrastructure.Services
                     UserId = user.Id,
                 };
 
-                var chat = new Chat()
+                var chat = new Conversation()
                 {
                     FirstUserId = user.Id,
                     SecondUserId = request.SecondUserId,

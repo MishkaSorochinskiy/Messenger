@@ -21,7 +21,7 @@ namespace ApplicationTests.UserServiceTests
 
             var mockUnit = fixture.Freeze<Mock<IUnitOfWork>>();
             mockUnit.Setup(u => u.ChatRepository.GetAsync(It.IsAny<int>()))
-                .ReturnsAsync(default(Chat));
+                .ReturnsAsync(default(Conversation));
 
             var userService = fixture.Create<UserService>();
 

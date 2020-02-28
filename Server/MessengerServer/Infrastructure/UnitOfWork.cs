@@ -13,7 +13,7 @@ namespace Infrastructure
         public MessengerContext _db { get; private set; }
 
         private Lazy<IUserRepository> userRepository;     
-        private Lazy<IPhotoRepository> photoRepository;     
+        private Lazy<IConversationInfoRepository> photoRepository;     
         private Lazy<IMessageRepository> messageRepository;
         private Lazy<IChatRepository> chatRepository;
         private Lazy<IBlockedUserRepository> blockeduserRepository;
@@ -32,7 +32,7 @@ namespace Infrastructure
                return this.blockeduserRepository.Value;
             }
         }
-        public IPhotoRepository PhotoRepository
+        public IConversationInfoRepository ConversationInfoRepository
         {
             get
             {
@@ -67,7 +67,7 @@ namespace Infrastructure
 
             this.messageRepository = new Lazy<IMessageRepository>(() => new MessageRepository(_db));
 
-            this.photoRepository = new Lazy<IPhotoRepository>(() => new PhotoRepository(_db));
+            this.photoRepository = new Lazy<IConversationInfoRepository>(() => new PhotoRepository(_db));
 
         }
 

@@ -8,7 +8,7 @@ namespace Domain
 {
     public interface IUnitOfWork
     {
-        IPhotoRepository PhotoRepository { get; }
+        IConversationInfoRepository ConversationInfoRepository { get; }
         IMessageRepository MessageRepository { get; }
         IUserRepository UserRepository { get; }
         IChatRepository ChatRepository { get; }

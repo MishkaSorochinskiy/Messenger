@@ -53,9 +53,9 @@ namespace ApplicationTests.ChatServiceTests
         public async void GetChats_ReturnsValidValues()
         {
             //arrange
-            var chats = new List<Chat>
+            var chats = new List<Conversation>
             {
-                new Chat
+                new Conversation
                 {
                     Id=1,
                     SecondUser=new User
