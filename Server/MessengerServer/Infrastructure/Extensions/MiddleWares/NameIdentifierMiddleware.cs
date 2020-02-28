@@ -21,7 +21,7 @@ namespace Infrastructure.Extensions
             if (context.User.Identity.IsAuthenticated)
             {
                 context.Items["id"] =
-                     Convert.ToInt32(context.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                     int.Parse(context.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             }
 
             await _next(context);       

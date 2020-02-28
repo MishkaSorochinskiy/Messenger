@@ -37,7 +37,7 @@ namespace MessengerAPI.Hubs
         {
             var userId =Context.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var userChats = await this._unit.ChatRepository.GetUserChatsAsync(Convert.ToInt32(userId));
+            var userChats = await this._unit.ChatRepository.GetUserChatsAsync(int.Parse(userId));
 
             userChats.ForEach(async chat =>
             {
@@ -49,7 +49,7 @@ namespace MessengerAPI.Hubs
 
         public async Task SendToAll(AddMessageDto message)
         {
-            message.userId =Convert.ToInt32(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            message.userId = int.Parse(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             var isBlocked = _cache.Get($"{message.userId}:{message.chatId}");
 
@@ -72,7 +72,7 @@ namespace MessengerAPI.Hubs
         {
             var userId = Context.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var userChats = await this._unit.ChatRepository.GetUserChatsAsync(Convert.ToInt32(userId));
+            var userChats = await this._unit.ChatRepository.GetUserChatsAsync(int.Parse(userId));
 
             userChats.ForEach(async chat =>
             {
