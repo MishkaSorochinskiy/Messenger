@@ -2,22 +2,18 @@
 
 namespace Domain.Entities
 {
-    public class Chat
+    public class  Converation
     {
         public int Id { get; set; }
-
-        public int FirstUserId { get; set; }
-        public User FirstUser { get; set; }
-
-        public int SecondUserId { get; set; }
-        public User SecondUser { get; set; }
 
         public int? LastMessageId { get; set; }
         public Message LastMessage { get; set; }
 
         public ICollection<Message> Messages { get; private set; }
 
-        public Chat()
+        public ICollection<User> Users { get; set; }
+
+        public Converation()
         {
             this.Messages = new List<Message>();
         }
