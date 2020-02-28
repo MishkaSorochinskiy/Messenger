@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Domain.Entities
 {
@@ -23,6 +21,5 @@ namespace Domain.Entities
         {
             this.Messages = new List<Message>();
         }
-
     }
 }
