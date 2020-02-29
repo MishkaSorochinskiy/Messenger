@@ -123,7 +123,9 @@ namespace MessengerAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
+            UserManager<SecurityUser>um,RoleManager<IdentityRole<int>>rm,SecurityContext s,
+            MessengerContext m,IConfiguration con)
         {
             if (env.IsDevelopment())
             {
@@ -131,6 +133,8 @@ namespace MessengerAPI
             }
 
             app.UseHttpsRedirection();
+
+            DataInitializer.SeedData(um, rm, s, m, con).Wait();
 
             app.UseRouting();
 

@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.IServices;
-using Application.Models.ChatDto.Requests;
+using Application.Models.PhotoDto;
 using Application.Models.UserDto;
 using Application.Models.UserDto.Requests;
-using AutoMapper;
-using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -78,6 +73,24 @@ namespace MessengerAPI.Controllers
             await this._userService.UnBlockUserAsync(request);
 
             return Ok();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ChangePhoto(IFormCollection collection)
+        {
+            if (ModelState.IsValid && collection.Files[0] != null)
+            {
+                await _userService.ChangePhotoAsync(new AddPhotoDto()
+                {
+                    UserId = (int)HttpContext.Items["id"],
+                    UploadedFile = collection.Files[0]
+                });
+
+                return Ok();
+            }
+
+            return BadRequest();
         }
     }
 }

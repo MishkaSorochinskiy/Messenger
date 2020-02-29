@@ -37,7 +37,7 @@ namespace Infrastructure.Services
             if (user == null)
                 throw new UserNotExistException("user not exist", 400);
 
-            if ((await this._unit.ChatRepository.ChatExistAsync(user.Id, request.SecondUserId)))
+            if ((await this._unit.ConversationRepository.ChatExistAsync(user.Id, request.SecondUserId)))
             {
                 var grettingMessage = new Message()
                 {
@@ -48,12 +48,28 @@ namespace Infrastructure.Services
 
                 var chat = new Conversation()
                 {
-                    FirstUserId = user.Id,
-                    SecondUserId = request.SecondUserId,
+                    Type=ConversationType.Chat,
+
                     LastMessage = grettingMessage
                 };
 
-                await this._unit.ChatRepository.CreateAsync(chat);
+                var firstUserConversation = new UserConversation
+                {
+                    UserId = user.Id,
+                    Conversation = chat
+                };
+
+                var secondUserConversation = new UserConversation
+                {
+                    UserId = request.SecondUserId,
+                    Conversation = chat
+                };
+
+                await this._unit.ConversationRepository.CreateAsync(chat);
+
+                await this._unit.UserConversationRepository.CreateAsync(firstUserConversation);
+
+                await this._unit.UserConversationRepository.CreateAsync(secondUserConversation);
 
                 await this._unit.Commit();
             }
@@ -70,24 +86,32 @@ namespace Infrastructure.Services
             if (user == null)
                 throw new UserNotExistException("Given user not exist!",400);
 
-            var chatres= await _unit.ChatRepository.GetUserChatsAsync(user.Id);
+            var conversationList= await _unit.ConversationRepository.GetUserChatsAsync(user.Id);
 
             var res = new List<GetChatDto>();
 
-            foreach(var chat in chatres)
+            foreach(var conversation in conversationList)
             {
-                res.Add(new GetChatDto()
+                if(conversation.Type==ConversationType.Chat)
                 {
-                    Id = chat.Id,
-                    Photo = chat.FirstUserId == user.Id ? chat.SecondUser.Photo.Name : chat.FirstUser.Photo.Name,
-                    Content = chat.LastMessage == null ? null : chat.LastMessage.Content,
-                    SecondUserId = chat.FirstUserId == user.Id ? chat.SecondUserId : chat.FirstUserId,
-                    IsBlocked = user.BlockedUsers.Any(bl => bl.UserToBlockId == chat.SecondUserId || bl.UserToBlockId==chat.FirstUserId) ? true : false
-                }) ;
+                    var secondUserId = conversation.UserConversations[0].UserId == user.Id ? conversation.UserConversations[1].UserId : 
+                        conversation.UserConversations[0].UserId;
+
+                    var secondUser = await _auth.FindByIdUserAsync(secondUserId);
+
+                    res.Add(new GetChatDto()
+                    {
+                        Id = conversation.Id,
+                        Photo = secondUser.Photo,
+                        Content = conversation.LastMessage == null ? null : conversation.LastMessage.Content,
+                        SecondUserId = secondUserId,
+                        IsBlocked = user.BlockedUsers.Any(
+                        bl => bl.UserToBlockId == secondUserId) ? true : false
+                    });
+                }             
             }
 
             return res;
-        }
-        
+        }      
     }
 }

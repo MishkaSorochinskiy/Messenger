@@ -11,8 +11,9 @@ namespace Domain
         IConversationInfoRepository ConversationInfoRepository { get; }
         IMessageRepository MessageRepository { get; }
         IUserRepository UserRepository { get; }
-        IChatRepository ChatRepository { get; }
+        IConversationRepository ConversationRepository { get; }
         IBlockedUserRepository BlockedUserRepository { get; }
+        IUserConversationRepository UserConversationRepository { get; }
        
         Task Commit();
     }

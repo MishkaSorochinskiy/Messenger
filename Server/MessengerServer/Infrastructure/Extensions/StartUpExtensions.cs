@@ -27,8 +27,6 @@ namespace Infrastructure.Extensions
         {
             services.AddScoped<IAuthService, AuthService>();
 
-            services.AddScoped<IPhotoService, PhotoService>();
-
             services.AddScoped<IMessageService, MessageService>();
 
             services.AddScoped<IUserService, UserService>();

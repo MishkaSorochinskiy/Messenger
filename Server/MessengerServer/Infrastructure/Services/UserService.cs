@@ -1,5 +1,6 @@
 ﻿using Application.IServices;
 using Application.Models.MessageDto;
+using Application.Models.PhotoDto;
 using Application.Models.UserDto;
 using Application.Models.UserDto.Requests;
 using AutoMapper;
@@ -8,12 +9,10 @@ using Domain.Entities;
 using Domain.Exceptions.BlockedUserExceptions;
 using Domain.Exceptions.ChatExceptions;
 using Domain.Exceptions.UserExceptions;
-using Infrastructure.AppSecurity;
-using Microsoft.EntityFrameworkCore;
-using System;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Services
@@ -22,8 +21,10 @@ namespace Infrastructure.Services
     {
         private readonly IUnitOfWork _unit;
         private readonly IMapper _map;
+        private readonly IHostingEnvironment _env;
+        private readonly IConfiguration _config;
         private readonly IAuthService _auth;
-        public UserService(IUnitOfWork unit,IMapper map,IAuthService auth)
+        public UserService(IUnitOfWork unit,IMapper map,IAuthService auth, IHostingEnvironment env, IConfiguration config)
         {
             _unit = unit;
 
@@ -31,6 +32,9 @@ namespace Infrastructure.Services
 
             _map = map;
 
+            _env = env;
+
+            _config = config;
         }
 
         public async Task<GetUserDto> GetUserInfoAsync(GetUserInfoRequest request)
@@ -128,7 +132,10 @@ namespace Infrastructure.Services
 
         public async Task<bool> CheckStatusAsync(AddMessageDto request)
         {
-            var chat = await this._unit.ChatRepository.GetAsync(request.chatId);
+            var chat = await this._unit.ConversationRepository.GetWithConversationAsync(request.chatId);
+
+            if (chat.Type != ConversationType.Chat)
+                return false;
 
             if (chat == null)
                 throw new ChatNotExistException("Given chat not exist!!",400);
@@ -138,7 +145,7 @@ namespace Infrastructure.Services
             if (currentUser == null)
                 throw new UserNotExistException("Given user not exist!!",400);
         
-            var requestedUserId = chat.FirstUserId == currentUser.Id ? chat.SecondUserId : chat.FirstUserId;
+            var requestedUserId = chat.UserConversations[0].UserId == currentUser.Id ? chat.UserConversations[1].UserId : chat.UserConversations[0].UserId;
 
             if ((await _unit.BlockedUserRepository.IsBlockedUserAsync(requestedUserId,currentUser.Id))==null)
             {
@@ -146,6 +153,34 @@ namespace Infrastructure.Services
             }
 
             return true;
+        }
+
+        public async Task ChangePhotoAsync(AddPhotoDto model)
+        {
+            var user = await _auth.FindByIdUserAsync(model.UserId);
+
+            if (user == null)
+                throw new UserNotExistException("Given user not exist!!", 400);
+
+            var ext = model.UploadedFile.FileName.Substring(model.UploadedFile.FileName.LastIndexOf('.'));
+
+            if (this._config[$"PhotoExtensions:{ext}"] != null)
+            {
+                user.Photo = $"{user.Id}{model.UploadedFile.Name}";
+
+                var path = $"{_env.WebRootPath}\\avatars\\{user.Photo}";
+
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    await model.UploadedFile.CopyToAsync(fileStream);
+                }
+
+                await _unit.Commit();
+            }
+            else
+            {
+                throw new PhotoInCorrectException("Given extension is incorrect!!", 400);
+            }
         }
     }
 }

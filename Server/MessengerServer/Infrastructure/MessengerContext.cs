@@ -16,6 +16,9 @@ namespace Infrastructure
 
         public DbSet<UserConversation> UserConversations { get; set; }
 
+        public DbSet<ConversationInfo> ConversationInfos { get; set; }
+
+
         public MessengerContext(DbContextOptions<MessengerContext> options):base(options)
         {
 
